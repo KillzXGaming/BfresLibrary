@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "F5FVmBjKR7+uqO93TOt5onpKlcH8djVXzqQ5Inz2sc7g/bTaKi5a9iLBLFdmI/zBFkBg0Gx0PfAKpIT9Dtu9sQ==",
+  "dgSpecHash": "L/Kn+fvmUmjN5jNbwqgzhHm/gnJGkcQqR34JmSfi9+P3lm9WjSXF3AUB6D7I4rQGMuiAYGCljjcUk+XQyQ6WGw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nathan\\Documents\\GitHub\\GLEngine\\BfresLibrary\\BfresLibrary\\BfresLibrary.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Nathan\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Nathan\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
     "C:\\Users\\Nathan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []

@@ -13,7 +13,7 @@
     <PackageTags>bfres;cafe;nintendo;nw4f;wiiu;nx;switch;</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://gitlab.com/Syroot/NintenTools.Bfres</RepositoryUrl>
-    <TargetFrameworks>net46;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <VersionPrefix>1.6.0</VersionPrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
