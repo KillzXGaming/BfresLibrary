@@ -73,21 +73,6 @@ namespace Syroot.NintenTools.Bfres
         [Browsable(false)]
         public ResDict<RenderInfo> RenderInfos { get; set; }
 
-        [Description("Information based on how the model is rendered.")]
-        [Category("Rendering")]
-        [DisplayName("Render Info")]
-        public List<RenderInfo> RenderInfoValues
-        {
-            get { return RenderInfos.Values.ToList(); }
-            set
-            {
-                RenderInfos.Clear();
-
-                foreach (var item in value)
-                    RenderInfos.Add(item.Name, item);
-            }
-        }
-
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [Category("Rendering")]
         [DisplayName("Render State")]
