@@ -1,0 +1,16 @@
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.BinaryData.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.Maths.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.Maths.pdb
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.Maths.xml
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\obj\Debug\BfresLibrary.csproj.CopyComplete
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.NintenTools.NSW.Bntx.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.NintenTools.NSW.Bntx.pdb
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.NintenTools.NSW.Bntx.xml
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\obj\Debug\BfresLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\obj\Debug\BfresLibrary.csprojAssemblyReference.cache
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.NintenTools.Bfres.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\bin\Debug\Syroot.NintenTools.Bfres.pdb
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\obj\Debug\Syroot.NintenTools.Bfres.dll
+C:\Users\Nathan\source\repos\BfresLibrary\BfresLibrary\obj\Debug\Syroot.NintenTools.Bfres.pdb

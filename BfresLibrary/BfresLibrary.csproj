@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BE5D9D99-A2E0-40AE-B2F5-2DB34C3DE9C2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Syroot.NintenTools.Bfres</RootNamespace>
+    <AssemblyName>Syroot.NintenTools.Bfres</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Syroot.BinaryData">
+      <HintPath>.\Syroot.BinaryData.dll</HintPath>
+    </Reference>
+    <Reference Include="Syroot.Maths">
+      <HintPath>.\Syroot.Maths.dll</HintPath>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bntx">
+      <HintPath>..\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Common\AnimCurve.cs" />
+    <Compile Include="Shared\Common\Buffer.cs" />
+    <Compile Include="Shared\Common\ResDict.cs" />
+    <Compile Include="Shared\Common\ResDictOfT.cs" />
+    <Compile Include="Shared\Common\SrtStructs.cs" />
+    <Compile Include="Shared\Common\StringTable.cs" />
+    <Compile Include="Shared\Common\TextureRef.cs" />
+    <Compile Include="Shared\Common\UserData.cs" />
+    <Compile Include="Shared\Core\IResData.cs" />
+    <Compile Include="Shared\Core\ResFileLoader.cs" />
+    <Compile Include="Shared\Core\ResFileSaver.cs" />
+    <Compile Include="Shared\ExternalFile\ExternalFile.cs" />
+    <Compile Include="Shared\Helpers\VertexBuffer\VertexBufferHelper.cs" />
+    <Compile Include="Shared\Helpers\VertexBuffer\VertexBufferHelperAttrib.cs" />
+    <Compile Include="Shared\IBinarySection.cs" />
+    <Compile Include="Shared\MaterialAnim\MaterialAnim.cs" />
+    <Compile Include="Shared\MaterialAnim\MaterialAnimData.cs" />
+    <Compile Include="Shared\MaterialAnim\ParamAnimInfo.cs" />
+    <Compile Include="Shared\MaterialAnim\PatternAnimInfo.cs" />
+    <Compile Include="Shared\Models\Material\Material.cs" />
+    <Compile Include="Shared\Models\Material\RenderInfo.cs" />
+    <Compile Include="Shared\Models\Material\RenderState.cs" />
+    <Compile Include="Shared\Models\Material\Sampler.cs" />
+    <Compile Include="Shared\Models\Material\ShaderAssign.cs" />
+    <Compile Include="Shared\Models\Material\ShaderParam.cs" />
+    <Compile Include="Shared\Models\Model.cs" />
+    <Compile Include="Shared\Models\Shape\Bounding.cs" />
+    <Compile Include="Shared\Models\Shape\BoundingNode.cs" />
+    <Compile Include="Shared\Models\Shape\KeyShape.cs" />
+    <Compile Include="Shared\Models\Shape\Mesh.cs" />
+    <Compile Include="Shared\Models\Shape\Shape.cs" />
+    <Compile Include="Shared\Models\Shape\SubMesh.cs" />
+    <Compile Include="Shared\Models\Skeleton\Bone.cs" />
+    <Compile Include="Shared\Models\Skeleton\Skeleton.cs" />
+    <Compile Include="Shared\Models\VertexAttrib.cs" />
+    <Compile Include="Shared\Models\VertexBuffer.cs" />
+    <Compile Include="Shared\ResException.cs" />
+    <Compile Include="Shared\Common\ResString.cs" />
+    <Compile Include="Shared\Core\ResStringComparer.cs" />
+    <Compile Include="Shared\GX2\Enums.cs" />
+    <Compile Include="Shared\Core\DWord.cs" />
+    <Compile Include="Shared\ResFile.cs" />
+    <Compile Include="Shared\Common\Decimal10x5.cs" />
+    <Compile Include="Shared\Common\Half.cs" />
+    <Compile Include="Shared\Core\Extensions\BinaryDataReaderExtensions.cs" />
+    <Compile Include="Shared\Core\Extensions\BinaryDataWriterExtensions.cs" />
+    <Compile Include="Shared\Core\Extensions\ByteExtensions.cs" />
+    <Compile Include="Shared\Core\Extensions\UInt32Extensions.cs" />
+    <Compile Include="Shared\SceneAnim\CameraAnim.cs" />
+    <Compile Include="Shared\SceneAnim\CameraAnimData.cs" />
+    <Compile Include="Shared\SceneAnim\FogAnim.cs" />
+    <Compile Include="Shared\SceneAnim\FogAnimData.cs" />
+    <Compile Include="Shared\SceneAnim\LightAnim.cs" />
+    <Compile Include="Shared\SceneAnim\LightAnimData.cs" />
+    <Compile Include="Shared\SceneAnim\SceneAnim.cs" />
+    <Compile Include="Shared\ShapeAnim\KeyShapeAnimInfo.cs" />
+    <Compile Include="Shared\ShapeAnim\ShapeAnim.cs" />
+    <Compile Include="Shared\ShapeAnim\VertexShapeAnim.cs" />
+    <Compile Include="Shared\SkeletalAnim\BoneAnim.cs" />
+    <Compile Include="Shared\SkeletalAnim\BoneAnimData.cs" />
+    <Compile Include="Shared\SkeletalAnim\SkeletalAnim.cs" />
+    <Compile Include="Shared\Texture\Texture.cs" />
+    <Compile Include="Shared\VisibilityAnim\VisibilityAnim.cs" />
+    <Compile Include="Switch\Common\MemoryPool\BufferInfo.cs" />
+    <Compile Include="Switch\Common\MemoryPool\BufferSize.cs" />
+    <Compile Include="Switch\Common\MemoryPool\MemoryPool.cs" />
+    <Compile Include="Switch\Common\ResDictUpdate.cs" />
+    <Compile Include="Switch\Core\ResFileLoader.cs" />
+    <Compile Include="Switch\Core\ResFileSaver.cs" />
+    <Compile Include="Switch\Model\SamplerSwitch.cs" />
+    <Compile Include="Switch\Model\VertexBufferParser.cs" />
+    <Compile Include="Switch\Model\ShapeParser.cs" />
+    <Compile Include="Switch\Model\MaterialParser.cs" />
+    <Compile Include="Switch\Model\ModelParser.cs" />
+    <Compile Include="Switch\Model\VertexBufferSize.cs" />
+    <Compile Include="Switch\Model\VertexBufferStride.cs" />
+    <Compile Include="Switch\ResFileParser.cs" />
+    <Compile Include="Switch\Texture\Swizzle\TegraX1Swizzle.cs" />
+    <Compile Include="Switch\Texture\Texture.cs" />
+    <Compile Include="TextConvert\MaterialConvert.cs" />
+    <Compile Include="WiiU\Core\ResFileLoader.cs" />
+    <Compile Include="WiiU\Core\ResFileSaver.cs" />
+    <Compile Include="WiiU\Texture\GX2\ByteUtils.cs" />
+    <Compile Include="WiiU\Texture\GX2\GX2.cs" />
+    <Compile Include="WiiU\Texture\GX2\GX2TexRegisters.cs" />
+    <Compile Include="WiiU\Texture\GX2\TextureHelper.cs" />
+    <Compile Include="WiiU\RenderState\AlphaControl.cs" />
+    <Compile Include="WiiU\RenderState\BlendControl.cs" />
+    <Compile Include="WiiU\RenderState\ColorControl.cs" />
+    <Compile Include="WiiU\RenderState\DepthControl.cs" />
+    <Compile Include="WiiU\RenderState\PolygonControl.cs" />
+    <Compile Include="Shared\Models\Material\TexSampler.cs" />
+    <Compile Include="WiiU\ResFileParser.cs" />
+    <Compile Include="WiiU\Texture\Texture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WiiU\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "5Ees+6dI+Zgj2rM3OTLpnfgLtBF6xC1kJ6TUdVsQIWcyZ3e93ni1UymuS9EKfCzKSBkzj7TIkXWZBwCxSc7bwA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Nathan\\Documents\\GitHub\\GLEngine\\BfresLibrary\\TestApp\\TestApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nathan\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
