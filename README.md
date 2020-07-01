@@ -16,4 +16,8 @@ Note for proper conversion in games, the materials must be from the platform bei
 
 ## Credits
 
-(Syroot/Ray Koopa for the original library used.)[https://gitlab.com/Syroot/NintenTools.Bfres/tree/master/src/Syroot.NintenTools.Bfres]
+[Syroot/Ray Koopa for the original library used.](https://gitlab.com/Syroot/NintenTools.Bfres/tree/master/src/Syroot.NintenTools.Bfres)
+
+## LICENSE
+
+https://gitlab.com/Syroot/NintenTools.Bfres/-/blob/master/LICENS
