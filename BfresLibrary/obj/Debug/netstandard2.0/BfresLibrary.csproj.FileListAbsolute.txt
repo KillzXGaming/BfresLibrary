@@ -1,0 +1,4 @@
+C:\Users\Nathan\Documents\GitHub\GLEngine\BfresLibrary\BfresLibrary\obj\Debug\netstandard2.0\BfresLibrary.csprojAssemblyReference.cache
+C:\Users\Nathan\Documents\GitHub\GLEngine\BfresLibrary\BfresLibrary\obj\Debug\netstandard2.0\BfresLibrary.AssemblyInfoInputs.cache
+C:\Users\Nathan\Documents\GitHub\GLEngine\BfresLibrary\BfresLibrary\obj\Debug\netstandard2.0\BfresLibrary.AssemblyInfo.cs
+C:\Users\Nathan\Documents\GitHub\GLEngine\BfresLibrary\BfresLibrary\obj\Debug\netstandard2.0\BfresLibrary.csproj.CoreCompileInputs.cache
