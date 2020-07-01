@@ -13,3 +13,7 @@ A reworked version of NintenTools.Bfres with Wii U and Switch support and many v
 Note for proper conversion in games, the materials must be from the platform being converted to due to shader changes.
 - Improve visibily animation support. Boolean bits have issues on some animations.
 - Add text conversion for all sections.
+
+## Credits
+
+(Syroot/Ray Koopa for the original library used.)[https://gitlab.com/Syroot/NintenTools.Bfres/tree/master/src/Syroot.NintenTools.Bfres]
