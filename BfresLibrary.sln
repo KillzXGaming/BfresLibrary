@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BfresLibrary", "BfresLibrary\BfresLibrary.csproj", "{BE5D9D99-A2E0-40AE-B2F5-2DB34C3DE9C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BfresLibrary.Test", "TestApp\BfresLibrary.Test.csproj", "{8073125C-5B1F-439A-BC73-3859110EAF45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BfresLibrary.Test", "BfresLibrary.Test\BfresLibrary.Test.csproj", "{8073125C-5B1F-439A-BC73-3859110EAF45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
