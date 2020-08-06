@@ -39,7 +39,16 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Save(ResFileSaver saver)
         {
-            saver.SaveBlock(Data, (uint)saver.ResFile.DataAlignment, () => saver.Write(Data));
+            if (saver.IsSwitch)
+            {
+                ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0,
+                    Switch.Core.ResFileSwitchSaver.Section5, "External files");
+            }
+
+            if (Data.Length <= 3)
+                saver.SaveBlock(Data, (int)512, () => saver.Write(Data));
+            else
+                saver.SaveBlock(Data, (uint)saver.ResFile.DataAlignment, () => saver.Write(Data));
             saver.WriteSize((uint)Data.Length);
         }
     }

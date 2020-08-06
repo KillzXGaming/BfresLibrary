@@ -11,7 +11,7 @@ namespace Syroot.NintenTools.Bfres.Switch
 {
     public class ModelParser
     {
-        public static void Read(ResFileSwitchLoader loader, Model model)
+        internal static void Read(ResFileSwitchLoader loader, Model model)
         {
             if (loader.ResFile.VersionMajor2 == 9)
                 model.Flags = loader.ReadUInt32();
@@ -60,7 +60,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             else
                 saver.SaveHeaderBlock();
 
-            saver.SaveRelocateEntryToSection(saver.Position, 10, 1, 0, ResFileSwitchSaver.Section1, "Model"); //      <------------ Entry Set
+            saver.SaveRelocateEntryToSection(saver.Position, 10, 1, 0, ResFileSwitchSaver.Section1, "Model");
             saver.SaveString(model.Name);
             saver.SaveString(model.Path);
             model.SkeletonOffset = saver.SaveOffset();

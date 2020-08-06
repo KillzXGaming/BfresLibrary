@@ -32,7 +32,7 @@ namespace Syroot.NintenTools.Bfres.Switch
                 loader.ReadBytes(32); //reserved
             }
             resFile.SkeletalAnims = loader.LoadDictValues<SkeletalAnim>();
-            resFile.ShaderParamAnims = loader.LoadDictValues<MaterialAnim>();
+            resFile.MaterialAnims = loader.LoadDictValues<MaterialAnim>();
             resFile.BoneVisibilityAnims = loader.LoadDictValues<VisibilityAnim>();
             resFile.ShapeAnims = loader.LoadDictValues<ShapeAnim>();
             resFile.SceneAnims = loader.LoadDictValues<SceneAnim>();
@@ -89,7 +89,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             saver.WriteSignature("FRES");
             saver.Write(0x20202020);
             saver.Write(resFile.Version);
-            saver.Write(resFile.ByteOrder, true);
+            saver.WriteByteOrder(resFile.ByteOrder);
             saver.Write((byte)resFile.Alignment);
             saver.Write((byte)resFile.TargetAddressSize);
             saver.SaveFileNameString(resFile.Name);
@@ -99,9 +99,9 @@ namespace Syroot.NintenTools.Bfres.Switch
             saver.SaveFieldFileSize();
 
             if (saver.ResFile.VersionMajor2 == 9)
-                saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "ResFile"); //      <------------ Entry Set
+                saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "ResFile");
             else
-                saver.SaveRelocateEntryToSection(saver.Position, 13, 1, 0, ResFileSwitchSaver.Section1, "ResFile"); //      <------------ Entry Set
+                saver.SaveRelocateEntryToSection(saver.Position, 13, 1, 0, ResFileSwitchSaver.Section1, "ResFile");
 
             saver.SaveString(resFile.Name);
             resFile.ModelOffset = saver.SaveOffset();
@@ -128,19 +128,19 @@ namespace Syroot.NintenTools.Bfres.Switch
             resFile.SceneAnimationDictOffset = saver.SaveOffset();
 
             if (resFile.MemoryPool != null)
-                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section4, "Memory pool"); //      <------------ Entry Set
+                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section4, "Memory pool");
             saver.SaveMemoryPoolPointer();
 
             if (resFile.BufferInfo != null)
-                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section1, "Buffer info"); //      <------------ Entry Set
+                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section1, "Buffer info");
 
             resFile.BufferInfoOffset = saver.SaveOffset();
             if (resFile.ExternalFiles.Count > 0)
-                saver.SaveRelocateEntryToSection(saver.Position, 2, 1, 0, ResFileSwitchSaver.Section1, "External Files"); //      <------------ Entry Set
+                saver.SaveRelocateEntryToSection(saver.Position, 2, 1, 0, ResFileSwitchSaver.Section1, "External Files");
             resFile.ExternalFileOffset = saver.SaveOffset();
             resFile.ExternalFileDictOffset = saver.SaveOffset();
             saver.Write(0L); // padding
-            saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section1, "String pool"); //      <------------ Entry Set
+            saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section1, "String pool");
             saver.SaveFieldStringPool();
             saver.Write((ushort)resFile.Models.Count);
 
@@ -152,7 +152,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             }
 
             saver.Write((ushort)resFile.SkeletalAnims.Count);
-            saver.Write((ushort)resFile.ShaderParamAnims.Count);
+            saver.Write((ushort)resFile.MaterialAnims.Count);
             saver.Write((ushort)resFile.BoneVisibilityAnims.Count);
             saver.Write((ushort)resFile.ShapeAnims.Count);
             saver.Write((ushort)resFile.SceneAnims.Count);

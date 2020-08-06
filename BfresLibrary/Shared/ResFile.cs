@@ -417,7 +417,6 @@ namespace Syroot.NintenTools.Bfres
         internal void PreSave()
         {
             Version = SaveVersion();
-            MaterialAnims = new ResDict<MaterialAnim>();
 
             for (int i = 0; i < Models.Count; i++) {
                 for (int s = 0; s < Models[i].Shapes.Count; s++) {

@@ -44,7 +44,7 @@ namespace Syroot.NintenTools.Bfres.TextConvert
             public Dictionary<string, string> AttributeAssign = new Dictionary<string, string>();
         }
 
-        public static string ParseFormat(Material material)
+        public static string ToJson(Material material)
         {
             MaterialStruct matConv = new MaterialStruct();
             matConv.Name = material.Name;
@@ -65,6 +65,33 @@ namespace Syroot.NintenTools.Bfres.TextConvert
             return JsonConvert.SerializeObject(matConv, Formatting.Indented);
         }
 
+        public static Material FromJson(string json)
+        {
+            var matJson = JsonConvert.DeserializeObject<MaterialStruct>(json);
+            Material mat = new Material();
+            mat.Name = matJson.Name;
+            mat.Visible = matJson.Visible;
+            mat.ShaderAssign = ConvertShaderAssign(matJson.ShaderAssign);
+            if (matJson.RenderState != null)
+                mat.RenderState = matJson.RenderState;
+
+            foreach (var param in matJson.Parameters)
+            {
+
+            }
+
+            foreach (var param in matJson.RenderInfo)
+            {
+            }
+
+            foreach (var param in matJson.UserData)
+            {
+
+            }
+
+            return mat;
+        }
+
         private static ShaderAssignStruct ConvertShaderAssign(ShaderAssign shader)
         {
             ShaderAssignStruct shaderConv = new ShaderAssignStruct();
@@ -81,62 +108,20 @@ namespace Syroot.NintenTools.Bfres.TextConvert
             return shaderConv;
         }
 
-        public class NoFormattingConverter : JsonConverter
+        private static ShaderAssign ConvertShaderAssign(ShaderAssignStruct shader)
         {
-            [ThreadStatic]
-            static bool cannotWrite;
+            ShaderAssign shaderAssign = new ShaderAssign();
+            shaderAssign.ShaderArchiveName = shader.ShaderArchive;
+            shaderAssign.ShadingModelName = shader.ShaderModel;
 
-            // Disables the converter in a thread-safe manner.
-            bool CannotWrite { get { return cannotWrite; } set { cannotWrite = value; } }
+            foreach (var param in shader.SamplerAssign)
+                shaderAssign.SamplerAssigns.Add(param.Key, param.Value);
+            foreach (var param in shader.AttributeAssign)
+                shaderAssign.AttribAssigns.Add(param.Key, param.Value);
+            foreach (var param in shader.Options)
+                shaderAssign.ShaderOptions.Add(param.Key, param.Value);
 
-            public override bool CanWrite { get { return !CannotWrite; } }
-
-            public override bool CanRead { get { return false; } }
-
-            public override bool CanConvert(Type objectType)
-            {
-                throw new NotImplementedException(); // Should be applied as a property rather than included in the JsonSerializerSettings.Converters list.
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                using (new PushValue<bool>(true, () => CannotWrite, val => CannotWrite = val))
-                using (new PushValue<Formatting>(Formatting.None, () => writer.Formatting, val => writer.Formatting = val))
-                {
-                    serializer.Serialize(writer, value);
-                }
-            }
-        }
-
-        public struct PushValue<T> : IDisposable
-        {
-            Action<T> setValue;
-            T oldValue;
-
-            public PushValue(T value, Func<T> getValue, Action<T> setValue)
-            {
-                if (getValue == null || setValue == null)
-                    throw new ArgumentNullException();
-                this.setValue = setValue;
-                this.oldValue = getValue();
-                setValue(value);
-            }
-
-            #region IDisposable Members
-
-            // By using a disposable struct we avoid the overhead of allocating and freeing an instance of a finalizable class.
-            public void Dispose()
-            {
-                if (setValue != null)
-                    setValue(oldValue);
-            }
-
-            #endregion
+            return shaderAssign;
         }
     }
 }

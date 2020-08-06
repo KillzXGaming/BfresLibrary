@@ -84,33 +84,43 @@ namespace Syroot.NintenTools.Bfres
         void IResData.Load(ResFileLoader loader)
         {
             loader.CheckSignature(_signature);
-            Flags = loader.ReadEnum<CameraAnimFlags>(false);
-            loader.Seek(2);
-            FrameCount = loader.ReadInt32();
-            byte numCurve = loader.ReadByte();
-            loader.Seek(1);
-            ushort numUserData = loader.ReadUInt16();
-            BakedSize = loader.ReadUInt32();
-            Name = loader.LoadString();
-            Curves = loader.LoadList<AnimCurve>(numCurve);
-            BaseData = loader.LoadCustom(() => new CameraAnimData(loader));
-            UserData = loader.LoadDict<UserData>();
+            if (loader.IsSwitch)
+                Switch.CameraAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
+            else
+            {
+                Flags = loader.ReadEnum<CameraAnimFlags>(false);
+                loader.Seek(2);
+                FrameCount = loader.ReadInt32();
+                byte numCurve = loader.ReadByte();
+                loader.Seek(1);
+                ushort numUserData = loader.ReadUInt16();
+                BakedSize = loader.ReadUInt32();
+                Name = loader.LoadString();
+                Curves = loader.LoadList<AnimCurve>(numCurve);
+                BaseData = loader.LoadCustom(() => new CameraAnimData(loader));
+                UserData = loader.LoadDict<UserData>();
+            }
         }
         
         void IResData.Save(ResFileSaver saver)
         {
             saver.WriteSignature(_signature);
-            saver.Write(Flags, false);
-            saver.Seek(2);
-            saver.Write(FrameCount);
-            saver.Write((byte)Curves.Count);
-            saver.Seek(1);
-            saver.Write((ushort)UserData.Count);
-            saver.Write(BakedSize);
-            saver.SaveString(Name);
-            saver.SaveList(Curves);
-            saver.SaveCustom(BaseData, () => BaseData.Save(saver));
-            saver.SaveDict(UserData);
+            if (saver.IsSwitch)
+                Switch.CameraAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
+            else
+            {
+                saver.Write(Flags, false);
+                saver.Seek(2);
+                saver.Write(FrameCount);
+                saver.Write((byte)Curves.Count);
+                saver.Seek(1);
+                saver.Write((ushort)UserData.Count);
+                saver.Write(BakedSize);
+                saver.SaveString(Name);
+                saver.SaveList(Curves);
+                saver.SaveCustom(BaseData, () => BaseData.Save(saver));
+                saver.SaveDict(UserData);
+            }
         }
 
         internal long PosCurveArrayOffset;

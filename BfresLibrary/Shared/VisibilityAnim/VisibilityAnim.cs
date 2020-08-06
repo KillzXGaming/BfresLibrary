@@ -28,7 +28,6 @@ namespace Syroot.NintenTools.Bfres
             BindIndices = new ushort[0];
             Names = new List<string>();
             BaseDataList = new bool[0];
-            BaseSDataList = new byte[0];
             UserData = new ResDict<UserData>();
         }
 
@@ -41,7 +40,7 @@ namespace Syroot.NintenTools.Bfres
 
         // ---- FIELDS -------------------------------------------------------------------------------------------------
 
-        private ushort _flags;
+        internal ushort _flags;
 
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
@@ -155,16 +154,13 @@ namespace Syroot.NintenTools.Bfres
         [Browsable(false)]
         public bool[] BaseDataList { get; set; }
 
-        [Browsable(false)]
-        public byte[] BaseSDataList { get; set; }
-
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
         [Browsable(false)]
         public ResDict<UserData> UserData { get; set; }
 
-        List<byte> baseDataBytes = new List<byte>();
+        internal List<byte> baseDataBytes = new List<byte>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
@@ -182,9 +178,7 @@ namespace Syroot.NintenTools.Bfres
         {
             loader.CheckSignature(_signature);
             if (loader.IsSwitch)
-            {
-
-            }
+                Switch.VisibilityAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
             else
             {
                 Name = loader.LoadString();
@@ -236,13 +230,11 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Save(ResFileSaver saver)
         {
+            saver.WriteSignature(_signature);
             if (saver.IsSwitch)
-            {
-
-            }
+                Switch.VisibilityAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
             else
             {
-                saver.WriteSignature(_signature);
                 saver.SaveString(Name);
                 saver.SaveString(Path);
                 saver.Write(_flags);
@@ -268,21 +260,20 @@ namespace Syroot.NintenTools.Bfres
                 saver.SaveCustom(BindIndices, () => saver.Write(BindIndices));
                 saver.SaveCustom(Names, () => saver.SaveStrings(Names));
                 saver.SaveList(Curves);
-                saver.SaveCustom(BaseDataList, () =>
-                {
-                    foreach (var b in baseDataBytes)
-                        saver.Write(b);
-                });
+                if (baseDataBytes.Count > 0) {
+                    saver.SaveCustom(BaseDataList, () =>
+                    {
+                        WriteBaseData(saver);
+                    });
+                }
                 saver.SaveDict(UserData);
             }
         }
 
-        internal void WriteBaseData(ResFileSaver saver)
-        {
-            saver.Write(BaseSDataList);
+        internal void WriteBaseData(ResFileSaver saver) {
+            saver.Write(baseDataBytes.ToArray());
         }
 
-        internal long PosBindModelOffset;
         internal long PosBindIndicesOffset;
         internal long PosCurvesOffset;
         internal long PosBaseDataOffset;

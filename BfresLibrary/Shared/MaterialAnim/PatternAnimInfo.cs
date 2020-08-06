@@ -93,7 +93,7 @@ namespace Syroot.NintenTools.Bfres
             {
                 saver.SaveString(Name);
                 saver.Write(CurveIndex);
-                saver.Write((byte)BeginConstant);
+                saver.Write(BeginConstant);
                 saver.Write(SubBindIndex);
                 saver.Seek(3); //padding
             }

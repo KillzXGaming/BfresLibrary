@@ -235,6 +235,8 @@ namespace Syroot.NintenTools.Bfres.GX2
             set { Values[2] = Values[2].SetBit(_depthCompareBit, value); }
         }
 
+        internal ushort _filterFlags;
+
         internal uint[] Values { get; set; }
 
         // ---- METHODS (PRIVATE) --------------------------------------------------------------------------------------

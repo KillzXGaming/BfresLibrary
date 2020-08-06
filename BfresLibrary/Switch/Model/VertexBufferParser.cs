@@ -9,7 +9,7 @@ using Syroot.NintenTools.Bfres;
 
 namespace Syroot.NintenTools.Bfres.Switch
 {
-    public class VertexBufferParser
+    internal class VertexBufferParser
     {
         public static void Load(ResFileSwitchLoader loader, VertexBuffer vertexBuffer)
         {
@@ -130,14 +130,14 @@ namespace Syroot.NintenTools.Bfres.Switch
                         if (vtx == vertexBuffer)
                             return TotalSize - Pos;
 
-                        TotalSize += (uint)buff.Data.Length;
+                        TotalSize += buff.Size;
                     }
                 }
             }
 
             TotalSize = TotalSize - Pos;
 
-            return TotalSize;
+            return TotalSize;   
         }
     }
 }

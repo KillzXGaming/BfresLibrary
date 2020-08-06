@@ -32,8 +32,8 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
 
         // ---- FIELDS -------------------------------------------------------------------------------------------------
 
-        public bool SaveIndexBufferRuntimeData = true;
-        public bool SaveVertexBufferRuntimeData = true;
+        public bool SaveIndexBufferRuntimeData = false;
+        public bool SaveVertexBufferRuntimeData = false;
 
         //These to save pointer info back to
         private uint _ofsFileName;
@@ -377,6 +377,27 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
             Write(0);
         }
 
+        internal override void WriteBlocks()
+        {
+            int blockIndex = 0;
+            foreach (KeyValuePair<object, BlockEntry> entry in _savedBlocks)
+            {
+                // Align and satisfy offsets.
+                if (entry.Value.Alignment != 0) Align((int)entry.Value.Alignment);
+                if (blockIndex == 0)
+                    _ofsExternalFileBlock = (uint)this.Position;
+
+                using (TemporarySeek())
+                {
+                    SatisfyOffsets(entry.Value.Offsets, (uint)Position);
+                }
+
+                // Write the data.
+                entry.Value.Callback.Invoke();
+                blockIndex++;
+            }
+        }
+
         /// <summary>
         /// Reserves space for an offset and size for header block.
         /// </summary>
@@ -407,6 +428,8 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
         public override void Execute()
         {
             Initialize();
+
+            Console.WriteLine($"Executing save....");
 
             // Store the headers recursively and satisfy offsets to them, then the string pool and data blocks.
             ((IResData)ResFile).Save(this);
@@ -533,7 +556,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
             }
             if (ResFile.BoneVisibilityAnims.Count > 0)
             {
-                WriteOffset(ResFile.BoneVisAnimationOffset);
+                WriteOffset(ResFile.BoneVisAnimationDictOffset);
                 ((IResData)ResFile.BoneVisibilityAnims).Save(this);
             }
             if (ResFile.ShapeAnims.Count > 0)
@@ -552,6 +575,8 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 ((IResData)ResFile.ExternalFiles).Save(this);
             }
 
+            Console.WriteLine($"Saving data....");
+
             //save headers
             foreach (Model mdl in ResFile.Models.Values)
                 WriteModel(mdl);
@@ -561,16 +586,26 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 WriteModelBlock(mdl);
             }
 
+            Console.WriteLine($"Saving SkeletalAnims....");
+
             foreach (SkeletalAnim ska in ResFile.SkeletalAnims.Values)
                 WriteSkeletonAnimations(ska);
+
+            Console.WriteLine($"Saving MaterialAnims....");
+
             foreach (MaterialAnim matanim in ResFile.MaterialAnims.Values)
                 WriteMaterialAnimations(matanim);
+
+            Console.WriteLine($"Saving VisibilityAnims....");
+
             foreach (VisibilityAnim bnanim in ResFile.BoneVisibilityAnims.Values)
                 WriteBoneVisabiltyAnimations(bnanim);
             foreach (ShapeAnim shpanim in ResFile.ShapeAnims.Values)
                 WriteShapeAnimations(shpanim);
             foreach (SceneAnim scnanim in ResFile.SceneAnims.Values)
                 WriteSceneAnimations(scnanim);
+
+            Console.WriteLine($"Saving strings....");
 
             WriteStrings();
 
@@ -581,6 +616,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
             }
             if (ResFile.MemoryPool != null)
                 WriteMemoryPool();
+
             WriteBlocks(); //External files
 
             //First setup the values for RLT
@@ -951,17 +987,17 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                     Align(8);
                     SaveRelocateEntryToSection(Position, 2, (uint)bn.Curves.Count, 4, Section1, "Animation Curve");
                     WriteOffset(bn.PosCurvesOffset);
-                    foreach (AnimCurve cr in bn.Curves)
-                        ((IResData)cr).Save(this);
+                    for (int i = 0; i < bn.Curves.Count; i++)
+                        ((IResData)bn.Curves[i]).Save(this);
 
-                    foreach (AnimCurve cr in bn.Curves)
+                    for (int i = 0; i < bn.Curves.Count; i++)
                     {
-                        WriteOffset(cr.PosFrameOffset);
-                        cr.SaveFrames(this);
+                        WriteOffset(bn.Curves[i].PosFrameOffset);
+                        bn.Curves[i].SaveFrames(this);
                         Align(8);
 
-                        WriteOffset(cr.PosKeyDataOffset);
-                        cr.SaveKeyData(this);
+                        WriteOffset(bn.Curves[i].PosKeyDataOffset);
+                        bn.Curves[i].SaveKeyData(this);
                         Align(8);
                     }
                 }
@@ -992,7 +1028,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 //    SaveRelocateEntryToSection(Position, 5, (uint)matanim.MaterialAnimDataList.Count, 3, Section1, "Material Animation Data");
                 WriteOffset(matanim.PosMatAnimDataOffset);
                 foreach (MaterialAnimData mat in matanim.MaterialAnimDataList)
-                    ((IResData)mat).Save(this);
+                    mat.Save(this, "FMAA");
             }
             foreach (MaterialAnimData mat in matanim.MaterialAnimDataList)
             {
@@ -1099,7 +1135,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                     Align(8);
                 }
             }
-            if (bnanim.BaseSDataList != null)
+            if (bnanim.baseDataBytes.Count > 0)
             {
                 WriteOffset(bnanim.PosBaseDataOffset);
                 bnanim.WriteBaseData(this);

@@ -255,7 +255,7 @@ namespace Syroot.NintenTools.Bfres
                         {
                             for (int j = 0; j < elementsPerKey; j++)
                             {
-                                if (CurveType == AnimCurveType.StepInt)
+                                if (CurveType == AnimCurveType.StepInt || CurveType == AnimCurveType.StepBool)
                                     keys[i, j] = loader.ReadUInt32();
                                 else
                                     keys[i, j] = loader.ReadSingle();
@@ -293,33 +293,50 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Save(ResFileSaver saver)
         {
-            saver.Write(_flags);
-            saver.Write((ushort)Frames.Length);
-            saver.Write(AnimDataOffset);
-            saver.Write(StartFrame);
-            saver.Write(EndFrame);
-            saver.Write(Scale);
-            saver.Write(Offset);
-            if (saver.ResFile.Version >= 0x03040000)
+            if (saver.IsSwitch)
             {
+                PosFrameOffset = saver.SaveOffset();
+                PosKeyDataOffset = saver.SaveOffset();
+                saver.Write(_flags);
+                saver.Write((ushort)Frames.Length);
+                saver.Write(AnimDataOffset);
+                saver.Write(StartFrame);
+                saver.Write(EndFrame);
+                saver.Write(Scale);
+                saver.Write(Offset);
                 saver.Write(Delta);
-            }
-
-            if (SaveEntryBlock)
-            {
-                saver.SaveCustom(Frames, () =>
-                {
-                    SaveFrames(saver);
-                });
-                saver.SaveCustom(Keys, () =>
-                {
-                    SaveKeyData(saver);
-                });
+                saver.Write(0);
             }
             else
             {
-                PosFrameOffset = saver.SaveOffsetPos();
-                PosKeyDataOffset = saver.SaveOffsetPos();
+                saver.Write(_flags);
+                saver.Write((ushort)Frames.Length);
+                saver.Write(AnimDataOffset);
+                saver.Write(StartFrame);
+                saver.Write(EndFrame);
+                saver.Write(Scale);
+                saver.Write(Offset);
+                if (saver.ResFile.Version >= 0x03040000)
+                {
+                    saver.Write(Delta);
+                }
+
+                if (SaveEntryBlock)
+                {
+                    saver.SaveCustom(Frames, () =>
+                    {
+                        SaveFrames(saver);
+                    });
+                    saver.SaveCustom(Keys, () =>
+                    {
+                        SaveKeyData(saver);
+                    });
+                }
+                else
+                {
+                    PosFrameOffset = saver.SaveOffsetPos();
+                    PosKeyDataOffset = saver.SaveOffsetPos();
+                }
             }
         }
 

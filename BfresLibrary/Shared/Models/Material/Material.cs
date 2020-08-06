@@ -127,7 +127,7 @@ namespace Syroot.NintenTools.Bfres
         {
             long[] slots = new long[count];
             for (int i = 0; i < count; i++)
-                slots[i] = long.MaxValue;
+                slots[i] = -1;
             return slots;
         }
 

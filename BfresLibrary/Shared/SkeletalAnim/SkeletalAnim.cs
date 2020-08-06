@@ -280,7 +280,6 @@ namespace Syroot.NintenTools.Bfres
             saver.WriteSignature(_signature);
             if (saver.IsSwitch)
             {
-                saver.WriteSignature(_signature);
                 if (saver.ResFile.VersionMajor2 == 9)
                     saver.Write(_flags);
                 else

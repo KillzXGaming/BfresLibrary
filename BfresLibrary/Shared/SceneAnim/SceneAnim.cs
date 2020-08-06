@@ -63,6 +63,8 @@ namespace Syroot.NintenTools.Bfres
         /// </summary>
         public ResDict<UserData> UserData { get; set; }
 
+        internal uint Flags { get; set; }
+
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
         public void Import(string FileName, ResFile ResFile) {
@@ -77,9 +79,11 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Load(ResFileLoader loader)
         {
-            if (loader.ResFile.Version >= 0x02040000)
+            loader.CheckSignature(_signature);
+            if (loader.ResFile.IsPlatformSwitch)
+                Switch.SceneAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
+            else
             {
-                loader.CheckSignature(_signature);
                 Name = loader.LoadString();
                 Path = loader.LoadString();
                 ushort numUserData = loader.ReadUInt16();
@@ -91,25 +95,26 @@ namespace Syroot.NintenTools.Bfres
                 FogAnims = loader.LoadDict<FogAnim>();
                 UserData = loader.LoadDict<UserData>();
             }
-            else
-            {
-
-            }
         }
         
         void IResData.Save(ResFileSaver saver)
         {
             saver.WriteSignature(_signature);
-            saver.SaveString(Name);
-            saver.SaveString(Path);
-            saver.Write((ushort)UserData.Count);
-            saver.Write((ushort)CameraAnims.Count);
-            saver.Write((ushort)LightAnims.Count);
-            saver.Write((ushort)FogAnims.Count);
-            saver.SaveDict(CameraAnims);
-            saver.SaveDict(LightAnims);
-            saver.SaveDict(FogAnims);
-            saver.SaveDict(UserData);
+            if (saver.ResFile.IsPlatformSwitch)
+                Switch.SceneAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
+            else
+            {
+                saver.SaveString(Name);
+                saver.SaveString(Path);
+                saver.Write((ushort)UserData.Count);
+                saver.Write((ushort)CameraAnims.Count);
+                saver.Write((ushort)LightAnims.Count);
+                saver.Write((ushort)FogAnims.Count);
+                saver.SaveDict(CameraAnims);
+                saver.SaveDict(LightAnims);
+                saver.SaveDict(FogAnims);
+                saver.SaveDict(UserData);
+            }
         }
 
         internal long PosCameraAnimArrayOffset;

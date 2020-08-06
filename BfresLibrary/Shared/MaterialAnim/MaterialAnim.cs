@@ -378,7 +378,7 @@ namespace Syroot.NintenTools.Bfres
                 }
 
                 saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.ParamCount));
-                saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.TextureCount));
+                saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.TexturePatternCount));
                 saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.VisibilyCount));
                 saver.Write(TextureNames != null ? (ushort)TextureNames.Count : (ushort)0);
                 if (saver.ResFile.VersionMajor2 == 9)

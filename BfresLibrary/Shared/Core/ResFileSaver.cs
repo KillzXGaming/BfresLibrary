@@ -517,7 +517,7 @@ namespace Syroot.NintenTools.Bfres.Core
             }
         }
 
-        internal void WriteBlocks()
+        internal virtual void WriteBlocks()
         {
             foreach (KeyValuePair<object, BlockEntry> entry in _savedBlocks)
             {
@@ -543,6 +543,13 @@ namespace Syroot.NintenTools.Bfres.Core
                         SatisfyOffsets(entry.Offsets, entry.Target.Value);
                 }
             }
+        }
+
+        internal void WriteByteOrder(ByteOrder byteOrder)
+        {
+            ByteOrder = ByteOrder.BigEndian;
+            Write(byteOrder, true);
+            ByteOrder = byteOrder;
         }
 
         public virtual void SatisfyOffsets(List<uint> offsets, uint target)

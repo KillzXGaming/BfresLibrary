@@ -96,33 +96,43 @@ namespace Syroot.NintenTools.Bfres
         void IResData.Load(ResFileLoader loader)
         {
             loader.CheckSignature(_signature);
-            Flags = loader.ReadEnum<FogAnimFlags>(true);
-            FrameCount = loader.ReadInt32();
-            byte numCurve = loader.ReadByte();
-            DistanceAttnFuncIndex = loader.ReadSByte();
-            ushort numUserData = loader.ReadUInt16();
-            BakedSize = loader.ReadUInt32();
-            Name = loader.LoadString();
-            DistanceAttnFuncName = loader.LoadString();
-            Curves = loader.LoadList<AnimCurve>(numCurve);
-            BaseData = loader.LoadCustom(() => new FogAnimData(loader));
-            UserData = loader.LoadDict<UserData>();
+            if (loader.IsSwitch)
+                Switch.FogAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
+            else
+            {
+                Flags = loader.ReadEnum<FogAnimFlags>(true);
+                FrameCount = loader.ReadInt32();
+                byte numCurve = loader.ReadByte();
+                DistanceAttnFuncIndex = loader.ReadSByte();
+                ushort numUserData = loader.ReadUInt16();
+                BakedSize = loader.ReadUInt32();
+                Name = loader.LoadString();
+                DistanceAttnFuncName = loader.LoadString();
+                Curves = loader.LoadList<AnimCurve>(numCurve);
+                BaseData = loader.LoadCustom(() => new FogAnimData(loader));
+                UserData = loader.LoadDict<UserData>();
+            }
         }
         
         void IResData.Save(ResFileSaver saver)
         {
-            saver.WriteSignature(_signature);
-            saver.Write(Flags, true);
-            saver.Write(FrameCount);
-            saver.Write((byte)Curves.Count);
-            saver.Write(DistanceAttnFuncIndex);
-            saver.Write((ushort)UserData.Count);
-            saver.Write(BakedSize);
-            saver.SaveString(Name);
-            saver.SaveString(DistanceAttnFuncName);
-            saver.SaveList(Curves);
-            saver.SaveCustom(BaseData, () => BaseData.Save(saver));
-            saver.SaveDict(UserData);
+            if (saver.IsSwitch)
+                Switch.FogAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
+            else
+            {
+                saver.WriteSignature(_signature);
+                saver.Write(Flags, true);
+                saver.Write(FrameCount);
+                saver.Write((byte)Curves.Count);
+                saver.Write(DistanceAttnFuncIndex);
+                saver.Write((ushort)UserData.Count);
+                saver.Write(BakedSize);
+                saver.SaveString(Name);
+                saver.SaveString(DistanceAttnFuncName);
+                saver.SaveList(Curves);
+                saver.SaveCustom(BaseData, () => BaseData.Save(saver));
+                saver.SaveDict(UserData);
+            }
         }
 
         internal long PosCurveArrayOffset;

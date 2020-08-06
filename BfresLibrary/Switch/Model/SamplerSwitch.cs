@@ -7,7 +7,7 @@ using Syroot.NintenTools.Bfres.GX2;
 
 namespace Syroot.NintenTools.Bfres
 {
-    public class SamplerSwitch : IResData
+    internal class SamplerSwitch : IResData
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
@@ -134,6 +134,8 @@ namespace Syroot.NintenTools.Bfres
         public TexSampler ToTexSampler()
         {
             TexSampler sampler = new TexSampler();
+            sampler._filterFlags = _filterFlags;
+
             if (ClampModes.ContainsKey(WrapModeU)) sampler.ClampX = ClampModes[WrapModeU];
             if (ClampModes.ContainsKey(WrapModeV)) sampler.ClampY = ClampModes[WrapModeV];
             if (ClampModes.ContainsKey(WrapModeW)) sampler.ClampZ = ClampModes[WrapModeW];
@@ -143,6 +145,7 @@ namespace Syroot.NintenTools.Bfres
 
             sampler.MaxLod = MaxLOD;
             sampler.MinLod = MinLOD;
+            sampler.LodBias = LODBias;
 
             return sampler;
         }
@@ -161,18 +164,19 @@ namespace Syroot.NintenTools.Bfres
             MinLOD = sampler.MinLod;
             MaxLOD = sampler.MaxLod;
             LODBias = sampler.LodBias;
+            _filterFlags = sampler._filterFlags;
 
             ((IResData)this).Save(saver);
         }
 
         void IResData.Load(ResFileLoader loader)
         {
-            WrapModeU = loader.ReadEnum<TexClamp>(false);
-            WrapModeV = loader.ReadEnum<TexClamp>(false);
-            WrapModeW = loader.ReadEnum<TexClamp>(false);
-            CompareFunc = loader.ReadEnum<CompareFunction>(false);
-            BorderColorType = loader.ReadEnum<TexBorderType>(false);
-            Anisotropic = loader.ReadEnum<MaxAnisotropic>(false);
+            WrapModeU = (TexClamp)loader.ReadByte();
+            WrapModeV = (TexClamp)loader.ReadByte();
+            WrapModeW = (TexClamp)loader.ReadByte();
+            CompareFunc = (CompareFunction)loader.ReadByte();
+            BorderColorType = (TexBorderType)loader.ReadByte();
+            Anisotropic = (MaxAnisotropic)loader.ReadByte();
             _filterFlags = loader.ReadUInt16();
             MinLOD = loader.ReadSingle();
             MaxLOD = loader.ReadSingle();
@@ -182,12 +186,12 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Save(ResFileSaver saver)
         {
-            saver.Write(WrapModeU, false);
-            saver.Write(WrapModeV, false);
-            saver.Write(WrapModeW, false);
+            saver.Write((byte)WrapModeU);
+            saver.Write((byte)WrapModeV);
+            saver.Write((byte)WrapModeW);
             saver.Write((byte)CompareFunc);
             saver.Write((byte)BorderColorType);
-            saver.Write(Anisotropic, false);
+            saver.Write((byte)Anisotropic);
             saver.Write(_filterFlags);
             saver.Write((float)MinLOD);
             saver.Write((float)MaxLOD);

@@ -141,7 +141,7 @@ namespace Syroot.NintenTools.Bfres
             if (BufferTotalSize % saver.ResFile.Alignment != 0) BufferTotalSize = BufferTotalSize + (saver.ResFile.Alignment - (BufferTotalSize % saver.ResFile.Alignment));
 
             ((ResFileSwitchSaver)saver).SaveBufferTotalSize();
-            ((ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section2, "Buffer Data"); //      <------------ Entry Set
+            ((ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section2, "Buffer Data");
             ((ResFileSwitchSaver)saver).SaveIndexBufferPointer();
             ((ResFileSwitchSaver)saver).Seek(16);
         }

@@ -9,7 +9,7 @@ using Syroot.NintenTools.Bfres;
 
 namespace Syroot.NintenTools.Bfres.Switch
 {
-    public class ShapeParser
+    internal class ShapeParser
     {
         public static void Read(ResFileSwitchLoader loader, Shape shape)
         {

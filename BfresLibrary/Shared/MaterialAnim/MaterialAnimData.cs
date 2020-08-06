@@ -76,9 +76,14 @@ namespace Syroot.NintenTools.Bfres
             }
         }
 
-        public ushort TextureCount
+        public ushort TexturePatternCount
         {
-            get { return (ushort)(PatternAnimInfos.Count + Constants.Count); }
+            get {
+                if (PatternAnimInfos.Count > 0)
+                    return (ushort)(PatternAnimInfos.Count + (Constants != null ? Constants.Count : 0));
+                else
+                    return 0; 
+            }
         }
 
         public ushort ParamCount

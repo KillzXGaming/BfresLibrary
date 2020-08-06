@@ -9,7 +9,7 @@ using Syroot.NintenTools.Bfres;
 
 namespace Syroot.NintenTools.Bfres.Switch
 {
-    public class MaterialParser
+    internal class MaterialParser
     {
         public static void Load(ResFileSwitchLoader loader, Material mat)
         {
@@ -72,15 +72,11 @@ namespace Syroot.NintenTools.Bfres.Switch
             if (mat.ShaderParamData == null)
                 mat.ShaderParamData = new byte[0];
 
-            //Note these change amount believe by texture ref.
-            long[] unkown2 = new long[mat.TextureRefs.Count];//Set at runtime????
-            long[] unkown1 = new long[mat.TextureRefs.Count * 15]; //Set at runtime????
-
             if (saver.ResFile.VersionMajor2 == 9)
                 saver.Write(mat.Flags, true);
             else
                 saver.Seek(12);
-            saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "FMAT"); //      <------------ Entry Set
+            saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "FMAT");
             saver.SaveString(mat.Name);
             mat.PosRenderInfoOffset = saver.SaveOffset();
             mat.PosRenderInfoDictOffset = saver.SaveOffset();
@@ -99,7 +95,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             saver.Write((long)0);
 
             //Set the slot offsets for both sampler and texture
-            saver.SaveRelocateEntryToSection(saver.Position, 2, 1, 0, ResFileSwitchSaver.Section1, "Material texture slots"); //      <------------ Entry Set
+            saver.SaveRelocateEntryToSection(saver.Position, 2, 1, 0, ResFileSwitchSaver.Section1, "Material texture slots");
             mat.PosSamplerSlotArrayOffset = saver.SaveOffset();
             mat.PosTextureSlotArrayOffset = saver.SaveOffset();
             if (saver.ResFile.VersionMajor2 != 9)
