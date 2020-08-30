@@ -450,8 +450,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 }
                 else
                 {
-                    SaveRelocateEntryToSection(Position + 16, 2, (uint)ResFile.SkeletalAnims.Count, 10, Section1, "Skeleton Animation");
-                    SaveRelocateEntryToSection(Position + 40, 4, (uint)ResFile.SkeletalAnims.Count, 8, Section1, "Skeleton Animation");
+                    SaveRelocateEntryToSection(Position + 16, 10, (uint)ResFile.SkeletalAnims.Count, 3, Section1, "Skeleton Animation");
                 }
 
                 WriteOffset(ResFile.SkeletonAnimationOffset);
@@ -1210,7 +1209,6 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
             if (scnanim.CameraAnims.Count > 0)
             {
                 int CurCam = 0;
-                SaveRelocateEntryToSection(Position, 1, (uint)scnanim.CameraAnims.Count, 1, Section1, "Camera Anims");
                 foreach (CameraAnim camanim in scnanim.CameraAnims.Values)
                 {
                     if (CurCam == 0)
