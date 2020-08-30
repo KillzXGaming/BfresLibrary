@@ -450,7 +450,8 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 }
                 else
                 {
-                    SaveRelocateEntryToSection(Position + 16, 10, (uint)ResFile.SkeletalAnims.Count, 3, Section1, "Skeleton Animation");
+                    SaveRelocateEntryToSection(Position + 16, 10, (uint)ResFile.SkeletalAnims.Count, 10, Section1, "Skeleton Animation");
+                    SaveRelocateEntryToSection(Position + 40, 4, (uint)ResFile.SkeletalAnims.Count, 8, Section1, "Skeleton Animation");
                 }
 
                 WriteOffset(ResFile.SkeletonAnimationOffset);
@@ -508,8 +509,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 }
                 else
                 {
-                    SaveRelocateEntryToSection(Position + 16, 2, (uint)ResFile.SceneAnims.Count, 11, Section1, "Scene Animation");
-                    SaveRelocateEntryToSection(Position + 40, 6, (uint)ResFile.SceneAnims.Count, 7, Section1, "Scene Animation");
+                    SaveRelocateEntryToSection(Position + 16, 10, (uint)ResFile.SceneAnims.Count, 3, Section1, "Scene Animation");
                 }
 
                 WriteOffset(ResFile.SceneAnimationOffset);
