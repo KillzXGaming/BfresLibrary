@@ -267,6 +267,7 @@ namespace Syroot.NintenTools.Bfres
                         numSubMeshBoundingNodes = (ushort)(Meshes.Count + Meshes.Sum(x => x.SubMeshes.Count));
                     else
                         numSubMeshBoundingNodes = (ushort)(1 + Meshes[0].SubMeshes.Count + 1);
+                    SubMeshBoundings = loader.LoadCustom(() => loader.ReadBoundings(numSubMeshBoundingNodes))?.ToList();
                 }
                 else
                 {
