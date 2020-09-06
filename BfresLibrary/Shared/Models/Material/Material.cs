@@ -141,6 +141,31 @@ namespace Syroot.NintenTools.Bfres
             ResFileSaver.ExportSection(FileName, this, ResFile);
         }
 
+
+        /// <summary>
+        /// Sets a value directly to render info given the name and value.
+        /// Render info entry is added if none with the given name exists.
+        /// Value can be type of int, string, float, or an array of those 3.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetRenderInfo(string name, object value)
+        {
+            var renderInfo = new RenderInfo();
+            renderInfo.Name = name;
+            if (value is int) renderInfo.SetValue(new int[1] { (int)value });
+            else if (value is float) renderInfo.SetValue(new float[1] { (float)value });
+            else if (value is string) renderInfo.SetValue(new string[1] { (string)value });
+            else if (value is int[]) renderInfo.SetValue((int[])value);
+            else if (value is float[]) renderInfo.SetValue((float[])value);
+            else if (value is string[]) renderInfo.SetValue((string[])value);
+
+            if (!RenderInfos.ContainsKey(name))
+                RenderInfos.Add(name, renderInfo);
+            else
+                RenderInfos[name] = renderInfo;
+        }
+
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)

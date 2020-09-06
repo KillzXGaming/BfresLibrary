@@ -154,14 +154,14 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Save(ResFileSaver saver)
         {
+            if (InverseModelMatrices == null)
+                InverseModelMatrices = new List<Matrix3x4>();
+            if (MatrixToBoneList == null)
+                MatrixToBoneList = new List<ushort>();
+
             saver.WriteSignature(_signature);
             if (saver.IsSwitch)
             {
-                if (InverseModelMatrices == null)
-                    InverseModelMatrices = new List<Matrix3x4>();
-                if (MatrixToBoneList == null)
-                    MatrixToBoneList = new List<ushort>();
-
                 if (saver.ResFile.VersionMajor2 == 9)
                     saver.Write(_flags);
                 else

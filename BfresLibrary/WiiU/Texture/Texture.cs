@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Syroot.NintenTools.Bfres.Core;
 using Syroot.NintenTools.Bfres.GX2;
+using Syroot.NintenTools.NSW.Bntx.GFX;
 using System.ComponentModel;
 using Syroot.NintenTools.Bfres.Swizzling;
 
@@ -279,6 +282,58 @@ namespace Syroot.NintenTools.Bfres.WiiU
             return Swizzling.GX2.Decode(surf, arrayLevel, mipLevel);
         }
 
+        /// <summary>
+        /// Converts a Wii U texture instance to a switch texture.
+        /// </summary>
+        /// <param name="texture"></param>
+        public void FromSwitch(Switch.SwitchTexture textureNX)
+        {
+            Width = textureNX.Width;
+            Height = textureNX.Height;
+            MipCount = textureNX.MipCount;
+            Depth = 1;
+            ArrayLength = textureNX.ArrayLength;
+            TileMode = GX2TileMode.Mode2dTiledThin1;
+            Dim = GX2SurfaceDim.Dim2D;
+            Use = GX2SurfaceUse.Texture;
+            Format = PlatformConverters.TextureConverter.FormatList.FirstOrDefault(
+                x => x.Value == textureNX.Format).Key;
+            Name = textureNX.Name;
+
+            //Save arrays and mips into a list for swizzling back
+            for (int i = 0; i < textureNX.ArrayLength; i++)
+            {
+                List<byte[]> mipData = new List<byte[]>();
+                for (int j = 0; j < textureNX.MipCount; j++)
+                    mipData.Add(textureNX.GetDeswizzledData(i, j));
+                System.IO.File.WriteAllBytes($"{Name}_DATA.bin", ByteUtils.CombineArray(mipData.ToArray()));
+
+                //Swizzle the current mip data into a switch swizzled image
+                var surface = SwizzleSurfaceMipMaps(ByteUtils.CombineArray(mipData.ToArray()));
+                Data = surface.data;
+                MipData = surface.mipData;
+                TileMode = (GX2TileMode)surface.tileMode;
+                MipOffsets = surface.mipOffset;
+                MipCount = surface.numMips;
+                Alignment = surface.alignment;
+                Pitch = surface.pitch;
+                Swizzle = surface.swizzle;
+                Regs = surface.texRegs;
+            }
+
+            CompSelR = ConvertChannelSelector(textureNX.Texture.ChannelRed);
+            CompSelG = ConvertChannelSelector(textureNX.Texture.ChannelGreen);
+            CompSelB = ConvertChannelSelector(textureNX.Texture.ChannelBlue);
+            CompSelA = ConvertChannelSelector(textureNX.Texture.ChannelAlpha);
+
+       /*     //Convert user data. BNTX doesn't share the same user data library atm so it needs manual conversion.
+            UserData = new ResDict<UserData>();
+            foreach (var userData in textureNX.UserData)
+            {
+
+            }*/
+        }
+
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)
@@ -381,7 +436,8 @@ namespace Syroot.NintenTools.Bfres.WiiU
             saver.Write(Swizzle);
             saver.Write(Alignment);
             saver.Write(Pitch);
-            saver.Write(MipOffsets);
+            for (int i = 0; i < 13; i++)
+                saver.Write(i < MipOffsets.Length ? MipOffsets[i] : 0);
             saver.Write(ViewMipFirst);
             saver.Write(ViewMipCount);
             saver.Write(ViewSliceFirst);
@@ -390,6 +446,9 @@ namespace Syroot.NintenTools.Bfres.WiiU
             saver.Write(CompSelG, true);
             saver.Write(CompSelB, true);
             saver.Write(CompSelA, true);
+            if (Regs.Length != 5)
+                RegenerateRegisters();
+
             saver.Write(Regs);
             saver.Write(0); // Handle
             saver.Write((byte)ArrayLength);
@@ -417,6 +476,46 @@ namespace Syroot.NintenTools.Bfres.WiiU
             saver.SaveDict(UserData);
             saver.Write((ushort)UserData.Count);
             saver.Seek(2);
+        }
+
+        private void RegenerateRegisters()
+        {
+            Regs = GX2TexRegisters.CreateTexRegs(Width, Height, MipCount,
+                    (uint)Format, (uint)TileMode, Pitch, new byte[4]
+                    {
+                        (byte)CompSelR,
+                        (byte)CompSelG,
+                        (byte)CompSelB,
+                        (byte)CompSelA,
+                    });
+        }
+
+        private GX2.GX2CompSel ConvertChannelSelector(ChannelType type)
+        {
+            switch (type)
+            {
+                case ChannelType.Red: return GX2.GX2CompSel.ChannelR;
+                case ChannelType.Green: return GX2.GX2CompSel.ChannelG;
+                case ChannelType.Blue: return GX2.GX2CompSel.ChannelB;
+                case ChannelType.Alpha: return GX2.GX2CompSel.ChannelA;
+                case ChannelType.Zero: return GX2.GX2CompSel.Always0;
+                default: return GX2.GX2CompSel.Always1;
+            }
+        }
+
+        Swizzling.GX2.GX2Surface SwizzleSurfaceMipMaps(byte[] data)
+        {
+            return Swizzling.GX2.CreateGx2Texture(data,
+               Name,
+               (uint)TileMode,
+               (uint)AAMode,
+               Width,
+               Height,
+               Depth,
+               (uint)Format,
+               SwizzlePattern,
+               (uint)Dim,
+               MipCount);
         }
     }
 }

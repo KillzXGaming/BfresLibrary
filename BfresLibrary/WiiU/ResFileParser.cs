@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Syroot.NintenTools.Bfres.Core;
 using Syroot.BinaryData;
 using Syroot.NintenTools.Bfres.WiiU.Core;
+using Syroot.NintenTools.NSW.Bntx;
+    using Syroot.NintenTools.NSW.Bntx.GFX;
 
 namespace Syroot.NintenTools.Bfres.WiiU
 {
@@ -103,7 +105,6 @@ namespace Syroot.NintenTools.Bfres.WiiU
             saver.Write((ushort)resFile.SceneAnims.Count);
             saver.Write((ushort)resFile.ExternalFiles.Count);
             saver.Write(0); // UserPointer
-
         }
     }
 }

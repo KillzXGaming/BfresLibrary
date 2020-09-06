@@ -28,7 +28,7 @@ namespace Syroot.NintenTools.Bfres
             VisualConstantIndex = -1;
         }
 
-        public MaterialAnimData(ResFileLoader loader, string signature) {
+        public MaterialAnimData(ResFileLoader loader, string signature) : base() {
             Load(loader, signature);
         }
 
@@ -100,6 +100,11 @@ namespace Syroot.NintenTools.Bfres
 
         internal void Load(ResFileLoader loader, string signature)
         {
+            ParamAnimInfos = new List<ParamAnimInfo>();
+            PatternAnimInfos = new List<PatternAnimInfo>();
+            Constants = new List<AnimConstant>();
+            Curves = new List<AnimCurve>();
+
             if (signature == "FSHU")
             {
                 ushort numAnimParam = loader.ReadUInt16();

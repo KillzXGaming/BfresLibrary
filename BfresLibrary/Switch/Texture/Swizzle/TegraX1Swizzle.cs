@@ -24,7 +24,7 @@ namespace Syroot.NintenTools.Bfres.Swizzling
             uint blkDepth = 1;
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
 
-            Console.WriteLine($"format {texture.Format} {bpp} {blkWidth} {blkHeight} {blockHeight}");
+            Console.WriteLine($"fo  rmat {texture.Format} {bpp} {blkWidth} {blkHeight} {blockHeight}");
             Console.WriteLine($"ArrayLevel {ArrayLevel} {MipLevel} {DepthLevel} {BlockHeightLog2}");
 
             uint Pitch = 0;
@@ -103,24 +103,24 @@ namespace Syroot.NintenTools.Bfres.Swizzling
             return new byte[0];
         }
 
-        private static uint GetBytesPerPixel(Texture texture)
+        internal static uint GetBytesPerPixel(Texture texture)
         {
             if (FormatList.ContainsKey(texture.Format))
                 return FormatList[texture.Format].BytesPerPixel;
             return 0;
         }
 
-        private static uint GetBlockWidth(Texture texture)
+        internal static uint GetBlockWidth(Texture texture)
         {
             if (FormatList.ContainsKey(texture.Format))
-                return FormatList[texture.Format].BytesPerPixel;
+                return FormatList[texture.Format].BlockWidth;
             return 0;
         }
 
-        private static uint GetBlockHeight(Texture texture)
+        internal static uint GetBlockHeight(Texture texture)
         {
             if (FormatList.ContainsKey(texture.Format))
-                return FormatList[texture.Format].BytesPerPixel;
+                return FormatList[texture.Format].BlockHeight;
             return 0;
         }
 

@@ -152,19 +152,21 @@ namespace Syroot.NintenTools.Bfres
 
         public void SaveTexSampler(ResFileSaver saver, TexSampler sampler)
         {
+            _filterFlags = sampler._filterFlags;
+
             WrapModeU = ClampModes.FirstOrDefault(x => x.Value == sampler.ClampX).Key;
             WrapModeV = ClampModes.FirstOrDefault(x => x.Value == sampler.ClampY).Key;
             WrapModeW = ClampModes.FirstOrDefault(x => x.Value == sampler.ClampZ).Key;
             CompareFunc = CompareModes.FirstOrDefault(x => x.Value == sampler.DepthCompareFunc).Key;
             BorderColorType = BorderModes.FirstOrDefault(x => x.Value == sampler.BorderType).Key;
             Anisotropic = AnisotropicModes.FirstOrDefault(x => x.Value == sampler.MaxAnisotropicRatio).Key;
-            ShrinkXY = ShrinkFilterModes.Linear;
-            ExpandXY = ExpandFilterModes.Linear;
-            Mipmap = MipFilterModes.Linear;
+           // ShrinkXY = ShrinkFilterModes.Linear;
+         //   ExpandXY = ExpandFilterModes.Linear;
+          //  Mipmap = MipFilters.FirstOrDefault(x => x.Value == sampler.MipFilter).Key;
+
             MinLOD = sampler.MinLod;
             MaxLOD = sampler.MaxLod;
             LODBias = sampler.LodBias;
-            _filterFlags = sampler._filterFlags;
 
             ((IResData)this).Save(saver);
         }
@@ -198,6 +200,13 @@ namespace Syroot.NintenTools.Bfres
             saver.Write((float)LODBias);
             saver.Seek(12);
         }
+
+        Dictionary<MipFilterModes, GX2TexMipFilterType> MipFilters = new Dictionary<MipFilterModes, GX2TexMipFilterType>()
+        {
+            { MipFilterModes.Linear, GX2TexMipFilterType.Linear },
+            { MipFilterModes.Points, GX2TexMipFilterType.Point },
+            { MipFilterModes.None, GX2TexMipFilterType.NoMip },
+        };
 
         Dictionary<TexBorderType, GX2TexBorderType> BorderModes = new Dictionary<TexBorderType, GX2TexBorderType>()
         {

@@ -46,6 +46,7 @@ namespace Syroot.NintenTools.Bfres
             ShapeAnims = new ResDict<ShapeAnim>();
             SceneAnims = new ResDict<SceneAnim>();
             ExternalFiles = new ResDict<ExternalFile>();
+            MaterialAnims = new ResDict<MaterialAnim>();
         }
 
         /// <summary>
@@ -230,7 +231,7 @@ namespace Syroot.NintenTools.Bfres
         /// Combination of all the material animations into one.
         /// This is used for switch material animations
         /// </summary>
-        internal ResDict<MaterialAnim> MaterialAnims { get; set; }
+        internal ResDict<MaterialAnim> MaterialAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the major revision of the BFRES structure formats.
@@ -368,10 +369,37 @@ namespace Syroot.NintenTools.Bfres
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         public void ChangePlatform(bool isSwitch, int alignment,
-            byte versionA, byte versionB, byte versionC, byte versionD)
+            byte versionA, byte versionB, byte versionC, byte versionD, PlatformConverters.ConverterHandle handle)
         {
+            if (IsPlatformSwitch && isSwitch || (!IsPlatformSwitch && !isSwitch))
+                return;
+
             if (!IsPlatformSwitch && isSwitch) {
                 ConvertTexturesToBntx(Textures.Values.ToList());
+            }
+            else
+            {
+                List<TextureShared> textures = new List<TextureShared>();
+                foreach (var tex in this.Textures.Values)
+                {
+                    var textureU = new WiiU.Texture();
+                    textureU.FromSwitch((Switch.SwitchTexture)tex);
+                    textures.Add(textureU);
+                }
+                Textures.Clear();
+                foreach (var tex in textures)
+                    Textures.Add(tex.Name, tex);
+
+                foreach (var mdl in Models.Values) {
+                    foreach (var mat in mdl.Materials.Values)
+                    {
+                        mat.RenderState = new RenderState();
+                    }
+                }
+
+                for (int i = 0; i < ExternalFiles.Count; i++)
+                    if (ExternalFiles.Keys.ElementAt(i).Contains(".bntx"))
+                        ExternalFiles.RemoveAt(i);
             }
 
             //Order to read the existing data
@@ -385,6 +413,7 @@ namespace Syroot.NintenTools.Bfres
             VersionMajor2 = versionB;
             VersionMinor = versionC;
             VersionMinor2 = versionD;
+            this.ByteOrder = targetOrder;
 
             foreach (var model in Models.Values)
             {
@@ -394,6 +423,43 @@ namespace Syroot.NintenTools.Bfres
                         mesh.UpdateIndexBufferByteOrder(targetOrder);
                     }
                 }
+                foreach (var mat in model.Materials.Values)
+                {
+                    if (IsPlatformSwitch)
+                        PlatformConverters.MaterialConverter.ConvertToSwitchMaterial(mat, handle);
+                    else
+                        PlatformConverters.MaterialConverter.ConvertToWiiUMaterial(mat, handle);
+                }
+            }
+
+            if (IsPlatformSwitch)
+            {
+                MaterialAnims.Clear();
+                foreach (var anim in ShaderParamAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in TexSrtAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in ColorAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in TexPatternAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in MatVisibilityAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                for (int i = 0; i < MaterialAnims.Count; i++)
+                    MaterialAnims[i].signature = "FMAA";
+            }
+            else
+            {
+                this.TexPatternAnims = new ResDict<MaterialAnim>();
+                this.ShaderParamAnims = new ResDict<MaterialAnim>();
+                this.ColorAnims = new ResDict<MaterialAnim>();
+                this.TexSrtAnims = new ResDict<MaterialAnim>();
+                this.MatVisibilityAnims = new ResDict<MaterialAnim>();
             }
         }
 
@@ -435,8 +501,7 @@ namespace Syroot.NintenTools.Bfres
                 }
             }
 
-            for (int i = 0; 
-                i < SkeletalAnims.Count; i++)
+            for (int i = 0; i < SkeletalAnims.Count; i++)
             {
                 int curveIndex = 0;
                 for (int s = 0; s < SkeletalAnims[i].BoneAnims.Count; s++)
@@ -469,9 +534,15 @@ namespace Syroot.NintenTools.Bfres
 
         private void ConvertTexturesToBntx(List<TextureShared> textures)
         {
+            if (textures.Count == 0) return;
+
+            var bntx = PlatformConverters.TextureConverter.CreateBNTX(textures);
+            var mem = new MemoryStream();
+            bntx.Save(mem);
+
             ExternalFiles.Add("textures.bntx", new ExternalFile()
             {
-                Data = new byte[0],
+                Data = mem.ToArray(),
             });
         }
 

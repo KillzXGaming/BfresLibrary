@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Syroot.NintenTools.Bfres.Swizzling
 {
-    public class TextureHelper
+    class TextureHelper
     {
-        public static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkWidth, uint blkHeight, uint bpp, int CurLevel)
+        internal static Tuple<uint, uint> GetCurrentMipSize(uint width, uint height, uint blkWidth, uint blkHeight, uint bpp, int CurLevel)
         {
             uint offset = 0;
             uint width_ = 0;
