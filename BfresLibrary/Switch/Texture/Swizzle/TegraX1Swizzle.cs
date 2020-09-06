@@ -24,7 +24,7 @@ namespace Syroot.NintenTools.Bfres.Swizzling
             uint blkDepth = 1;
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
 
-            Console.WriteLine($"fo  rmat {texture.Format} {bpp} {blkWidth} {blkHeight} {blockHeight}");
+            Console.WriteLine($"format {texture.Format} {bpp} {blkWidth} {blkHeight} {blockHeight}");
             Console.WriteLine($"ArrayLevel {ArrayLevel} {MipLevel} {DepthLevel} {BlockHeightLog2}");
 
             uint Pitch = 0;
