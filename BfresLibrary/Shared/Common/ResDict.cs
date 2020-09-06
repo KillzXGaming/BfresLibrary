@@ -231,7 +231,7 @@ namespace Syroot.NintenTools.Bfres
         /// <returns><c>true</c> if the instance under <paramref name="key"/> was successfully removed; otherwise
         /// <c>false</c>. This method also returns <c>false</c> if <paramref name="key"/> was not found in the
         /// dictionary.</returns>
-        public bool Remove(string key)
+        public bool RemoveKey(string key)
         {
             if (Lookup(key, out Node node, out int index, false))
             {

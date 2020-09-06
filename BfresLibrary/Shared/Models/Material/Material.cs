@@ -166,6 +166,19 @@ namespace Syroot.NintenTools.Bfres
                 RenderInfos[name] = renderInfo;
         }
 
+        public void SetShaderParameter(string name, ShaderParamType type, object value)
+        {
+            ShaderParam param = new ShaderParam();
+            param.Name = name;
+            param.DataValue = value;
+            param.Type = type;
+
+            if (!ShaderParams.ContainsKey(name))
+                ShaderParams.Add(name, param);
+            else
+                ShaderParams[name] = param;
+        }
+
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)
@@ -338,12 +351,19 @@ namespace Syroot.NintenTools.Bfres
             using (var writer = new BinaryDataWriter(mem)) {
                 writer.ByteOrder = byteOrder;
 
+                int index = 0;
+
                 uint Offset = 0;
                 foreach (var param in ShaderParams.Values) {
+                    param.DataOffset = (ushort)Offset;
+                    param.DependIndex = (ushort)index;
+                    param.DependedIndex = (ushort)index;
+
                     writer.Seek(param.DataOffset, SeekOrigin.Begin);
                     WriteParamData(writer, param.DataValue);
 
                     Offset += (param.DataSize + (uint)param.PaddingLength);
+                    index++;
                 }
             }
             return mem.ToArray();

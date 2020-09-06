@@ -56,7 +56,29 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
 
         internal override void ConvertToWiiUMaterial(Material material)
         {
+            //Ckear all Switch render infos not used by wii u
 
+            RemoveRenderInfo(material, "gsys_bake_normal_map");
+            RemoveRenderInfo(material, "gsys_bake_emission_map");
+            RemoveRenderInfo(material, "gsys_render_state_display_face");
+            RemoveRenderInfo(material, "gsys_render_state_mode");
+            RemoveRenderInfo(material, "gsys_depth_test_enable");
+            RemoveRenderInfo(material, "gsys_depth_test_func");
+            RemoveRenderInfo(material, "gsys_depth_test_write");
+            RemoveRenderInfo(material, "gsys_alpha_test_enable");
+            RemoveRenderInfo(material, "gsys_alpha_test_func");
+            RemoveRenderInfo(material, "gsys_alpha_test_value");
+            RemoveRenderInfo(material, "gsys_render_state_blend_mode");
+            RemoveRenderInfo(material, "gsys_color_blend_rgb_op");
+            RemoveRenderInfo(material, "gsys_color_blend_rgb_src_func");
+            RemoveRenderInfo(material, "gsys_color_blend_rgb_dst_func");
+            RemoveRenderInfo(material, "gsys_color_blend_alpha_op");
+            RemoveRenderInfo(material, "gsys_color_blend_alpha_src_func");
+            RemoveRenderInfo(material, "gsys_color_blend_alpha_dst_func");
+            RemoveRenderInfo(material, "gsys_color_blend_const_color");
+
+            for (int i = 0; i < 5; i++)
+                material.SetRenderInfo($"gsys_model_fx{i}", "default");
         }
 
         internal override void ConvertToSwitchMaterial(Material material)
@@ -64,11 +86,8 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             //Convert all render info
 
             for (int i = 0; i < 5; i++)
-            {
-                if (material.RenderInfos.ContainsKey($"gsys_model_fx{i}"))
-                    material.RenderInfos.Remove($"gsys_model_fx{i}");
-            }
-      
+                RemoveRenderInfo(material, $"gsys_model_fx{i}");
+
             material.SetRenderInfo("gsys_bake_normal_map", "default");
             material.SetRenderInfo("gsys_bake_emission_map", "default");
             material.SetRenderInfo("gsys_render_state_display_face", GetCullState(material.RenderState));
@@ -101,7 +120,163 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             material.SetRenderInfo("gsys_color_blend_alpha_dst_func", BlendFunction[
                   material.RenderState.BlendControl.AlphaDestinationBlend]);
 
-            material.SetRenderInfo("gsys_color_blend_const_color", new int[4] { 0,0,0,0 });
+            material.SetRenderInfo("gsys_color_blend_const_color", new float[4] { 0,0,0,0 });
+
+            material.SetShaderParameter("gsys_alpha_test_ref_value",
+                ShaderParamType.Float, material.RenderState.AlphaRefValue);
+            material.SetShaderParameter("gsys_xlu_zprepass_alpha",
+                ShaderParamType.Float4, new float[4] { 1, 1, 1, 1 });
+            material.SetShaderParameter("screen_fake_scale_begin_ratio",
+                ShaderParamType.Float, 0.25f);
+            material.SetShaderParameter("screen_fake_scale_factor",
+                ShaderParamType.Float3, new float[3] { 0,0,0 });
+
+            material.ShaderParams.RemoveKey("effect_normal_offset");
+            material.ShaderParams.RemoveKey("gsys_model_fx_ratio");
+            material.ShaderParams.RemoveKey("gsys_specular_roughness");
+            material.ShaderParams.RemoveKey("zprepass_shadow_rate");
+
+            //Adjust shader params
+            //Here we'll make a new shader param list in the same switch order
+            List<ShaderParam> param = new List<ShaderParam>();
+
+            param.Add(material.ShaderParams["edge_light_rim_i"]);
+            param.Add(material.ShaderParams["d_shadow_bake_l_cancel_rate"]);
+            param.Add(material.ShaderParams["gsys_i_color_ratio0"]);
+            param.Add(material.ShaderParams["gsys_edge_ratio0"]);
+            param.Add(material.ShaderParams["gsys_edge_width0"]);
+            param.Add(material.ShaderParams["bloom_intensity"]);
+            param.Add(material.ShaderParams["gsys_outline_width"]);
+            param.Add(material.ShaderParams["gsys_alpha_threshold"]);
+            param.Add(material.ShaderParams["game_edge_pow"]);
+            param.Add(material.ShaderParams["edge_alpha_scale"]);
+            param.Add(material.ShaderParams["post_multi_texture"]);
+            param.Add(material.ShaderParams["edge_alpha_width"]);
+            param.Add(material.ShaderParams["edge_alpha_pow"]);
+            param.Add(material.ShaderParams["transparency"]);
+            param.Add(material.ShaderParams["alphat_out_start"]);
+            param.Add(material.ShaderParams["alphat_out_end"]);
+            param.Add(material.ShaderParams["gsys_area_env_index_diffuse"]);
+            param.Add(material.ShaderParams["shadow_density"]);
+            param.Add(material.ShaderParams["ao_density"]);
+            param.Add(material.ShaderParams["transmit_intensity"]);
+            param.Add(material.ShaderParams["edge_light_vc_intensity"]);
+            param.Add(material.ShaderParams["specular_aniso_power"]);
+            param.Add(material.ShaderParams["transmit_shadow_intensity"]);
+            param.Add(material.ShaderParams["edge_light_intensity"]);
+            param.Add(material.ShaderParams["light_pre_pass_intensity"]);
+            param.Add(material.ShaderParams["gsys_bake_opacity"]);
+            param.Add(material.ShaderParams["shiny_specular_intensity"]);
+            param.Add(material.ShaderParams["specular_intensity"]);
+            param.Add(material.ShaderParams["specular_roughness"]);
+            param.Add(material.ShaderParams["specular_fresnel_i"]);
+            param.Add(material.ShaderParams["specular_fresnel_s"]);
+            param.Add(material.ShaderParams["specular_fresnel_m"]);
+            param.Add(material.ShaderParams["shiny_specular_sharpness"]);
+            param.Add(material.ShaderParams["emission_intensity"]);
+            param.Add(material.ShaderParams["soft_edge_dist_inv"]);
+            param.Add(material.ShaderParams["silhoutte_depth"]);
+            param.Add(material.ShaderParams["refraction_intensity"]);
+            param.Add(material.ShaderParams["normal_map_weight"]);
+            param.Add(material.ShaderParams["shiny_specular_fresnel"]);
+            param.Add(material.ShaderParams["silhoutte_depth_contrast"]);
+            param.Add(material.ShaderParams["fresnel_look_depend_factor"]);
+            param.Add(material.ShaderParams["mii_hair_specular_intensity"]);
+            param.Add(material.ShaderParams["decal_trail_intensity"]);
+            param.Add(material.ShaderParams["screen_fake_scale_begin_ratio"]);
+            param.Add(material.ShaderParams["fog_emission_intensity"]);
+            param.Add(material.ShaderParams["fog_emission_effect"]);
+            param.Add(material.ShaderParams["fog_edge_power"]);
+            param.Add(material.ShaderParams["fog_edge_width"]);
+            param.Add(material.ShaderParams["gsys_alpha_test_ref_value"]);
+            param.Add(material.ShaderParams["edge_light_sharpness"]);
+            param.Add(material.ShaderParams["indirect_mag"]);
+            param.Add(material.ShaderParams["indirect_magB"]);
+            param.Add(material.ShaderParams["silhoutte_depth_color"]);
+            param.Add(material.ShaderParams["gsys_mii_skin_color"]);
+            param.Add(material.ShaderParams["gsys_mii_favorite_color"]);
+            param.Add(material.ShaderParams["gsys_point_light_color"]);
+            param.Add(material.ShaderParams["gsys_edge_color0"]);
+            param.Add(material.ShaderParams["transmit_color"]);
+            param.Add(material.ShaderParams["gsys_i_color0"]);
+            param.Add(material.ShaderParams["gsys_i_color0_b"]);
+            param.Add(material.ShaderParams["gsys_bake_light_scale"]);
+            param.Add(material.ShaderParams["gsys_bake_light_scale1"]);
+            param.Add(material.ShaderParams["gsys_bake_light_scale2"]);
+            param.Add(material.ShaderParams["albedo_tex_color"]);
+            param.Add(material.ShaderParams["decal_trail_color"]);
+            param.Add(material.ShaderParams["fog_emission_color"]);
+            param.Add(material.ShaderParams["screen_fake_scale_factor"]);
+            param.Add(material.ShaderParams["edge_light_color"]);
+            param.Add(material.ShaderParams["shiny_specular_color"]);
+            param.Add(material.ShaderParams["specular_color"]);
+            param.Add(material.ShaderParams["emission_color"]);
+            param.Add(material.ShaderParams["gsys_depth_silhoutte_color"]);
+            param.Add(material.ShaderParams["gsys_outline_color"]);
+            param.Add(material.ShaderParams["gsys_area_env_data0"]);
+            param.Add(material.ShaderParams["gsys_area_env_data1"]);
+            param.Add(material.ShaderParams["gsys_bake_st0"]);
+            param.Add(material.ShaderParams["gsys_bake_st1"]);
+            param.Add(material.ShaderParams["multi_tex_reg0"]);
+            param.Add(material.ShaderParams["multi_tex_reg1"]);
+            param.Add(material.ShaderParams["multi_tex_param0"]);
+            param.Add(material.ShaderParams["fog_edge_color"]);
+            param.Add(material.ShaderParams["gsys_xlu_zprepass_alpha"]);
+            param.Add(material.ShaderParams["multi_tex_reg2"]);
+            param.Add(material.ShaderParams["gsys_sssss_color"]);
+            param.Add(material.ShaderParams["tex_mtx1"]);
+            param.Add(material.ShaderParams["tex_mtx2"]);
+            param.Add(material.ShaderParams["tex_mtx0"]);
+
+            material.ShaderParams.Clear();
+            foreach (var prm in param)
+                material.ShaderParams.Add(prm.Name, prm);
+
+            //Adjust shader options
+
+            //gsys_alpha_test_enable
+            //gsys_alpha_test_func
+            //enable_screen_fake_scale
+
+            var shaderAssign = material.ShaderAssign;
+
+            shaderAssign.ShaderOptions.RemoveKey("enable_effect_normal_offset");
+            shaderAssign.ShaderOptions.RemoveKey("bake_calc_type");
+
+            ResDict<ResString> shaderOptions = new ResDict<ResString>();
+
+            var keys = shaderAssign.ShaderOptions.Keys.ToList();
+            var values = shaderAssign.ShaderOptions.Values.ToList();
+            int opIndex = 0;
+            for (int i = 0; i < 123; i++)
+            {
+                if (i == 0)
+                {
+                    shaderOptions.Add("gsys_alpha_test_enable",
+                        material.RenderState.AlphaControl.AlphaTestEnabled ? "1" : "0");
+                }
+                else if (i == 1)
+                {
+                    shaderOptions.Add("gsys_alpha_test_func", GetShaderOptionAlphaTestFunc(
+                        CompareFunction[material.RenderState.AlphaControl.AlphaFunc]));
+                }
+                else if (i == 100)
+                {
+                    shaderOptions.Add("enable_screen_fake_scale", "0");
+                }
+                else
+                {
+                    shaderOptions.Add(keys[opIndex], values[opIndex]);
+                    opIndex++;
+                }
+            }
+            shaderAssign.ShaderOptions = shaderOptions;
+        }
+
+        private void RemoveRenderInfo(Material mat, string key)
+        {
+            if (mat.RenderInfos.ContainsKey(key))
+                mat.RenderInfos.RemoveKey(key);
         }
 
         private string GetCullState(RenderState state)
@@ -170,5 +345,15 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             { GX2.GX2BlendFunction.One, "one" },
             { GX2.GX2BlendFunction.Zero, "zero" },
         };
+
+        private string GetShaderOptionAlphaTestFunc(string func)
+        {
+            switch (func)
+            {
+                case "gequal": return "6";
+                default:
+                    throw new Exception("Unuspported alpha test func! " + func);
+            }
+        }
     }
 }

@@ -374,6 +374,13 @@ namespace Syroot.NintenTools.Bfres
             if (IsPlatformSwitch && isSwitch || (!IsPlatformSwitch && !isSwitch))
                 return;
 
+            //Shaders cannot be converted, remove them
+            for (int i = 0; i < ExternalFiles.Count; i++)
+            {
+                if (ExternalFiles.Keys.ElementAt(i).Contains(".bfsha"))
+                    ExternalFiles.RemoveAt(i);
+            }
+
             if (!IsPlatformSwitch && isSwitch) {
                 ConvertTexturesToBntx(Textures.Values.ToList());
             }
@@ -398,8 +405,10 @@ namespace Syroot.NintenTools.Bfres
                 }
 
                 for (int i = 0; i < ExternalFiles.Count; i++)
+                {
                     if (ExternalFiles.Keys.ElementAt(i).Contains(".bntx"))
                         ExternalFiles.RemoveAt(i);
+                }
             }
 
             //Order to read the existing data
