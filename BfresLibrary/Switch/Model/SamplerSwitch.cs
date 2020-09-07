@@ -160,9 +160,16 @@ namespace Syroot.NintenTools.Bfres
             CompareFunc = CompareModes.FirstOrDefault(x => x.Value == sampler.DepthCompareFunc).Key;
             BorderColorType = BorderModes.FirstOrDefault(x => x.Value == sampler.BorderType).Key;
             Anisotropic = AnisotropicModes.FirstOrDefault(x => x.Value == sampler.MaxAnisotropicRatio).Key;
-           // ShrinkXY = ShrinkFilterModes.Linear;
-         //   ExpandXY = ExpandFilterModes.Linear;
-          //  Mipmap = MipFilters.FirstOrDefault(x => x.Value == sampler.MipFilter).Key;
+            // ShrinkXY = ShrinkFilterModes.Linear;
+            //   ExpandXY = ExpandFilterModes.Linear;
+            //  Mipmap = MipFilters.FirstOrDefault(x => x.Value == sampler.MipFilter).Key;
+
+            _filterFlags = 0x0029;
+
+            ShrinkXY = ShrinkFilterModes.Linear;
+            ExpandXY = ExpandFilterModes.Linear;
+            Mipmap = MipFilterModes.Points;
+            BorderColorType = TexBorderType.White;
 
             MinLOD = sampler.MinLod;
             MaxLOD = sampler.MaxLod;
