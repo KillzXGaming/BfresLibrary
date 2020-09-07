@@ -102,7 +102,7 @@ namespace Syroot.NintenTools.Bfres
         /// </summary>
         public IList<Buffer> Buffers { get; set; }
 
-        internal MemoryPool MemoryPool;
+        internal MemoryPool MemoryPool = new MemoryPool();
 
         internal uint Flags;
 
