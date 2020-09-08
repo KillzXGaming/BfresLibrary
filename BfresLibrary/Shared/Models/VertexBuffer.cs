@@ -166,6 +166,14 @@ namespace Syroot.NintenTools.Bfres
             this.Buffers = new List<Buffer>();
             for (int i = 0; i < newBuffer.Buffers.Count; i++)
                 this.Buffers.Add(newBuffer.Buffers[i]);
+            //Update all the attributes incase order or offsets change.
+            for (int i = 0; i < newBuffer.Attributes.Count; i++)
+            {
+                Attributes[i].Offset = newBuffer.Attributes[i].Offset;
+                Attributes[i].BufferIndex = newBuffer.Attributes[i].BufferIndex;
+                Attributes[i].Format = newBuffer.Attributes[i].Format;
+                Attributes[i].Name = newBuffer.Attributes[i].Name;
+            }
         }
 
         internal long AttributeOffset;

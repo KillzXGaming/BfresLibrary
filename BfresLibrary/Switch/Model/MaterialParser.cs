@@ -48,8 +48,10 @@ namespace Syroot.NintenTools.Bfres.Switch
                 loader.ReadUInt32(); //Padding
 
             var textures = loader.LoadCustom(() => loader.LoadStrings(numTextureRef), (uint)TextureNameArray);
-            foreach (var tex in textures)
-                mat.TextureRefs.Add(new TextureRef() { Name = tex });
+            if (textures != null) {
+                foreach (var tex in textures)
+                    mat.TextureRefs.Add(new TextureRef() { Name = tex });
+            }
 
             //Add names to the value as switch does not store any
             foreach (var sampler in mat.Samplers) {
