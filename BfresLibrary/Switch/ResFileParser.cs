@@ -68,7 +68,6 @@ namespace Syroot.NintenTools.Bfres.Switch
 
             resFile.Textures = new ResDict<TextureShared>();
             foreach (var ext in resFile.ExternalFiles) {
-                Console.WriteLine("EXT " + ext.Key);
                 if (ext.Key.Contains(".bntx")) 
                 {
                     BntxFile bntx = new BntxFile(new MemoryStream(ext.Value.Data));
@@ -76,6 +75,17 @@ namespace Syroot.NintenTools.Bfres.Switch
                     foreach (var tex in bntx.Textures)
                         resFile.Textures.Add(tex.Name, new SwitchTexture(tex));
                 }
+            }
+
+            //Split material animations into shader, texture, and visual animation lists
+            foreach (var anim in resFile.MaterialAnims.Values)
+            {
+                if (anim.MaterialAnimDataList.Any(x => x.VisibilyCount > 0))
+                    resFile.MatVisibilityAnims.Add(anim.Name, anim);
+                else if (anim.MaterialAnimDataList.Any(x => x.TexturePatternCount > 0))
+                    resFile.TexPatternAnims.Add(anim.Name, anim);
+                else
+                    resFile.ShaderParamAnims.Add(anim.Name, anim);
             }
         }
 

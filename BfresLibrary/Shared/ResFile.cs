@@ -398,8 +398,7 @@ namespace Syroot.NintenTools.Bfres
                     Textures.Add(tex.Name, tex);
 
                 foreach (var mdl in Models.Values) {
-                    foreach (var mat in mdl.Materials.Values)
-                    {
+                    foreach (var mat in mdl.Materials.Values) {
                         mat.RenderState = new RenderState();
                     }
                 }
@@ -443,24 +442,25 @@ namespace Syroot.NintenTools.Bfres
 
             if (IsPlatformSwitch)
             {
-                MaterialAnims.Clear();
-                foreach (var anim in ShaderParamAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
+                foreach (var anim in ShaderParamAnims.Values) {
+                    anim.Name = $"{anim.Name}_fsp";
+                }
 
-                foreach (var anim in TexSrtAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
+                foreach (var anim in TexSrtAnims.Values) {
+                    anim.Name = $"{anim.Name}_fts";
+                }
 
-                foreach (var anim in ColorAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
+                foreach (var anim in ColorAnims.Values) {
+                    anim.Name = $"{anim.Name}_fcl";
+                }
 
-                foreach (var anim in TexPatternAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
+                foreach (var anim in TexPatternAnims.Values) {
+                    anim.Name = $"{anim.Name}_ftp";
+                }
 
-                foreach (var anim in MatVisibilityAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
-
-                for (int i = 0; i < MaterialAnims.Count; i++)
-                    MaterialAnims[i].signature = "FMAA";
+                foreach (var anim in MatVisibilityAnims.Values) {
+                    anim.Name = $"{anim.Name}_fvs";
+                }
             }
             else
             {
@@ -533,6 +533,75 @@ namespace Syroot.NintenTools.Bfres
                     infoIndex += subAnim.KeyShapeAnimInfos.Count;
                 }
             }
+
+            foreach (var anim in TexPatternAnims.Values)
+            {
+                int curveIndex = 0;
+                int infoIndex = 0;
+                foreach (var subAnim in anim.MaterialAnimDataList)
+                {
+                    if (subAnim.Curves.Count > 0)
+                        subAnim.TexturePatternCurveIndex = curveIndex;
+                    subAnim.InfoIndex = infoIndex;
+                    curveIndex += subAnim.Curves.Count;
+                    infoIndex += subAnim.PatternAnimInfos.Count;
+                }
+            }
+
+            foreach (var anim in ShaderParamAnims.Values)
+            {
+                int curveIndex = 0;
+                int infoIndex = 0;
+                foreach (var subAnim in anim.MaterialAnimDataList)
+                {
+                    if (subAnim.Curves.Count > 0)
+                        subAnim.ShaderParamCurveIndex = curveIndex;
+                    subAnim.InfoIndex = infoIndex;
+                    curveIndex += subAnim.Curves.Count;
+                    infoIndex += subAnim.ParamAnimInfos.Count;
+                }
+            }
+
+            foreach (var anim in MatVisibilityAnims.Values)
+            {
+                int curveIndex = 0;
+                int infoIndex = 0;
+                foreach (var subAnim in anim.MaterialAnimDataList)
+                {
+                    if (subAnim.Curves.Count > 0)
+                        subAnim.VisalCurveIndex = curveIndex;
+                    curveIndex += subAnim.Curves.Count;
+                }
+            }
+
+            if (IsPlatformSwitch)
+            {
+                MaterialAnims.Clear();
+                foreach (var anim in TexPatternAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in ShaderParamAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in TexSrtAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in ColorAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in MatVisibilityAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                for (int i = 0; i < MaterialAnims.Count; i++)
+                {
+                    MaterialAnims[i].signature = "FMAA";
+                    foreach (var subAnim in MaterialAnims[i].MaterialAnimDataList)
+                    {
+                        if (subAnim.TexturePatternCount == 0)
+                            subAnim.VisualConstantIndex = 0;
+                    }
+                }
+            }
         }
 
         private void UpdateVertexBufferByteOrder(Model model, ByteOrder byteOrder, ByteOrder target)
@@ -547,6 +616,11 @@ namespace Syroot.NintenTools.Bfres
 
             var bntx = PlatformConverters.TextureConverter.CreateBNTX(textures);
             var mem = new MemoryStream();
+            bntx.Save(mem);
+
+            bntx = new NSW.Bntx.BntxFile(new MemoryStream(mem.ToArray()));
+
+            mem = new MemoryStream();
             bntx.Save(mem);
 
             ExternalFiles.Add("textures.bntx", new ExternalFile()

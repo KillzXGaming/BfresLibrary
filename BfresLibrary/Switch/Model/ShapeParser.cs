@@ -24,7 +24,6 @@ namespace Syroot.NintenTools.Bfres.Switch
             long SkinBoneIndexListOffset = loader.ReadOffset();
             shape.KeyShapes = loader.LoadDictValues<KeyShape>();
             long BoundingBoxArrayOffset = loader.ReadOffset();
-            Console.WriteLine($"BoundingBoxArrayOffset {BoundingBoxArrayOffset}");
             long RadiusOffset = 0;
             if (loader.ResFile.VersionMajor2 > 2 || loader.ResFile.VersionMajor > 0)
             {
@@ -60,7 +59,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             if (RadiusOffset != 0)
                 shape.RadiusArray = numMesh == 0 ? new List<float>() : loader.LoadCustom(() => loader.ReadSingles(numMesh), (uint)RadiusOffset).ToList();
 
-            int boundingboxCount = shape.Meshes.Sum(x => x.SubMeshes.Count);
+            int boundingboxCount = shape.Meshes.Sum(x => x.SubMeshes.Count + 1);
             shape.SubMeshBoundings = boundingboxCount == 0 ? new List<Bounding>() : loader.LoadCustom(() => 
                             loader.ReadBoundings(boundingboxCount), (uint)BoundingBoxArrayOffset)?.ToList();
 
@@ -78,13 +77,25 @@ namespace Syroot.NintenTools.Bfres.Switch
                 shape.SkinBoneIndices = new List<ushort>();
 
             int boundingboxCount = shape.Meshes.Sum(x => x.SubMeshes.Count+1);
-            Bounding[] boundings = new Bounding[boundingboxCount];
-            for (int i = 0; i < boundingboxCount; i++)
+            List<Bounding> boundings = new List<Bounding>();
+            if (shape.SubMeshBoundingNodes.Count > 0)
             {
-                if (shape.SubMeshBoundings.Count <= i)
-                    boundings[i] = shape.SubMeshBoundings.LastOrDefault();
-                else
-                    boundings[i] = shape.SubMeshBoundings[i];
+                for (int i = 0; i < shape.SubMeshBoundingNodes.Count; i++) {
+                    if (shape.SubMeshBoundingNodes[i].SubMeshCount == 1) {
+                        boundings.Add(shape.SubMeshBoundings[i]);
+                    }
+                }
+                boundings.Add(shape.SubMeshBoundings[0]);
+            }
+            else
+            {
+                for (int i = 0; i < boundingboxCount; i++)
+                {
+                    if (shape.SubMeshBoundings.Count <= i)
+                        boundings.Add(shape.SubMeshBoundings.LastOrDefault());
+                    else
+                        boundings.Add(shape.SubMeshBoundings[i]);
+                }
             }
 
             float[] boundingRadius = new float[shape.Meshes.Count];

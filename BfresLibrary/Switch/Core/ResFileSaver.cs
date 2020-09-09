@@ -177,8 +177,13 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
 
             }
 
+            _ofsStringPool = 0;
+
+            // Satisfy offsets, strings, and data blocks.
             WriteStrings();
-            WriteEndOfExportData();
+            WriteBlocks();
+
+            Flush();
         }
 
         internal void ExportModel()
@@ -429,8 +434,6 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
         {
             Initialize();
 
-            Console.WriteLine($"Executing save....");
-
             // Store the headers recursively and satisfy offsets to them, then the string pool and data blocks.
             ((IResData)ResFile).Save(this);
 
@@ -585,17 +588,11 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 WriteModelBlock(mdl);
             }
 
-            Console.WriteLine($"Saving SkeletalAnims....");
-
             foreach (SkeletalAnim ska in ResFile.SkeletalAnims.Values)
                 WriteSkeletonAnimations(ska);
 
-            Console.WriteLine($"Saving MaterialAnims....");
-
             foreach (MaterialAnim matanim in ResFile.MaterialAnims.Values)
                 WriteMaterialAnimations(matanim);
-
-            Console.WriteLine($"Saving VisibilityAnims....");
 
             foreach (VisibilityAnim bnanim in ResFile.BoneVisibilityAnims.Values)
                 WriteBoneVisabiltyAnimations(bnanim);
@@ -603,8 +600,6 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
                 WriteShapeAnimations(shpanim);
             foreach (SceneAnim scnanim in ResFile.SceneAnims.Values)
                 WriteSceneAnimations(scnanim);
-
-            Console.WriteLine($"Saving strings....");
 
             WriteStrings();
 
@@ -1639,7 +1634,7 @@ namespace Syroot.NintenTools.Bfres.Switch.Core
             _savedSection4Entries = _savedSection4Entries.OrderBy(o => o.Position).ToList();
             _savedSection5Entries = _savedSection5Entries.OrderBy(o => o.Position).ToList();
 
-            bool PrintDebug = true;
+            bool PrintDebug = false;
 
             if (PrintDebug)
             {
