@@ -160,8 +160,6 @@ namespace Syroot.NintenTools.Bfres
             uint materialAnimOffset = 0;
             ushort materialCount = 0;
 
-            Console.WriteLine($"signature {signature}");
-
             if (signature == "FMAA")
             {
                 if (loader.ResFile.VersionMajor2 == 9)

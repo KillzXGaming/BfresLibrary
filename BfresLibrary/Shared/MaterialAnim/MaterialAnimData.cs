@@ -60,11 +60,12 @@ namespace Syroot.NintenTools.Bfres
         /// </summary>
         public string Name { get; set; }
 
-        public int ShaderParamCurveIndex { get; set; }
-        public int TexturePatternCurveIndex { get; set; }
-        public int BeginVisalConstantIndex { get; set; }
-        public int VisalCurveIndex { get; set; }
-        public int VisualConstantIndex { get; set; }
+        public int ShaderParamCurveIndex { get; set; } = -1;
+        public int TexturePatternCurveIndex { get; set; } = -1;
+        public int BeginVisalConstantIndex { get; set; } = -1;
+        public int VisalCurveIndex { get; set; } = -1;
+        public int VisualConstantIndex { get; set; } = 0;
+        public int InfoIndex { get; set; } = 0;
 
         public ushort[] BaseDataList { get; set; }
 
@@ -112,7 +113,7 @@ namespace Syroot.NintenTools.Bfres
                 ushort numConstant = loader.ReadUInt16();
                 loader.Seek(2);
                 ShaderParamCurveIndex = loader.ReadInt32();
-                VisualConstantIndex = loader.ReadInt32();
+                InfoIndex = loader.ReadInt32();
                 Name = loader.LoadString();
                 ParamAnimInfos = loader.LoadList<ParamAnimInfo>(numAnimParam);
                 Curves = loader.LoadList<AnimCurve>(numCurve);
@@ -123,10 +124,8 @@ namespace Syroot.NintenTools.Bfres
                 ushort numPatAnim = loader.ReadUInt16();
                 ushort numCurve = loader.ReadUInt16();
                 TexturePatternCurveIndex = loader.ReadInt32();
-                VisualConstantIndex = loader.ReadInt32();
+                InfoIndex = loader.ReadInt32();
                 Name = loader.LoadString();
-                System.Console.WriteLine($"numPatAnim {numPatAnim} numCurve {numCurve} Name {Name}");
-
                 PatternAnimInfos = loader.LoadList<PatternAnimInfo>(numPatAnim);
                 Curves = loader.LoadList<AnimCurve>(numCurve);
                 BaseDataList = loader.LoadCustom(() => loader.ReadUInt16s(numPatAnim));
@@ -140,9 +139,9 @@ namespace Syroot.NintenTools.Bfres
                 uint ConstantAnimArrayOffset = loader.ReadOffset();
                 ShaderParamCurveIndex = loader.ReadUInt16();
                 TexturePatternCurveIndex = loader.ReadUInt16();
-                BeginVisalConstantIndex = loader.ReadUInt16();
-                VisalCurveIndex = loader.ReadUInt16();
                 VisualConstantIndex = loader.ReadUInt16();
+                VisalCurveIndex = loader.ReadUInt16();
+                BeginVisalConstantIndex = loader.ReadUInt16();
                 ushort ShaderParamAnimCount = loader.ReadUInt16();
                 ushort TexutrePatternAnimCount = loader.ReadUInt16();
                 ushort ConstantAnimCount = loader.ReadUInt16();
@@ -181,7 +180,7 @@ namespace Syroot.NintenTools.Bfres
                 saver.Write((ushort)Constants.Count);
                 saver.Seek(2);
                 saver.Write(ShaderParamCurveIndex);
-                saver.Write(VisualConstantIndex);
+                saver.Write(InfoIndex);
                 saver.SaveString(Name);
                 PosParamInfoOffset = saver.SaveOffsetPos();
                 PosCurvesOffset = saver.SaveOffsetPos();
@@ -192,7 +191,7 @@ namespace Syroot.NintenTools.Bfres
                 saver.Write((ushort)PatternAnimInfos.Count);
                 saver.Write((ushort)Curves.Count);
                 saver.Write(TexturePatternCurveIndex);
-                saver.Write(VisualConstantIndex);
+                saver.Write(InfoIndex);
                 saver.SaveString(Name);
                 saver.SaveList(PatternAnimInfos);
                 saver.SaveList(Curves);
@@ -208,9 +207,9 @@ namespace Syroot.NintenTools.Bfres
                 PosConstantsOffset = saver.SaveOffset();
                 saver.Write((ushort)ShaderParamCurveIndex);
                 saver.Write((ushort)TexturePatternCurveIndex);
-                saver.Write((ushort)BeginVisalConstantIndex);
-                saver.Write((ushort)VisalCurveIndex);
                 saver.Write((ushort)VisualConstantIndex);
+                saver.Write((ushort)VisalCurveIndex);
+                saver.Write((ushort)BeginVisalConstantIndex);
                 saver.Write((ushort)ParamAnimInfos.Count);
                 saver.Write((ushort)PatternAnimInfos.Count);
                 if (Constants != null)
