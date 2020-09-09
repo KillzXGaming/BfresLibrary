@@ -196,8 +196,6 @@ namespace Syroot.NintenTools.Bfres.Switch
             Texture.textureLayout2 = 0x010007;
             Texture.SampleCount = 1;
 
-            Console.WriteLine($"bpp {bpp} {blkWidth} {blkHeight}");
-
             uint linesPerBlockHeight = 0;
 
             if (Texture.TileMode == TileMode.LinearAligned)

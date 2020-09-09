@@ -72,7 +72,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             vertexBuffer.AttributeOffset = saver.SaveOffset();
             vertexBuffer.AttributeDictOffset = saver.SaveOffset();
             if (vertexBuffer.MemoryPool != null)
-                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section4, "Memory pool");
+                saver.SaveRelocateEntryToSection(saver.Position, 1, 1, 0, ResFileSwitchSaver.Section4, "Vertex Memory pool");
             saver.SaveMemoryPoolPointer();
 
             saver.SaveRelocateEntryToSection(saver.Position, 4, 1, 0, ResFileSwitchSaver.Section1, "Vertex buffer info");

@@ -108,8 +108,6 @@ namespace Syroot.NintenTools.Bfres
 
         void IResData.Load(ResFileLoader loader)
         {
-            System.Console.WriteLine("Model " + loader.Position);
-
             loader.CheckSignature(_signature);
             if (loader.IsSwitch)
                 Switch.ModelParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
@@ -135,8 +133,6 @@ namespace Syroot.NintenTools.Bfres
 
                 VertexBuffers = loader.LoadList<VertexBuffer>(numVertexBuffer, ofsVertexBufferList);
             }
-
-            System.Console.WriteLine("Name " + Name);
         }
 
         void IResData.Save(ResFileSaver saver)

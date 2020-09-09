@@ -15,8 +15,6 @@ namespace Syroot.NintenTools.Bfres.WiiU
     {
         public static void Load(ResFileLoader loader, ResFile resFile)
         {
-            Console.WriteLine("WiiU!");
-
             loader.CheckSignature("FRES");
             resFile.Version = loader.ReadUInt32();
             resFile.SetVersionInfo(resFile.Version);

@@ -148,8 +148,6 @@ namespace Syroot.NintenTools.Bfres.Helpers
             int lastElementCount = Attributes[0].Data.Length;
             int numBuffers = Attributes.Max(x => x.BufferIndex + 1);
             vertexBuffer.Buffers = new List<Buffer>(numBuffers);
-            Console.WriteLine($"Generating buffer data! {ByteOrder} " + numBuffers);
-
             foreach (VertexBufferHelperAttrib helperAttrib in Attributes)
             {
                 // Check if the length of data does not match another attribute's data length.
@@ -180,8 +178,6 @@ namespace Syroot.NintenTools.Bfres.Helpers
                 }
 
                 ushort stride = (ushort)attributes.Sum(x => x.Stride);
-                Console.WriteLine($"stride total {stride}");
-
                 if (attributes.Count == 1)
                 {
                     vertexBuffer.Buffers.Add(new Buffer()

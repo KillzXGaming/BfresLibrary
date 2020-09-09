@@ -255,6 +255,8 @@ namespace Syroot.NintenTools.Bfres.WiiU
         [Browsable(false)]
         public byte[] MipData { get; set; }
 
+        public uint MipSwizzle { get; set; }
+
         public override byte[] GetSwizzledData() {
             return ByteUtils.CombineArray(Data, MipData);
         }
@@ -306,7 +308,6 @@ namespace Syroot.NintenTools.Bfres.WiiU
                 List<byte[]> mipData = new List<byte[]>();
                 for (int j = 0; j < textureNX.MipCount; j++)
                     mipData.Add(textureNX.GetDeswizzledData(i, j));
-                System.IO.File.WriteAllBytes($"{Name}_DATA.bin", ByteUtils.CombineArray(mipData.ToArray()));
 
                 //Swizzle the current mip data into a switch swizzled image
                 var surface = SwizzleSurfaceMipMaps(ByteUtils.CombineArray(mipData.ToArray()));

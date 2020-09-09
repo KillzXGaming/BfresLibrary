@@ -416,8 +416,6 @@ namespace Syroot.NintenTools.Bfres
             loader.ReadUInt32(); 
             int numNodes = loader.ReadInt32(); // Excludes root node.
 
-            System.Console.WriteLine("numNodes " + numNodes);
-
             int i = 0;
             // Read the nodes including the root node.
             List<Node> nodes = new List<Node>();

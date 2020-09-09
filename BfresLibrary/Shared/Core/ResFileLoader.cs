@@ -118,13 +118,23 @@ namespace Syroot.NintenTools.Bfres.Core
 
         private void ReadImportedFileHeader()
         {
-            Seek(8, SeekOrigin.Begin);
+            this.ByteOrder = ByteOrder.BigEndian;
+
+            Seek(8, SeekOrigin.Begin); //SUB MAGIC
             ResFile.Version = ReadUInt32();
-            ushort ByteOrder = ReadUInt16();
-            ushort Alignment = ReadUInt16();
             ResFile.SetVersionInfo(ResFile.Version);
 
-            Seek(0x20, SeekOrigin.Begin);
+            string sectionMagic = ReadString(8, Encoding.ASCII);
+            uint offset = ReadUInt32();
+            uint platformFlag = ReadUInt32();
+            ReadUInt32();
+            this.ByteOrder = ByteOrder.BigEndian;
+
+            if (platformFlag != 0)
+            {
+                Seek(0x30, SeekOrigin.Begin);
+                this.ByteOrder = ByteOrder.LittleEndian;
+            }
         }
 
         internal ByteOrder ReadByteOrder()

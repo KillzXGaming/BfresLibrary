@@ -237,7 +237,7 @@ namespace Syroot.NintenTools.Bfres
                 ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, Switch.Core.ResFileSwitchSaver.Section1, "Mesh");
                 PosSubMeshesOffset = saver.SaveOffset();
                 if (MemoryPool != null)
-                    ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, Switch.Core.ResFileSwitchSaver.Section4, "Memory pool");
+                    ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, Switch.Core.ResFileSwitchSaver.Section4, "Mesh Memory pool");
                 ((Switch.Core.ResFileSwitchSaver)saver).SaveMemoryPoolPointer();
                 ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 2, 1, 0, Switch.Core.ResFileSwitchSaver.Section1, "Mesh buffer info");
                 PosBufferUnkOffset = saver.SaveOffset();
