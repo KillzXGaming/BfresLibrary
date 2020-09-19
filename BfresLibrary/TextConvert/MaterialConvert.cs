@@ -79,11 +79,25 @@ namespace Syroot.NintenTools.Bfres.TextConvert
 
         public static Material FromJson(string json)
         {
+            Material material = new Material();
+            FromJson(material, json);
+            return material;
+        }
+
+        public static void FromJson(Material mat, string json)
+        {
             var matJson = JsonConvert.DeserializeObject<MaterialStruct>(json);
-            Material mat = new Material();
             mat.Name = matJson.Name;
             mat.Visible = matJson.Visible;
             mat.ShaderAssign = ConvertShaderAssign(matJson.ShaderAssign);
+            mat.TextureRefs = new List<TextureRef>();
+            mat.Samplers = new ResDict<Sampler>();
+            mat.ShaderParams = new ResDict<ShaderParam>();
+            mat.UserData = new ResDict<UserData>();
+            mat.RenderInfos = new ResDict<RenderInfo>();
+            mat.ShaderParamData = new byte[0];
+            mat.VolatileFlags = new byte[0];
+
             if (matJson.RenderState != null)
                 mat.RenderState = matJson.RenderState;
 
@@ -201,8 +215,6 @@ namespace Syroot.NintenTools.Bfres.TextConvert
                 if (dataType == UserDataType.WString)
                     mat.SetUserData(name, ((JArray)param.Value).ToObject<string[]>(), true);
             }
-
-            return mat;
         }
 
         private static ShaderAssignStruct ConvertShaderAssign(ShaderAssign shader)
