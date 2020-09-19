@@ -166,6 +166,31 @@ namespace Syroot.NintenTools.Bfres
                 RenderInfos[name] = renderInfo;
         }
 
+        /// <summary>
+        /// Sets a value directly to user data given the name and value.
+        /// User data entry is added if none with the given name exists.
+        /// Value can be type of int, string, float, or an array of those 3.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="isUnicode"></param>
+        public void SetUserData(string name, object value, bool isUnicode = false)
+        {
+            var userData = new UserData();
+            userData.Name = name;
+            if (value is int) userData.SetValue(new int[1] { (int)value });
+            else if (value is float) userData.SetValue(new float[1] { (float)value });
+            else if (value is string) userData.SetValue(new string[1] { (string)value }, isUnicode);
+            else if (value is int[]) userData.SetValue((int[])value);
+            else if (value is float[]) userData.SetValue((float[])value);
+            else if (value is string[]) userData.SetValue((string[])value, isUnicode);
+
+            if (!UserData.ContainsKey(name))
+                UserData.Add(name, userData);
+            else
+                UserData[name] = userData;
+        }
+
         public void SetShaderParameter(string name, ShaderParamType type, object value)
         {
             ShaderParam param = new ShaderParam();

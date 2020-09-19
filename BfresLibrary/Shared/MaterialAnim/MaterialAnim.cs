@@ -343,6 +343,13 @@ namespace Syroot.NintenTools.Bfres
                 else
                     saver.Seek(12);
 
+                if (TextureNames.Count != TextureBindArray.Count)
+                {
+                    TextureBindArray = new long[TextureNames.Count].ToList();
+                    for (int i = 0; i < TextureNames.Count; i++)
+                        TextureBindArray[i] = -1;
+                }
+
                 ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 2, 1, 0, 1, "Material Animation");
                 saver.SaveString(Name);
                 saver.SaveString(Path);

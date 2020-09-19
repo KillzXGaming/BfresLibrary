@@ -85,6 +85,14 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
         {
             //Convert all render info
 
+            if (material.ShaderAssign.ShadingModelName == "turbo_uber_xlu" || material.Name.Contains("CausticsArea"))
+            {
+                material.Visible = false;
+                return;
+            }
+
+            Console.WriteLine("Converting material " + material.Name);
+
             for (int i = 0; i < 5; i++)
                 RemoveRenderInfo(material, $"gsys_model_fx{i}");
 
@@ -131,6 +139,22 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             material.SetShaderParameter("screen_fake_scale_factor",
                 ShaderParamType.Float3, new float[3] { 0,0,0 });
 
+            if (!material.ShaderParams.ContainsKey("d_shadow_bake_l_cancel_rate"))
+                material.SetShaderParameter("d_shadow_bake_l_cancel_rate",
+                    ShaderParamType.Float, 0.25f);
+
+            if (!material.ShaderParams.ContainsKey("decal_trail_intensity"))
+                material.SetShaderParameter("decal_trail_intensity",
+                    ShaderParamType.Float, 1);
+
+            if (!material.ShaderParams.ContainsKey("indirect_magB"))
+                material.SetShaderParameter("indirect_magB",
+                    ShaderParamType.Float2, new float[2] { 1, 1 });
+
+            if (!material.ShaderParams.ContainsKey("decal_trail_color"))
+                material.SetShaderParameter("decal_trail_color",
+                    ShaderParamType.Float2, new float[3] { 1, 1,1 });
+            
             material.ShaderParams.RemoveKey("effect_normal_offset");
             material.ShaderParams.RemoveKey("gsys_model_fx_ratio");
             material.ShaderParams.RemoveKey("gsys_specular_roughness");
@@ -248,18 +272,18 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             var keys = shaderAssign.ShaderOptions.Keys.ToList();
             var values = shaderAssign.ShaderOptions.Values.ToList();
             int opIndex = 0;
-            for (int i = 0; i < 123; i++)
+            for (int i = 0; i < keys.Count + 3; i++)
             {
                 if (i == 0)
                 {
                     shaderOptions.Add("gsys_alpha_test_enable",
-                        material.RenderState.AlphaControl.AlphaTestEnabled ? "1" : "0");
+                        material.RenderState.AlphaControl.AlphaTestEnabled ? "0" : "0");
                 }
                 else if (i == 1)
                 {
                     shaderOptions.Add("gsys_alpha_test_func", GetShaderOptionAlphaTestFunc(
                         CompareFunction[material.RenderState.AlphaControl.AlphaFunc]));
-                }
+                }   
                 else if (i == 100)
                 {
                     shaderOptions.Add("enable_screen_fake_scale", "0");

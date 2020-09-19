@@ -33,8 +33,8 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
                 textureNX.FromWiiU((WiiU.Texture)tex);
 
                 //Now set the new texture
-                bntx.TextureDict.Add(textureNX.Name);
                 bntx.Textures.Add(textureNX.Texture);
+                bntx.TextureDict.Add(textureNX.Name);
             }
             return bntx;
         }

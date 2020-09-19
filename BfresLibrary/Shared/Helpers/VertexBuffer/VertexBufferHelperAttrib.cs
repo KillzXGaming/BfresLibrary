@@ -47,6 +47,11 @@ namespace Syroot.NintenTools.Bfres.Helpers
             set { stride = value; }
         }
 
+        /// <summary>
+        /// The offset of the buffer data.
+        /// </summary>
+        public uint Offset = 0;
+
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
         internal int FormatSize

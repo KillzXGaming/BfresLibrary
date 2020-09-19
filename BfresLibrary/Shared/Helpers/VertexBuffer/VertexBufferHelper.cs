@@ -45,8 +45,9 @@ namespace Syroot.NintenTools.Bfres.Helpers
                     Name = attrib.Name,
                     BufferIndex = attrib.BufferIndex,
                     Format = attrib.Format,
+                    Offset = attrib.Offset,
                     Data = FromRawData(vertexBuffer, attrib)
-                });
+                }); 
             }
         }
 
@@ -163,6 +164,7 @@ namespace Syroot.NintenTools.Bfres.Helpers
                 if (attributes.Count == 0)
                     throw new ArgumentException($"No attributes found for buffer index {index}. Total {numBuffers}");
 
+                attributes = attributes.OrderBy(x => x.Offset).ToList();
                 foreach (var att in attributes) {
                     Console.WriteLine($"{att.Name} {att.BufferIndex} {att.Stride} {att.Format} {att.Data.Length}");
                 }
@@ -196,19 +198,18 @@ namespace Syroot.NintenTools.Bfres.Helpers
                     });
                 }
 
-                ushort offset = 0;
+                uint offset = 0;
                 foreach (VertexBufferHelperAttrib helperAttrib in attributes)
                 {
-                    // Add a VertexAttrib instance from the helper attribute.
+                    // Add a VertexAttrib instance from the helper attribute.   
                     vertexBuffer.Attributes.Add(helperAttrib.Name, new VertexAttrib()
                     {
                         Name = helperAttrib.Name,
                         Format = helperAttrib.Format,
                         BufferIndex = helperAttrib.BufferIndex,
-                        Offset = offset,
+                        Offset = (ushort)offset,
                     });
-
-                    offset += (ushort)helperAttrib.Stride;
+                    offset += helperAttrib.Stride;
                 }
             }
 

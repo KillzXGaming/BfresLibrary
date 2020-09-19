@@ -599,6 +599,8 @@ namespace Syroot.NintenTools.Bfres
                     {
                         if (subAnim.TexturePatternCount == 0)
                             subAnim.VisualConstantIndex = 0;
+                        else
+                            subAnim.VisualConstantIndex = -1;
                     }
                 }
             }

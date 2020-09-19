@@ -77,6 +77,12 @@ namespace Syroot.NintenTools.Bfres.Switch
                 }
             }
 
+            resFile.TexPatternAnims = new ResDict<MaterialAnim>();
+            resFile.MatVisibilityAnims = new ResDict<MaterialAnim>();
+            resFile.ShaderParamAnims = new ResDict<MaterialAnim>();
+            resFile.ColorAnims = new ResDict<MaterialAnim>();
+            resFile.TexSrtAnims = new ResDict<MaterialAnim>();
+
             //Split material animations into shader, texture, and visual animation lists
             foreach (var anim in resFile.MaterialAnims.Values)
             {

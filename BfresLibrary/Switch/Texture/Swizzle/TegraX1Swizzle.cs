@@ -24,9 +24,6 @@ namespace Syroot.NintenTools.Bfres.Swizzling
             uint blkDepth = 1;
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
 
-            Console.WriteLine($"format {texture.Format} {bpp} {blkWidth} {blkHeight} {blockHeight}");
-            Console.WriteLine($"ArrayLevel {ArrayLevel} {MipLevel} {DepthLevel} {BlockHeightLog2}");
-
             uint Pitch = 0;
             uint DataAlignment = 512;
             uint TileMode = 0;
@@ -55,8 +52,6 @@ namespace Syroot.NintenTools.Bfres.Swizzling
                         uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
 
                         uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                        Console.WriteLine($"size " + size);
 
                         if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
@@ -236,8 +231,6 @@ namespace Syroot.NintenTools.Bfres.Swizzling
         private static byte[] _swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, int toSwizzle)
         {
             uint block_height = (uint)(1 << blockHeightLog2);
-
-            Console.WriteLine($"Swizzle {width} {height} {blkWidth} {blkHeight} {roundPitch} {bpp} {tileMode} {blockHeightLog2} {data.Length} {toSwizzle}");
 
             width = DIV_ROUND_UP(width, blkWidth);
             height = DIV_ROUND_UP(height, blkHeight);
