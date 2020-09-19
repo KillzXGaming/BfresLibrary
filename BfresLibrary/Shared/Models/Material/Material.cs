@@ -136,7 +136,7 @@ namespace Syroot.NintenTools.Bfres
         public void Import(string FileName, ResFile ResFile) {
             string ext = Path.GetExtension(FileName);
             if (ext == ".json")
-                TextConvert.MaterialConvert.FromJson(FileName);
+                TextConvert.MaterialConvert.FromJson(this, File.ReadAllText(FileName));
             else
                 ResFileLoader.ImportSection(FileName, this, ResFile);
         }
