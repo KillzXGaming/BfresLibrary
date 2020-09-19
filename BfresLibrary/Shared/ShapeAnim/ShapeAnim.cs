@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an FSHA subfile in a <see cref="ResFile"/>, storing shape animations of a <see cref="Model"/>

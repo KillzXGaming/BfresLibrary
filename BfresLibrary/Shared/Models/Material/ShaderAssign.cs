@@ -1,8 +1,8 @@
-﻿using Syroot.NintenTools.Bfres.Core;
+﻿using BfresLibrary.Core;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     public class ShaderAssign : IResData
     {

@@ -1,6 +1,6 @@
-﻿using Syroot.NintenTools.Bfres.Core;
+﻿using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres.GX2
+namespace BfresLibrary.GX2
 {
     /// <summary>
     /// Represents GX2 settings controlling additional color blending options.

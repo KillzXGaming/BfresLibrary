@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary.Core;
+using BfresLibrary.GX2;
 using System.ComponentModel;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an FMDL subfile in a <see cref="ResFile"/>, storing multi-dimensional texture data.

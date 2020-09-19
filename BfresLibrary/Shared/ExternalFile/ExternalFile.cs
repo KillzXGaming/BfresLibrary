@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a file attachment to a <see cref="ResFile"/> which can be of arbitrary data.

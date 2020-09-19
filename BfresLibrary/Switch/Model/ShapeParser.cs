@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Syroot.NintenTools.Bfres.Switch.Core;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres;
+using BfresLibrary.Switch.Core;
+using BfresLibrary.Core;
+using BfresLibrary;
 
-namespace Syroot.NintenTools.Bfres.Switch
+namespace BfresLibrary.Switch
 {
     internal class ShapeParser
     {

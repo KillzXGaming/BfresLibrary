@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Syroot.NintenTools.Bfres.PlatformConverters
+namespace BfresLibrary.PlatformConverters
 {
     /// <summary>
     /// The conversion handler to process how to convert shaders and other data per game profile.

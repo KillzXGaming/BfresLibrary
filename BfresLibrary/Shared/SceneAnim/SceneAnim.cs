@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.IO;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an FSCN subfile in a <see cref="ResFile"/>, storing scene animations controlling camera, light and

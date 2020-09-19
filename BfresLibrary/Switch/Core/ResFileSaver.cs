@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using Syroot.BinaryData;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres.Switch.Core
+namespace BfresLibrary.Switch.Core
 {
     /// <summary>
     /// Saves the hierachy and data of a <see cref="Bfres.ResFile"/>.

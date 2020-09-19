@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Syroot.BinaryData;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.Switch.Core;
+using BfresLibrary.Core;
+using BfresLibrary.Switch.Core;
 using Syroot.NintenTools.NSW.Bntx;
 
-namespace Syroot.NintenTools.Bfres.Switch
+namespace BfresLibrary.Switch
 {
     public class ResFileParser
     {

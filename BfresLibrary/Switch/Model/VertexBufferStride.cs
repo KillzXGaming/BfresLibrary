@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres;
+using BfresLibrary.Core;
+using BfresLibrary;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents stride and size in a <see cref="VertexBuffer"/>

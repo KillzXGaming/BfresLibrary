@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a dictionary which can quickly look up <see cref="IResData"/> instances of type

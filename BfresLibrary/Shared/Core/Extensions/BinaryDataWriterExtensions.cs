@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Syroot.BinaryData;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary;
+using BfresLibrary.GX2;
 
-namespace Syroot.NintenTools.Bfres.Core
+namespace BfresLibrary.Core
 {
     /// <summary>
     /// Represents extension methods for the <see cref="BinaryDataWriter"/> class.

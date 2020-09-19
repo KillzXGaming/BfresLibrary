@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a 16-bit half-precision floating point value according to the IEEE 754 standard.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Syroot.NintenTools.Bfres.Core
+namespace BfresLibrary.Core
 {
     /// <summary>
     /// Represents extension methods for <see cref="Byte"/> instances.

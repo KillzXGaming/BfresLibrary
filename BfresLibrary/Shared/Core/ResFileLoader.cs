@@ -7,7 +7,7 @@ using System.Text;
 using Syroot.Maths;
 using Syroot.BinaryData;
 
-namespace Syroot.NintenTools.Bfres.Core
+namespace BfresLibrary.Core
 {
     /// <summary>
     /// Loads the hierachy and data of a <see cref="Bfres.ResFile"/>.

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Syroot.NintenTools.Bfres.TextConvert
+namespace BfresLibrary.TextConvert
 {
     public class NoFormattingConverter : JsonConverter
     {

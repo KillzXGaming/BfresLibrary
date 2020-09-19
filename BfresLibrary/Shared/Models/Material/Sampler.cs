@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary.Core;
+using BfresLibrary.GX2;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a <see cref="Texture"/> sampler in a <see cref="UserData"/> section, storing configuration on how to

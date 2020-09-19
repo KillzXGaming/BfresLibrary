@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Syroot.NintenTools.NSW.Bntx;
 using Syroot.NintenTools.NSW.Bntx.GFX;
 
-namespace Syroot.NintenTools.Bfres.PlatformConverters
+namespace BfresLibrary.PlatformConverters
 {
     class TextureConverter
     {
@@ -22,7 +22,7 @@ namespace Syroot.NintenTools.Bfres.PlatformConverters
             bntx.VersionMinor = 0;
             bntx.VersionMinor2 = 0;
             bntx.Textures = new List<Texture>();
-            bntx.TextureDict = new NSW.Bntx.ResDict();
+            bntx.TextureDict = new Syroot.NintenTools.NSW.Bntx.ResDict();
             bntx.RelocationTable = new RelocationTable();
             bntx.Flag = 0;
 

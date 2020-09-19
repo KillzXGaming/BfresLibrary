@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an exception raised when handling <see cref="ResFile"/> data.

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a key shape animation info in a <see cref="VertexShapeAnim"/> instance.

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Syroot.BinaryData;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.Linq;
 
-namespace Syroot.NintenTools.Bfres.Helpers
+namespace BfresLibrary.Helpers
 {
     /// <summary>
     /// Represents a helper class for working with <see cref="VertexBuffer"/> instances.

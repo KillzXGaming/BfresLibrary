@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Syroot.NintenTools.Bfres.TextConvert
+namespace BfresLibrary.TextConvert
 {
     public class MaterialConvert
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Syroot.NintenTools.Bfres.Swizzling
+namespace BfresLibrary.Swizzling
 {
     public class GX2
     {

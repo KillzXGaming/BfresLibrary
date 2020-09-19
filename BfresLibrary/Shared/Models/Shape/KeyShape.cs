@@ -1,6 +1,6 @@
-﻿using Syroot.NintenTools.Bfres.Core;
+﻿using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     public class KeyShape : IResData
     {

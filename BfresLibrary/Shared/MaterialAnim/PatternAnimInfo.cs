@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a material animation in a <see cref="MaterialAnim"/> subfile, storing material animation data.

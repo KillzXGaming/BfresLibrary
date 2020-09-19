@@ -1,6 +1,6 @@
 ﻿using Syroot.Maths;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a 2D transformation.

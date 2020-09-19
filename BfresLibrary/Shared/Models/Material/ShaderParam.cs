@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a parameter value in a <see cref="UserData"/> section, passing data to shader variables.
@@ -81,7 +81,7 @@ namespace Syroot.NintenTools.Bfres
 
         // TODO: Methods to retrieve the strongly-typed shader param value.
 
-        // ---- METHODS ------------C:\Users\Nathan\Documents\GitHub\NintenTools.Bfres-master\NintenTools.Bfres\src\Syroot.NintenTools.Bfres\ExternalFile\------------------------------------------------------------------------------------
+        // ---- METHODS ------------C:\Users\Nathan\Documents\GitHub\NintenTools.Bfres-master\NintenTools.Bfres\src\BfresLibrary\ExternalFile\------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)
         {

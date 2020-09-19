@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Syroot.NintenTools.NSW.Bntx.GFX;
 using Syroot.NintenTools.NSW.Bntx;
 
-namespace Syroot.NintenTools.Bfres.Swizzling
+namespace BfresLibrary.Swizzling
 {
     public class TegraX1Swizzle
     {

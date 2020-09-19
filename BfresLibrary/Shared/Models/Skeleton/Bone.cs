@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using Syroot.Maths;
 using System.Collections.Generic;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.IO;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a single bone in a <see cref="Skeleton"/> section, storing its initial transform and transformation

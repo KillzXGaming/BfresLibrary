@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Syroot.NintenTools.NSW.Bntx;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.Swizzling;
+using BfresLibrary.Core;
+using BfresLibrary.Swizzling;
 using Syroot.NintenTools.NSW.Bntx.GFX;
 
-namespace Syroot.NintenTools.Bfres.Switch
+namespace BfresLibrary.Switch
 {
     public class SwitchTexture : TextureShared, IResData
     {
@@ -113,7 +113,7 @@ namespace Syroot.NintenTools.Bfres.Switch
             Texture.ChannelAlpha = ConvertChannelSelector(textureU.CompSelA);
 
             //Convert user data. BNTX doesn't share the same user data library atm so it needs manual conversion.
-            Texture.UserData = new List<NSW.Bntx.UserData>();
+            Texture.UserData = new List<Syroot.NintenTools.NSW.Bntx.UserData>();
             foreach (var userData in textureU.UserData)
             {
 

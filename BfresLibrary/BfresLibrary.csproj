@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Authors>Syroot;</Authors>
-    <AssemblyName>Syroot.NintenTools.Bfres</AssemblyName>
+    <AssemblyName>BfresLibrary</AssemblyName>
     <AssemblyTitle>NintenTools.Bfres</AssemblyTitle>
     <Copyright>(c) Syroot, licensed under MIT</Copyright>
     <Description>.NET library for loading and saving the Nintendo BFRES graphics archive format.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIconUrl>https://gitlab.com/Syroot/NintenTools.Bfres/raw/master/res/logo.png</PackageIconUrl>
-    <PackageId>Syroot.NintenTools.Bfres</PackageId>
+    <PackageId>BfresLibrary</PackageId>
     <PackageLicenseUrl>https://gitlab.com/Syroot/NintenTools.Bfres/raw/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/KillzXGaming/BfresLibrary</PackageProjectUrl>
     <PackageTags>bfres;cafe;nintendo;nw4f;wiiu;nx;switch;</PackageTags>
@@ -16,6 +16,7 @@
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <VersionPrefix>1.6.0</VersionPrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>BfresLibrary</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

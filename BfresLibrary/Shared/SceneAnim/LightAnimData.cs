@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents the animatable data of scene lighting.

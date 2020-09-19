@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using Syroot.BinaryData;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a <see cref="String"/> which is stored in a <see cref="ResFile"/>.

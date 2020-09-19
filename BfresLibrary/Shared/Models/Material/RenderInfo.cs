@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.ComponentModel;
 using System.Globalization;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a render info in a FMAT section storing uniform parameters required to render the

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.IO;
 using System.ComponentModel;
 using System.Linq;
 using Syroot.BinaryData;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an FMAT subsection of a <see cref="Model"/> subfile, storing information on with which textures and
@@ -34,7 +34,6 @@ namespace Syroot.NintenTools.Bfres
 
             ShaderParamData = new byte[0];
             VolatileFlags = new byte[0];
-
         }
 
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.ComponentModel;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary.GX2;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     internal class SamplerSwitch : IResData
     {

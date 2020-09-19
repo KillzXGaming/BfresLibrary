@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a 16-bit fixed-point decimal consisting of 1 sign bit, 10 integer bits and 5 fractional bits (denoted

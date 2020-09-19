@@ -1,4 +1,4 @@
-﻿namespace Syroot.NintenTools.Bfres.Core
+﻿namespace BfresLibrary.Core
 {
     /// <summary>
     /// Represents the common interface for <see cref="ResFile"/> data instances.

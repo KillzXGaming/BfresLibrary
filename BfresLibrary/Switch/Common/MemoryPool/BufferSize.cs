@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.Switch.Core;
+using BfresLibrary.Core;
+using BfresLibrary.Switch.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a buffer info section

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Syroot.BinaryData;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary.Core;
+using BfresLibrary.GX2;
 using System.Linq;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents the surface net of a <see cref="Shape"/> section, storing information on which

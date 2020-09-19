@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using Syroot.BinaryData;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     public class StringTable : IResData
     {

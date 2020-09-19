@@ -1,7 +1,7 @@
-﻿using Syroot.NintenTools.Bfres.Core;
+﻿using BfresLibrary.Core;
 using System.ComponentModel;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a node in a <see cref="SubMesh"/> bounding tree to determine when to show which sub mesh of a

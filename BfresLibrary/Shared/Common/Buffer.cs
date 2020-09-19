@@ -1,7 +1,7 @@
-﻿using Syroot.NintenTools.Bfres.Core;
+﻿using BfresLibrary.Core;
 using System.Linq;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a buffer of data uploaded to the GX2 GPU which can hold arbitrary data.

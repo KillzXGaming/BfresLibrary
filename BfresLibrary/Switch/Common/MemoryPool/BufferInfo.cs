@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Syroot.Maths;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.Switch.Core;
+using BfresLibrary.Core;
+using BfresLibrary.Switch.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents an buffer info section in a <see cref="ResFile"/> subfile. References vertex and index buffers

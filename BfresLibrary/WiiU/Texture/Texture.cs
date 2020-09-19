@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Syroot.NintenTools.Bfres.Core;
-using Syroot.NintenTools.Bfres.GX2;
+using BfresLibrary.Core;
+using BfresLibrary.GX2;
 using Syroot.NintenTools.NSW.Bntx.GFX;
 using System.ComponentModel;
-using Syroot.NintenTools.Bfres.Swizzling;
+using BfresLibrary.Swizzling;
 
-namespace Syroot.NintenTools.Bfres.WiiU
+namespace BfresLibrary.WiiU
 {
     /// <summary>
     /// Represents an FTEX subfile in a <see cref="ResFile"/>, storing multi-dimensional texture data.

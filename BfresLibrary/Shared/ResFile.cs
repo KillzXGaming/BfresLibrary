@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Syroot.BinaryData;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 using System.ComponentModel;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a NintendoWare for Cafe (NW4F) graphics data archive file.
@@ -620,7 +620,7 @@ namespace Syroot.NintenTools.Bfres
             var mem = new MemoryStream();
             bntx.Save(mem);
 
-            bntx = new NSW.Bntx.BntxFile(new MemoryStream(mem.ToArray()));
+            bntx = new Syroot.NintenTools.NSW.Bntx.BntxFile(new MemoryStream(mem.ToArray()));
 
             mem = new MemoryStream();
             bntx.Save(mem);

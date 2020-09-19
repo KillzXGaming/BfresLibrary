@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Syroot.NintenTools.Bfres.Core;
+using BfresLibrary.Core;
 
-namespace Syroot.NintenTools.Bfres
+namespace BfresLibrary
 {
     /// <summary>
     /// Represents a reference to a <see cref="Texture"/> instance by name.
