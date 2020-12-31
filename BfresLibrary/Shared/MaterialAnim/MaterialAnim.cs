@@ -343,7 +343,7 @@ namespace BfresLibrary
                 else
                     saver.Seek(12);
 
-                if (TextureNames.Count != TextureBindArray.Count)
+                if (TextureBindArray == null || TextureNames.Count != TextureBindArray.Count)
                 {
                     TextureBindArray = new long[TextureNames.Count].ToList();
                     for (int i = 0; i < TextureNames.Count; i++)
@@ -427,6 +427,8 @@ namespace BfresLibrary
             {
                 if (TextureNames == null)
                     TextureNames = new ResDict<TextureRef>();
+                if (MaterialAnimDataList == null)
+                    MaterialAnimDataList = new List<MaterialAnimData>();
 
                 saver.SaveString(Name);
                 saver.SaveString(Path);

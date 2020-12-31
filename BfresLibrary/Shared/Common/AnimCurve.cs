@@ -68,6 +68,24 @@ namespace BfresLibrary
         }
 
         /// <summary>
+        /// Gets or sets the pre wrap mode, determining how to wrap the key data.
+        /// </summary>
+        public WrapMode PreWrap
+        {
+            get { return (WrapMode)(_flags >> 8 & 3); }
+            set { _flags = (ushort)(_flags & 64767 | (ushort)value << 8); }
+        }
+
+        /// <summary>
+        /// Gets or sets the post wrap mode, determining how to wrap the key data.
+        /// </summary>
+        public WrapMode PostWrap
+        {
+            get { return (WrapMode)(_flags >> 12 & 3); }
+            set { _flags = (ushort)(_flags & 53247 | (ushort)value << 12); }
+        }
+
+        /// <summary>
         /// Gets or sets the memory offset relative to the start of the corresponding animation data structure to
         /// animate the field stored at that address. Note that enums exist in the specific animation which map offsets
         /// to names.
@@ -478,6 +496,13 @@ namespace BfresLibrary
         /// 1 element of the <see cref="AnimCurve.Keys"/> array forms a key.
         /// </summary>
         BakedBool = 7 << 4
+    }
+
+    public enum WrapMode
+    {
+        Clamp,
+        Repeat,
+        Mirror,
     }
 
     public struct AnimConstant

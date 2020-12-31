@@ -137,13 +137,13 @@ namespace BfresLibrary.Switch.Core
                 ((IResData)ExportableData).Save(this);
                 WriteMaterialAnimations((MaterialAnim)ExportableData);
             }
-            if (ExportableData is MaterialAnim)
+            if (ExportableData is VisibilityAnim)
             {
                 WriteHeader("fresSUB", "FVBN\0\0\0\0");
                 ((IResData)ExportableData).Save(this);
                 WriteBoneVisabiltyAnimations((VisibilityAnim)ExportableData);
             }
-            if (ExportableData is MaterialAnim)
+            if (ExportableData is ShapeAnim)
             {
                 WriteHeader("fresSUB", "FSHA\0\0\0\0");
                 ((IResData)ExportableData).Save(this);
@@ -155,14 +155,7 @@ namespace BfresLibrary.Switch.Core
                 ((IResData)ExportableData).Save(this);
                 WriteSceneAnimations((SceneAnim)ExportableData);
             }
-            if (ExportableData is SceneAnim)
-            {
-                WriteHeader("fmdlSUB", "FSKL\0\0\0\0");
-                WriteSignature("BONE");
-                ((IResData)ExportableData).Save(this);
-                WriteSceneAnimations((SceneAnim)ExportableData);
-            }
-            if (ExportableData is SceneAnim)
+            if (ExportableData is Skeleton)
             {
                 WriteHeader("fmdlSUB", "FSKL\0\0\0\0");
                 WriteSignature("BONE");

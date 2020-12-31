@@ -64,7 +64,7 @@ namespace BfresLibrary
         public int TexturePatternCurveIndex { get; set; } = -1;
         public int BeginVisalConstantIndex { get; set; } = -1;
         public int VisalCurveIndex { get; set; } = -1;
-        public int VisualConstantIndex { get; set; } = 0;
+        public int VisualConstantIndex { get; set; } = -1;
         public int InfoIndex { get; set; } = 0;
 
         public ushort[] BaseDataList { get; set; }

@@ -281,7 +281,7 @@ namespace BfresLibrary
         /// Gets the byte order in which data is stored. Must be the endianness of the target platform.
         /// </summary>
         [Browsable(false)]
-        public ByteOrder ByteOrder { get; internal set; } = ByteOrder.BigEndian;
+        public ByteOrder ByteOrder { get; set; } = ByteOrder.BigEndian;
 
         /// <summary>
         /// Gets or sets the stored <see cref="Model"/> (FMDL) instances.
@@ -595,13 +595,6 @@ namespace BfresLibrary
                 for (int i = 0; i < MaterialAnims.Count; i++)
                 {
                     MaterialAnims[i].signature = "FMAA";
-                    foreach (var subAnim in MaterialAnims[i].MaterialAnimDataList)
-                    {
-                        if (subAnim.TexturePatternCount == 0)
-                            subAnim.VisualConstantIndex = 0;
-                        else
-                            subAnim.VisualConstantIndex = -1;
-                    }
                 }
             }
         }
