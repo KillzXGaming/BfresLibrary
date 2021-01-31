@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using BfresLibrary.Core;
 
 namespace BfresLibrary
@@ -7,6 +8,7 @@ namespace BfresLibrary
     /// Represents a parameter value in a <see cref="UserData"/> section, passing data to shader variables.
     /// </summary>
     [DebuggerDisplay(nameof(ShaderParam) + " {" + nameof(Name) + "}")]
+    [Serializable]
     public class ShaderParam : IResData
     {
         /// <summary>
@@ -65,7 +67,7 @@ namespace BfresLibrary
                     case ShaderParamType.Srt2D: return Srt2D.SizeInBytes;
                     case ShaderParamType.Srt3D: return Srt3D.SizeInBytes;
                     case ShaderParamType.TexSrt: return TexSrt.SizeInBytes;
-                    case ShaderParamType.TexSrtEx: return TexSrtEx.SizeInBytes;
+                    case ShaderParamType.TexSrtEx: return TexSrt.SizeInBytes + 4;
                 }
                 throw new ResException($"Cannot retrieve size of unknown {nameof(ShaderParamType)} {Type}.");
             }
@@ -76,12 +78,10 @@ namespace BfresLibrary
         public uint callbackPointer { get; set; }
         public int offset { get; set; }
 
-        public bool UsePadding;
-        public int PaddingLength;
+        public bool UsePadding { get; set; }
+        public int PaddingLength { get; set; }
 
-        // TODO: Methods to retrieve the strongly-typed shader param value.
-
-        // ---- METHODS ------------C:\Users\Nathan\Documents\GitHub\NintenTools.Bfres-master\NintenTools.Bfres\src\BfresLibrary\ExternalFile\------------------------------------------------------------------------------------
+        // ---- METHODS ------------
 
         void IResData.Load(ResFileLoader loader)
         {
@@ -175,6 +175,7 @@ namespace BfresLibrary
     /// <summary>
     /// Represents the data types in which <see cref="ShaderParam"/> instances can store their value.
     /// </summary>
+    [Serializable]
     public enum ShaderParamType : byte
     {
         /// <summary>

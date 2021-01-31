@@ -99,70 +99,80 @@ namespace BfresLibrary
         void IResData.Load(ResFileLoader loader)
         {
             loader.CheckSignature(_signature);
-            Name = loader.LoadString();
-            Path = loader.LoadString();
-            Flags = loader.ReadEnum<ShapeAnimFlags>(true);
-
-            ushort numUserData;
-            ushort numVertexShapeAnim;
-            ushort numKeyShapeAnim;
-            ushort numCurve;
-            if (loader.ResFile.Version >= 0x03040000)
-            {
-                numUserData = loader.ReadUInt16();
-                FrameCount = loader.ReadInt32();
-                numVertexShapeAnim = loader.ReadUInt16();
-                numKeyShapeAnim = loader.ReadUInt16();
-                numCurve = loader.ReadUInt16();
-                loader.Seek(2);
-                BakedSize = loader.ReadUInt32();
-            }
+            if (loader.IsSwitch)
+                Switch.ShapeAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
             else
             {
-                FrameCount = loader.ReadUInt16();
-                numVertexShapeAnim = loader.ReadUInt16();
-                numKeyShapeAnim = loader.ReadUInt16();
-                numUserData = loader.ReadUInt16();
-                numCurve = loader.ReadUInt16();
-                BakedSize = loader.ReadUInt32();
-            }  
+                Name = loader.LoadString();
+                Path = loader.LoadString();
+                Flags = loader.ReadEnum<ShapeAnimFlags>(true);
 
-            BindModel = loader.Load<Model>();
-            BindIndices = loader.LoadCustom(() => loader.ReadUInt16s(numVertexShapeAnim));
-            VertexShapeAnims = loader.LoadList<VertexShapeAnim>(numVertexShapeAnim);
-            UserData = loader.LoadDict<UserData>();
+                ushort numUserData;
+                ushort numVertexShapeAnim;
+                ushort numKeyShapeAnim;
+                ushort numCurve;
+                if (loader.ResFile.Version >= 0x03040000)
+                {
+                    numUserData = loader.ReadUInt16();
+                    FrameCount = loader.ReadInt32();
+                    numVertexShapeAnim = loader.ReadUInt16();
+                    numKeyShapeAnim = loader.ReadUInt16();
+                    numCurve = loader.ReadUInt16();
+                    loader.Seek(2);
+                    BakedSize = loader.ReadUInt32();
+                }
+                else
+                {
+                    FrameCount = loader.ReadUInt16();
+                    numVertexShapeAnim = loader.ReadUInt16();
+                    numKeyShapeAnim = loader.ReadUInt16();
+                    numUserData = loader.ReadUInt16();
+                    numCurve = loader.ReadUInt16();
+                    BakedSize = loader.ReadUInt32();
+                }
+
+                BindModel = loader.Load<Model>();
+                BindIndices = loader.LoadCustom(() => loader.ReadUInt16s(numVertexShapeAnim));
+                VertexShapeAnims = loader.LoadList<VertexShapeAnim>(numVertexShapeAnim);
+                UserData = loader.LoadDict<UserData>();
+            }
         }
         
         void IResData.Save(ResFileSaver saver)
         {
             saver.WriteSignature(_signature);
-            saver.SaveString(Name);
-            saver.SaveString(Path);
-            saver.Write(Flags, true);
-
-            if (saver.ResFile.Version >= 0x03040000)
-            {
-                saver.Write((ushort)UserData.Count);
-                saver.Write(FrameCount);
-                saver.Write((ushort)VertexShapeAnims.Count);
-                saver.Write((ushort)VertexShapeAnims.Sum((x) => x.KeyShapeAnimInfos.Count));
-                saver.Write((ushort)VertexShapeAnims.Sum((x) => x.Curves.Count));
-                saver.Seek(2);
-                saver.Write(BakedSize);
-            }
+            if (saver.IsSwitch)
+                Switch.ShapeAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
             else
             {
-                saver.Write((ushort)FrameCount);
-                saver.Write((ushort)VertexShapeAnims.Count);
-                saver.Write((ushort)VertexShapeAnims.Sum((x) => x.KeyShapeAnimInfos.Count));
-                saver.Write((ushort)UserData.Count);
-                saver.Write((ushort)VertexShapeAnims.Sum((x) => x.Curves.Count));
-                saver.Write(BakedSize);
+                saver.SaveString(Name);
+                saver.SaveString(Path);
+                saver.Write(Flags, true);
+
+                if (saver.ResFile.Version >= 0x03040000)
+                {
+                    saver.Write((ushort)UserData.Count);
+                    saver.Write(FrameCount);
+                    saver.Write((ushort)VertexShapeAnims.Count);
+                    saver.Write((ushort)VertexShapeAnims.Sum((x) => x.KeyShapeAnimInfos.Count));
+                    saver.Write((ushort)VertexShapeAnims.Sum((x) => x.Curves.Count));
+                    saver.Seek(2);
+                    saver.Write(BakedSize);
+                }
+                else
+                {
+                    saver.Write((ushort)FrameCount);
+                    saver.Write((ushort)VertexShapeAnims.Count);
+                    saver.Write((ushort)VertexShapeAnims.Sum((x) => x.KeyShapeAnimInfos.Count));
+                    saver.Write((ushort)UserData.Count);
+                    saver.Write((ushort)VertexShapeAnims.Sum((x) => x.Curves.Count));
+                    saver.Write(BakedSize);
+                }
+                saver.Save(BindModel);
+                saver.SaveCustom(BindIndices, () => saver.Write(BindIndices));
+                saver.SaveList(VertexShapeAnims);
+                saver.SaveDict(UserData);
             }
-            saver.Save(BindModel);
-            saver.SaveCustom(BindIndices, () => saver.Write(BindIndices));
-            saver.SaveList(VertexShapeAnims);
-            saver.SaveDict(UserData);
         }
 
         internal long PosBindModelOffset;

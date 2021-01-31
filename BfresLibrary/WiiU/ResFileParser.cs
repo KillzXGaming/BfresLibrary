@@ -33,7 +33,7 @@ namespace BfresLibrary.WiiU
             resFile.TexSrtAnims = loader.LoadDict<MaterialAnim>();
             resFile.TexPatternAnims = loader.LoadDict<MaterialAnim>();
             resFile.BoneVisibilityAnims = loader.LoadDict<VisibilityAnim>();
-            resFile.MatVisibilityAnims = loader.LoadDict<MaterialAnim>();
+            loader.LoadDict<VisibilityAnim>();
             resFile.ShapeAnims = loader.LoadDict<ShapeAnim>();
 
             resFile.Textures = new ResDict<TextureShared>();

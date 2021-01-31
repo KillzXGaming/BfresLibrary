@@ -1,10 +1,12 @@
-﻿using Syroot.Maths;
+﻿using System;
+using Syroot.Maths;
 
 namespace BfresLibrary
 {
     /// <summary>
     /// Represents a 2D transformation.
     /// </summary>
+    [Serializable]
     public struct Srt2D
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
@@ -35,6 +37,7 @@ namespace BfresLibrary
     /// <summary>
     /// Represents a 3D transformation.
     /// </summary>
+    [Serializable]
     public struct Srt3D
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
@@ -65,6 +68,7 @@ namespace BfresLibrary
     /// <summary>
     /// Represents a 2D texture transformation.
     /// </summary>
+    [Serializable]
     public struct TexSrt
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
@@ -79,7 +83,7 @@ namespace BfresLibrary
         /// <summary>
         /// The <see cref="TexSrtMode"/> with which the transformation is applied.
         /// </summary>
-        public TexSrtMode Mode;
+        public TexSrtMode Mode { get; set; }
 
         /// <summary>
         /// The scaling amount of the transformation.
@@ -89,62 +93,16 @@ namespace BfresLibrary
         /// <summary>
         /// The rotation angle of the transformation.
         /// </summary>
-        public float Rotation;
+        public float Rotation { get; set; }
 
         /// <summary>
         /// The translation amount of the transformation.
         /// </summary>
         public Vector2F Translation;
-
-        /// <summary>
-        /// Unkown space used in some games
-        /// </summary>
-        public byte[] unkown;
     }
 
     /// <summary>
-    /// Represents a 2D texture transformation which is multiplied by a 3x4 matrix referenced at runtime by the
-    /// <see cref="MatrixPointer"/>.
-    /// </summary>
-    public struct TexSrtEx
-    {
-        // ---- CONSTANTS ----------------------------------------------------------------------------------------------
-
-        /// <summary>
-        /// The size of this structure.
-        /// </summary>
-        public const int SizeInBytes = TexSrt.SizeInBytes + sizeof(uint);
-
-        // ---- FIELDS -------------------------------------------------------------------------------------------------
-
-        /// <summary>
-        /// The <see cref="TexSrtMode"/> with which the transformation is applied.
-        /// </summary>
-        public TexSrtMode Mode;
-
-        /// <summary>
-        /// The scaling amount of the transformation.
-        /// </summary>
-        public Vector2F Scaling;
-
-        /// <summary>
-        /// The rotation angle of the transformation.
-        /// </summary>
-        public float Rotation;
-
-        /// <summary>
-        /// The translation amount of the transformation.
-        /// </summary>
-        public Vector2F Translation;
-
-        /// <summary>
-        /// A pointer to a 3x4 matrix to multiply the transformation with. Set at runtime.
-        /// </summary>
-        public uint MatrixPointer;
-    }
-
-    /// <summary>
-    /// Represents the texture transformation mode used in <see cref="TexSrt"/> and <see cref="TexSrtEx"/>.
+    /// Represents the texture transformation mode used in <see cref="TexSrt"/> />.
     /// </summary>
     public enum TexSrtMode : uint
     {

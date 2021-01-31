@@ -30,18 +30,38 @@ namespace BfresLibrary
 
         void IResData.Load(ResFileLoader loader)
         {
-            CurveIndex = loader.ReadSByte();
-            SubBindIndex = loader.ReadSByte();
-            loader.Seek(2);
-            Name = loader.LoadString();
+            if (loader.IsSwitch)
+            {
+                Name = loader.LoadString();
+                CurveIndex = loader.ReadSByte();
+                SubBindIndex = loader.ReadSByte();
+                loader.Seek(6);
+            }
+            else
+            {
+                CurveIndex = loader.ReadSByte();
+                SubBindIndex = loader.ReadSByte();
+                loader.Seek(2);
+                Name = loader.LoadString();
+            }
         }
         
         void IResData.Save(ResFileSaver saver)
         {
-            saver.Write(CurveIndex);
-            saver.Write(SubBindIndex);
-            saver.Seek(2);
-            saver.SaveString(Name);
+            if (saver.IsSwitch)
+            {
+                saver.SaveString(Name);
+                saver.Write(CurveIndex);
+                saver.Write(SubBindIndex);
+                saver.Seek(6);
+            }
+            else
+            {
+                saver.Write(CurveIndex);
+                saver.Write(SubBindIndex);
+                saver.Seek(2);
+                saver.SaveString(Name);
+            }
         }
     }
 }

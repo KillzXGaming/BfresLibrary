@@ -148,6 +148,28 @@ namespace BfresLibrary
 
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Calculates the bake size of the animation curve.
+        /// </summary>
+        /// <returns></returns>
+        public uint CalculateBakeSize(bool isSwitch)
+        {
+            if (isSwitch)
+            {
+                if (CurveType == AnimCurveType.StepInt || CurveType == AnimCurveType.StepBool)
+                    return (uint)(1 * (EndFrame - StartFrame + 1) + 12);
+                else
+                    return (uint)(4 * (EndFrame - StartFrame + 1) + 32);
+            }
+            else
+            {
+                if (CurveType == AnimCurveType.StepInt || CurveType == AnimCurveType.StepBool)
+                    return (uint)(1 * (EndFrame - StartFrame + 1) + 8);
+                else
+                    return (uint)(4 * (EndFrame - StartFrame + 1) + 20);
+            }
+        }
+
         public AnimCurve Copy()
         {
             AnimCurve curve = new AnimCurve();
@@ -210,34 +232,6 @@ namespace BfresLibrary
                 KeyArrayOffset = loader.ReadOffset();
             }
 
-            //Bools use bits to store values. 
-            if (CurveType == AnimCurveType.StepBool)
-            {
-                int KeyBool = 0;
-
-                if (KeyType == AnimCurveKeyType.Single) //Read them as a int instead of a float
-                {
-                    KeyBool = loader.LoadCustom(() => loader.ReadInt32(), (uint)KeyArrayOffset);
-                }
-                else if (KeyType == AnimCurveKeyType.Int16)
-                {
-                    KeyBool = loader.LoadCustom(() => loader.ReadInt16(), (uint)KeyArrayOffset);
-                }
-                else if (KeyType == AnimCurveKeyType.SByte)
-                {
-                    KeyBool = loader.LoadCustom(() => loader.ReadSByte(), (uint)KeyArrayOffset);
-                }
-
-                KeyStepBoolData = new bool[numKey];
-
-                for (int i = 0; i < numKey; i++)
-                {
-                    bool set = (KeyBool & 0x1) != 0;
-                    KeyBool >>= 1;
-
-                    KeyStepBoolData[i] = set;
-                }
-            }
             Frames = loader.LoadCustom(() =>
             {
                 switch (FrameType)
@@ -303,6 +297,31 @@ namespace BfresLibrary
                 }
                 return keys;
             }, (uint)KeyArrayOffset);
+
+            //Bools use bits to store values. 
+            if (CurveType == AnimCurveType.StepBool)
+            {
+                int keyIndex = 0;
+
+                KeyStepBoolData = new bool[numKey];
+                for (int i = 0; i < Keys.Length; i++) {
+                    if (numKey <= keyIndex) break;
+
+                    int value = (int)Keys[i, 0];
+
+                    //Bit shift each key value
+                    for (int j = 0; j < 0x1F; j++)
+                    {
+                        if (numKey <= keyIndex) break;
+
+                        bool set = (value & 0x1) != 0;
+                        value >>= 1;
+
+                        KeyStepBoolData[keyIndex] = set;
+                        keyIndex++;
+                    }
+                }
+            }
         }
 
         internal long PosFrameOffset;

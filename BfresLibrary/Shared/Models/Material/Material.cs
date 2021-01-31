@@ -357,21 +357,13 @@ namespace BfresLibrary
                         Translation = reader.ReadVector3F(),
                     };
                 case ShaderParamType.TexSrt:
+                case ShaderParamType.TexSrtEx:
                     return new TexSrt()
                     {
                         Mode = (TexSrtMode)reader.ReadInt32(),
                         Scaling = reader.ReadVector2F(),
                         Rotation = reader.ReadSingle(),
                         Translation = reader.ReadVector2F(),
-                    };
-                case ShaderParamType.TexSrtEx:
-                    return new TexSrtEx()
-                    {
-                        Mode = (TexSrtMode)reader.ReadInt32(),
-                        Scaling = reader.ReadVector2F(),
-                        Rotation = reader.ReadSingle(),
-                        Translation = reader.ReadVector2F(),
-                        MatrixPointer = reader.ReadUInt32(),
                     };
             }
             return 0;
@@ -392,7 +384,7 @@ namespace BfresLibrary
                     param.DependedIndex = (ushort)index;
 
                     writer.Seek(param.DataOffset, SeekOrigin.Begin);
-                    WriteParamData(writer, param.DataValue);
+                    WriteParamData(writer, param.Type, param.DataValue);
 
                     Offset += (param.DataSize + (uint)param.PaddingLength);
                     index++;
@@ -401,7 +393,7 @@ namespace BfresLibrary
             return mem.ToArray();
         }
 
-        private void WriteParamData(BinaryDataWriter writer, object data)
+        private void WriteParamData(BinaryDataWriter writer, ShaderParamType type, object data)
         {
             if (data is float) writer.Write((float)data);
             else if (data is uint) writer.Write((uint)data);
@@ -429,14 +421,8 @@ namespace BfresLibrary
                 writer.Write(((TexSrt)data).Scaling);
                 writer.Write(((TexSrt)data).Rotation);
                 writer.Write(((TexSrt)data).Translation);
-            }
-            else if (data is TexSrtEx)
-            {
-                writer.Write(((TexSrtEx)data).Mode, false);
-                writer.Write(((TexSrtEx)data).Scaling);
-                writer.Write(((TexSrtEx)data).Rotation);
-                writer.Write(((TexSrtEx)data).Translation);
-                writer.Write(((TexSrtEx)data).MatrixPointer);
+                if (type == ShaderParamType.TexSrtEx)
+                    writer.Write(0); //pointer at runtime
             }
         }
 

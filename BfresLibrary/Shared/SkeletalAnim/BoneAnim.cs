@@ -293,6 +293,44 @@ namespace BfresLibrary
 
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
+        public void CalculateTransformFlags()
+        {
+            FlagsTransform = BoneAnimFlagsTransform.Identity;
+            foreach (var curve in Curves) {
+                switch (curve.AnimDataOffset)
+                {
+                    case 0x4:
+                    case 0x8:
+                    case 0xC:
+                        FlagsTransform &= ~BoneAnimFlagsTransform.ScaleOne;
+                        FlagsTransform &= ~BoneAnimFlagsTransform.ScaleUniform;
+                        break;
+                    case 0x10:
+                    case 0x14:
+                    case 0x18:
+                        FlagsTransform &= ~BoneAnimFlagsTransform.TranslateZero;
+                        break;
+                    case 0x20:
+                    case 0x24:
+                    case 0x28:
+                    case 0x2C:
+                        FlagsTransform &= ~BoneAnimFlagsTransform.RotateZero;
+                        break;
+                }
+            }
+
+            if (BaseData.Rotate != Syroot.Maths.Vector4F.Zero)
+                FlagsTransform &= ~BoneAnimFlagsTransform.RotateZero;
+            if (BaseData.Scale != Syroot.Maths.Vector3F.One)
+                FlagsTransform &= ~BoneAnimFlagsTransform.ScaleOne;
+            if (BaseData.Scale.X != BaseData.Scale.Y ||
+                BaseData.Scale.Y != BaseData.Scale.Z ||
+                BaseData.Scale.X != BaseData.Scale.Z)
+                FlagsTransform &= ~BoneAnimFlagsTransform.ScaleUniform;
+            if (BaseData.Translate != Syroot.Maths.Vector3F.One)
+                FlagsTransform &= ~BoneAnimFlagsTransform.TranslateZero;
+        }
+
         void IResData.Load(ResFileLoader loader)
         {
             if (loader.IsSwitch)
