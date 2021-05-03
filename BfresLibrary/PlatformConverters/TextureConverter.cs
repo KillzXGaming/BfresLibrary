@@ -29,7 +29,7 @@ namespace BfresLibrary.PlatformConverters
             foreach (var tex in textureList)
             {
                 //Create a new switch texture instance
-                var textureNX = new Switch.SwitchTexture(null);
+                var textureNX = new Switch.SwitchTexture(bntx, null);
                 textureNX.FromWiiU((WiiU.Texture)tex);
 
                 //Now set the new texture

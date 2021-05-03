@@ -446,7 +446,7 @@ namespace BfresLibrary.Switch.Core
                 }
                 else
                 {
-                    SaveRelocateEntryToSection(Position + 16, 10, (uint)ResFile.SkeletalAnims.Count, 10, Section1, "Skeleton Animation");
+                    SaveRelocateEntryToSection(Position + 16, 2, (uint)ResFile.SkeletalAnims.Count, 10, Section1, "Skeleton Animation");
                     SaveRelocateEntryToSection(Position + 40, 4, (uint)ResFile.SkeletalAnims.Count, 8, Section1, "Skeleton Animation");
                 }
 
