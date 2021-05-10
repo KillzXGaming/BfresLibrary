@@ -89,6 +89,7 @@ namespace BfresLibrary.Switch
             Texture.Format = PlatformConverters.TextureConverter.FormatList[textureU.Format];
             Texture.Name = textureU.Name;
             Texture.AccessFlags = AccessFlags.Texture;
+            Texture.Swizzle = textureU.SwizzlePattern;
 
             //Save arrays and mips into a list for swizzling back
             Texture.TextureData = new List<List<byte[]>>();
