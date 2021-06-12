@@ -309,13 +309,15 @@ namespace BfresLibrary.WiiU.Core
                 WriteShaderParamAnimations(ResFile.ColorAnims[i]);
             for (int i = 0; i < ResFile.TexSrtAnims.Count; i++)
                 WriteShaderParamAnimations(ResFile.TexSrtAnims[i]);
+            for (int i = 0; i < ResFile.TexPatternAnims.Count; i++)
+                WriteShaderParamAnimations(ResFile.TexPatternAnims[i]);
 
             SaveEntries();
         }
 
         private void WriteShaderParamAnimations(MaterialAnim anim)
         {
-            if (anim.BindIndices.Length > 0)
+            if (anim.BindIndices?.Length > 0)
             {
                 Align(8);
                 WriteOffset(anim.PosBindIndicesOffset);
@@ -336,6 +338,19 @@ namespace BfresLibrary.WiiU.Core
                     WriteOffset(mat.PosParamInfoOffset);
                     for (int i = 0; i < mat.ParamAnimInfos.Count; i++)
                         ((IResData)mat.ParamAnimInfos[i]).Save(this);
+                }
+                if (mat.PatternAnimInfos.Count > 0)
+                {
+                    Align(4);
+                    WriteOffset(mat.PosTexPatInfoOffset);
+                    for (int i = 0; i < mat.PatternAnimInfos.Count; i++)
+                        ((IResData)mat.PatternAnimInfos[i]).Save(this);
+                }
+                if (mat.BaseDataList != null && mat.BaseDataList.Length > 0)
+                {
+                    Align(4);
+                    WriteOffset(mat.PosConstantsOffset);
+                    this.Write(mat.BaseDataList);
                 }
                 if (mat.Constants != null && mat.Constants.Count > 0)
                 {
@@ -368,6 +383,18 @@ namespace BfresLibrary.WiiU.Core
                             mat.Curves[i].SaveKeyData(this);
                         }
                     }
+                }
+            }
+            if (anim.TextureNames?.Count > 0)
+            {
+                Align(4);
+                WriteOffset(anim.PosTextureNamesOffset);
+                if (ResFile.Version >= 0x03040002)
+                    ((IResData)anim.TextureNames).Save(this);
+                else
+                {
+                    foreach (var texRef in anim.TextureNames.Values)
+                        ((IResData)texRef).Save(this);
                 }
             }
             if (anim.UserData.Count > 0)

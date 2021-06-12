@@ -48,16 +48,24 @@ namespace BfresLibrary.Switch
             visibilityAnim.BaseDataList = loader.LoadCustom(() =>
             {
                 bool[] baseData = new bool[numAnim];
-                int i = 0;
-                while (i < numAnim)
+                int keyIndex = 0;
+                for (int i = 0; i < numAnim; i++)
                 {
-                    byte b = loader.ReadByte();
-                    visibilityAnim.baseDataBytes.Add(b);
-                    for (int j = 0; j < 8 && i < numAnim; j++)
+                    if (numAnim <= keyIndex) break;
+
+                    int value = loader.ReadInt32();
+
+                    //Bit shift each key value
+                    for (int j = 0; j < 0x1F; j++)
                     {
-                        baseData[i] = b.GetBit(j);
+                        if (numAnim <= keyIndex) break;
+
+                        bool set = (value & 0x1) != 0;
+                        value >>= 1;
+
+                        baseData[keyIndex] = set;
+                        keyIndex++;
                     }
-                    i++;
                 }
                 return baseData;
             }, (uint)BaseDataArrayOffset);

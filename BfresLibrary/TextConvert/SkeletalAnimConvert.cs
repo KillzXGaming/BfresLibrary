@@ -29,7 +29,7 @@ namespace BfresLibrary.TextConvert
             public List<BoneAnimStruct> BoneAnims { get; set; }
 
             [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
-            public Dictionary<string, object> UserData { get; set; }
+            public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
         }
 
         internal class BoneAnimStruct
@@ -116,6 +116,7 @@ namespace BfresLibrary.TextConvert
             anim.FlagsScale = animJson.FlagsScale;
             anim.BoneAnims = new List<BoneAnim>();
             anim.BindIndices = new ushort[animJson.BoneAnims.Count];
+            anim.UserData = UserDataConvert.Convert(animJson.UserData);
 
             foreach (var boneAnimJson in animJson.BoneAnims) {
                 BoneAnim boneAnim = new BoneAnim();

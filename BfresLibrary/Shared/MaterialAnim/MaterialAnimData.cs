@@ -193,9 +193,9 @@ namespace BfresLibrary
                 saver.Write(TexturePatternCurveIndex);
                 saver.Write(InfoIndex);
                 saver.SaveString(Name);
-                saver.SaveList(PatternAnimInfos);
-                saver.SaveList(Curves);
-                saver.SaveCustom(BaseDataList, () => saver.Write(BaseDataList));
+                PosTexPatInfoOffset = saver.SaveOffsetPos();
+                PosCurvesOffset = saver.SaveOffsetPos();
+                PosConstantsOffset = saver.SaveOffsetPos();
             }
             else if (signature == "FMAA")
             {

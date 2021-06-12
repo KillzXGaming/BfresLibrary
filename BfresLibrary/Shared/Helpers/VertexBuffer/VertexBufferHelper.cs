@@ -174,9 +174,9 @@ namespace BfresLibrary.Helpers
                 {
                     //Add 4 bytes of alignment for 12 stride if buffers are combined
                     //Typically used for the position
-                    foreach (var att in attributes)
+                  /*  foreach (var att in attributes)
                         if (att.Stride == 12)
-                            att.Stride = 16;
+                            att.Stride = 16;*/
                 }
 
                 ushort stride = (ushort)attributes.Sum(x => x.Stride);

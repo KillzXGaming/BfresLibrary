@@ -492,6 +492,7 @@ namespace BfresLibrary
         internal void PreSave()
         {
             Version = SaveVersion();
+            bool calculateBakeSizes = true;
 
             if (MatVisibilityAnims == null)
                 MatVisibilityAnims = new ResDict<MaterialAnim>();
@@ -516,14 +517,18 @@ namespace BfresLibrary
             for (int i = 0; i < SkeletalAnims.Count; i++)
             {
                 int curveIndex = 0;
+                if (calculateBakeSizes)
                 SkeletalAnims[i].BakedSize = 0;
                 for (int s = 0; s < SkeletalAnims[i].BoneAnims.Count; s++)
                 {
                     SkeletalAnims[i].BoneAnims[s].BeginCurve = curveIndex;
                     curveIndex += SkeletalAnims[i].BoneAnims[s].Curves.Count;
 
-                    foreach (var curve in SkeletalAnims[i].BoneAnims[s].Curves)
-                        SkeletalAnims[i].BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in SkeletalAnims[i].BoneAnims[s].Curves)
+                            SkeletalAnims[i].BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -532,7 +537,8 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (VertexShapeAnim subAnim in anim.VertexShapeAnims)
                 {
                     subAnim.BeginCurve = curveIndex;
@@ -540,8 +546,11 @@ namespace BfresLibrary
                     curveIndex += subAnim.Curves.Count;
                     infoIndex += subAnim.KeyShapeAnimInfos.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -549,7 +558,8 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (var subAnim in anim.MaterialAnimDataList)
                 {
                     if (subAnim.Curves.Count > 0)
@@ -558,8 +568,11 @@ namespace BfresLibrary
                     curveIndex += subAnim.Curves.Count;
                     infoIndex += subAnim.PatternAnimInfos.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -567,7 +580,8 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (var subAnim in anim.MaterialAnimDataList)
                 {
                     if (subAnim.Curves.Count > 0)
@@ -576,8 +590,11 @@ namespace BfresLibrary
                     curveIndex += subAnim.Curves.Count;
                     infoIndex += subAnim.PatternAnimInfos.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -585,7 +602,8 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (var subAnim in anim.MaterialAnimDataList)
                 {
                     if (subAnim.Curves.Count > 0)
@@ -594,8 +612,11 @@ namespace BfresLibrary
                     curveIndex += subAnim.Curves.Count;
                     infoIndex += subAnim.PatternAnimInfos.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -603,7 +624,8 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (var subAnim in anim.MaterialAnimDataList)
                 {
                     if (subAnim.Curves.Count > 0)
@@ -612,8 +634,11 @@ namespace BfresLibrary
                     curveIndex += subAnim.Curves.Count;
                     infoIndex += subAnim.ParamAnimInfos.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -621,15 +646,31 @@ namespace BfresLibrary
             {
                 int curveIndex = 0;
                 int infoIndex = 0;
-                anim.BakedSize = 0;
+                if (calculateBakeSizes)
+                    anim.BakedSize = 0;
                 foreach (var subAnim in anim.MaterialAnimDataList)
                 {
                     if (subAnim.Curves.Count > 0)
                         subAnim.VisalCurveIndex = curveIndex;
                     curveIndex += subAnim.Curves.Count;
 
-                    foreach (var curve in subAnim.Curves)
-                        anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in subAnim.Curves)
+                            anim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
+                }
+            }
+
+            foreach (var anim in SceneAnims.Values)
+            {
+                foreach (var camAnim in anim.CameraAnims.Values)
+                {
+                    if (calculateBakeSizes)
+                    {
+                        foreach (var curve in camAnim.Curves)
+                            camAnim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                    }
                 }
             }
 
@@ -643,9 +684,6 @@ namespace BfresLibrary
             if (IsPlatformSwitch)
             {
                 MaterialAnims.Clear();
-                foreach (var anim in TexPatternAnims.Values)
-                    MaterialAnims.Add(anim.Name, anim);
-
                 foreach (var anim in ShaderParamAnims.Values)
                     MaterialAnims.Add(anim.Name, anim);
 
@@ -653,6 +691,9 @@ namespace BfresLibrary
                     MaterialAnims.Add(anim.Name, anim);
 
                 foreach (var anim in ColorAnims.Values)
+                    MaterialAnims.Add(anim.Name, anim);
+
+                foreach (var anim in TexPatternAnims.Values)
                     MaterialAnims.Add(anim.Name, anim);
 
                 foreach (var anim in MatVisibilityAnims.Values)

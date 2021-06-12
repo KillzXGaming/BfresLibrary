@@ -102,6 +102,9 @@ namespace BfresLibrary.TextConvert
                         break;
                     default:
                         var value = curve.Keys[i, 0] * valueScale + curve.Offset;
+                        if (useDegrees)
+                            value *= CurveConvert.Rad2Deg;
+
                         convCurve.KeyFrames.Add(frame, new KeyFrame() {
                             Value = value
                         });
@@ -121,7 +124,7 @@ namespace BfresLibrary.TextConvert
             curve.KeyType = curveJson.KeyType;
             curve.AnimDataOffset = target;
 
-            var first = curveJson.KeyFrames.First();
+           var first = curveJson.KeyFrames.First();
             var last = curveJson.KeyFrames.Last();
             curve.EndFrame = last.Key;
             curve.StartFrame = first.Key;
@@ -129,7 +132,9 @@ namespace BfresLibrary.TextConvert
             var keys = curveJson.KeyFrames.Values.ToList();
             var frames = curveJson.KeyFrames.Keys.ToList();
             curve.Frames = frames.ToArray();
-            curve.Keys = new float[keys.Count, 4];
+            curve.Keys = new float[keys.Count, 1];
+            if (curve.CurveType == AnimCurveType.Cubic) curve.Keys = new float[keys.Count, 4];
+            if (curve.CurveType == AnimCurveType.Linear) curve.Keys = new float[keys.Count, 2];
 
             for (int i = 0; i < keys.Count; i++)
             {
@@ -178,12 +183,17 @@ namespace BfresLibrary.TextConvert
                         break;
                     case AnimCurveType.Linear:
                         var linearKey = ((JObject)keys[i]).ToObject<KeyFrame>();
-                        curve.Keys[i, 0] = linearKey.Value;
+
+                        float linearValue = linearKey.Value;
+                        if (isDegrees) {
+                            linearValue *= Deg2Rad;
+                        }
+                        curve.Keys[i, 0] = linearValue;
                         if (i < keys.Count - 1)
                         {
                             //Get next value. Calculate delta
                             var nextLinearKey = ((JObject)keys[i+1]).ToObject<KeyFrame>();
-                            var delta = nextLinearKey.Value - linearKey.Value;
+                            var delta = nextLinearKey.Value - linearValue;
                             curve.Keys[i, 1] = delta;
                         }
                         break;
@@ -201,7 +211,7 @@ namespace BfresLibrary.TextConvert
 
                 curve.Delta = lastKey - firstKey;
             }
-
+            
             for (int i = 0; i < keys.Count; i++)
             {
                 curve.Keys[i, 0] -= curve.Offset;

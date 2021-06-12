@@ -332,6 +332,9 @@ namespace BfresLibrary
 
         void IResData.Save(ResFileSaver saver)
         {
+            if (MaterialAnimDataList == null)
+                MaterialAnimDataList = new List<MaterialAnimData>();
+
             saver.WriteSignature(signature);
             if (signature == "FMAA")
             {
@@ -465,19 +468,11 @@ namespace BfresLibrary
                     saver.Write(BakedSize);
                     saver.Seek(4);
                 }
-                saver.Save(BindModel);
-                saver.SaveCustom(BindIndices, () => saver.Write(BindIndices));
-                saver.SaveCustom(MaterialAnimDataList, () =>
-                {
-                    foreach (var matAnim in MaterialAnimDataList)
-                        matAnim.Save(saver, signature);
-                });
-
-                if (saver.ResFile.Version >= 0x03040002)
-                    saver.SaveDict(TextureNames);
-                else
-                    saver.SaveList(TextureNames.Values.ToList());
-                saver.SaveDict(UserData);
+                PosBindModelOffset = saver.SaveOffsetPos();
+                PosBindIndicesOffset = saver.SaveOffsetPos();
+                PosMatAnimDataOffset = saver.SaveOffsetPos();
+                PosTextureNamesOffset = saver.SaveOffsetPos();
+                PosUserDataOffset = saver.SaveOffsetPos();
             }
         }
 

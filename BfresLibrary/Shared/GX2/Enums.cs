@@ -394,6 +394,7 @@ namespace BfresLibrary.GX2
     {
         Dim1D,
         Dim2D,
+        Dim3D,
         DimCube,
         Dim1DArray,
         Dim2DArray,

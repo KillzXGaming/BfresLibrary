@@ -157,9 +157,9 @@ namespace BfresLibrary
             if (isSwitch)
             {
                 if (CurveType == AnimCurveType.StepInt || CurveType == AnimCurveType.StepBool)
-                    return (uint)(1 * (EndFrame - StartFrame + 1) + 12);
+                    return (uint)(1 * (EndFrame - StartFrame + 1) + 12) + 4;
                 else
-                    return (uint)(4 * (EndFrame - StartFrame + 1) + 32);
+                    return (uint)(4 * (EndFrame - StartFrame + 1) + 32 ) - 4;
             }
             else
             {

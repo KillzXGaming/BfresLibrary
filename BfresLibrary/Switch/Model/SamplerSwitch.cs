@@ -143,6 +143,10 @@ namespace BfresLibrary
             if (CompareModes.ContainsKey(CompareFunc)) sampler.DepthCompareFunc = CompareModes[CompareFunc];
             if (BorderModes.ContainsKey(BorderColorType)) sampler.BorderType = BorderModes[BorderColorType];
 
+            if (MipFilters.ContainsKey(Mipmap)) sampler.MipFilter = MipFilters[Mipmap];
+            if (ExpandFilters.ContainsKey(ExpandXY)) sampler.MagFilter = ExpandFilters[ExpandXY];
+            if (ShrinkFilters.ContainsKey(ShrinkXY)) sampler.MinFilter = ShrinkFilters[ShrinkXY];
+
             sampler.MaxLod = MaxLOD;
             sampler.MinLod = MinLOD;
             sampler.LodBias = LODBias;
@@ -160,16 +164,16 @@ namespace BfresLibrary
             CompareFunc = CompareModes.FirstOrDefault(x => x.Value == sampler.DepthCompareFunc).Key;
             BorderColorType = BorderModes.FirstOrDefault(x => x.Value == sampler.BorderType).Key;
             Anisotropic = AnisotropicModes.FirstOrDefault(x => x.Value == sampler.MaxAnisotropicRatio).Key;
-            // ShrinkXY = ShrinkFilterModes.Linear;
-            //   ExpandXY = ExpandFilterModes.Linear;
-            //  Mipmap = MipFilters.FirstOrDefault(x => x.Value == sampler.MipFilter).Key;
+            Mipmap = MipFilters.FirstOrDefault(x => x.Value == sampler.MipFilter).Key;
+            ExpandXY = ExpandFilters.FirstOrDefault(x => x.Value == sampler.MagFilter).Key;
+            ShrinkXY = ShrinkFilters.FirstOrDefault(x => x.Value == sampler.MinFilter).Key;
 
-            _filterFlags = 0x0029;
+         /*   _filterFlags = 0x0029;
 
             ShrinkXY = ShrinkFilterModes.Linear;
             ExpandXY = ExpandFilterModes.Linear;
             Mipmap = MipFilterModes.Points;
-            BorderColorType = TexBorderType.White;
+            BorderColorType = TexBorderType.White;*/
 
             MinLOD = sampler.MinLod;
             MaxLOD = sampler.MaxLod;
@@ -207,6 +211,18 @@ namespace BfresLibrary
             saver.Write((float)LODBias);
             saver.Seek(12);
         }
+
+        Dictionary<ExpandFilterModes, GX2TexXYFilterType> ExpandFilters = new Dictionary<ExpandFilterModes, GX2TexXYFilterType>()
+        {
+            { ExpandFilterModes.Linear, GX2TexXYFilterType.Bilinear },
+            { ExpandFilterModes.Points, GX2TexXYFilterType.Point },
+        };
+
+        Dictionary<ShrinkFilterModes, GX2TexXYFilterType> ShrinkFilters = new Dictionary<ShrinkFilterModes, GX2TexXYFilterType>()
+        {
+            { ShrinkFilterModes.Linear, GX2TexXYFilterType.Bilinear },
+            { ShrinkFilterModes.Points, GX2TexXYFilterType.Point },
+        };
 
         Dictionary<MipFilterModes, GX2TexMipFilterType> MipFilters = new Dictionary<MipFilterModes, GX2TexMipFilterType>()
         {

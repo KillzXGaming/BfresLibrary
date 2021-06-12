@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
+using BfresLibrary.GX2;
 
 namespace BfresLibrary.TextConvert
 {
@@ -32,6 +33,24 @@ namespace BfresLibrary.TextConvert
             }
         }
 
+        public class MeshMetaInfo
+        {
+            public int SkinCount { get; set; }
+
+            [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
+            public Dictionary<string, AttributeMetaInfo> Attributes { get; set; }
+
+            public MeshMetaInfo() {
+                Attributes = new Dictionary<string, AttributeMetaInfo>();
+            }
+        }
+
+        public class AttributeMetaInfo
+        {
+            public string Format { get; set; }
+            public int BufferIndex { get; set; }
+        }
+
         internal class MaterialStruct
         {
             public string Name { get; set; }
@@ -39,6 +58,7 @@ namespace BfresLibrary.TextConvert
             public bool Visible { get; set; }
 
             public UserMetaInfo PresetMetaInfo { get; set; }
+            public List<MeshMetaInfo> MeshInfo { get; set; }
 
             public List<string> Textures { get; set; }
             public List<Sampler> Samplers { get; set; }
@@ -61,6 +81,7 @@ namespace BfresLibrary.TextConvert
                 Parameters = new Dictionary<string, object>();
                 RenderInfo = new Dictionary<string, object>();
                 UserData = new Dictionary<string, object>();
+                MeshInfo = new List<MeshMetaInfo>();
             }
         }
 
@@ -74,7 +95,7 @@ namespace BfresLibrary.TextConvert
             public Dictionary<string, string> AttributeAssign = new Dictionary<string, string>();
         }
 
-        public static string ToJson(Material material)
+        public static string ToJson(Material material, Model parentModel = null)
         {
             MaterialStruct matConv = new MaterialStruct();
             matConv.Name = material.Name;
@@ -99,6 +120,18 @@ namespace BfresLibrary.TextConvert
             foreach (var param in material.UserData.Values)
                 matConv.UserData.Add($"{param.Type}|{param.Name}", param.GetData());
 
+            //It is important that we attach mesh information to the material
+            //Shaders rely on both mesh and material data to match up nicely
+            //This includes skin counts and vertex layouts
+            if (parentModel != null) {
+                foreach (var shape in parentModel.Shapes.Values) {
+                    if (parentModel.Materials[shape.MaterialIndex] == material)
+                    {
+                        matConv.MeshInfo.Add(CreateMeshInfo(shape, shape.VertexBuffer));
+                    }
+                }
+            }
+
             JsonConvert.DefaultSettings = () =>
             {
                 var settings = new JsonSerializerSettings();
@@ -108,6 +141,21 @@ namespace BfresLibrary.TextConvert
             return JsonConvert.SerializeObject(matConv, Formatting.Indented);
         }
 
+        private static MeshMetaInfo CreateMeshInfo(Shape shape, VertexBuffer vertexBuffer)
+        {
+            var info = new MeshMetaInfo();
+            info.SkinCount = shape.VertexSkinCount;
+            foreach (var att in vertexBuffer.Attributes.Values)
+            {
+                info.Attributes.Add(att.Name, new AttributeMetaInfo()
+                {
+                    Format = att.Format.ToString(),
+                    BufferIndex = att.BufferIndex,
+                });
+            }
+            return info;
+        }
+
         public static Material FromJson(string json)
         {
             Material material = new Material();
@@ -115,7 +163,7 @@ namespace BfresLibrary.TextConvert
             return material;
         }
 
-        public static void FromJson(Material mat, string json)
+        public static List<MeshMetaInfo> FromJson(Material mat, string json)
         {
             JsonConvert.DefaultSettings = () =>
             {
@@ -233,24 +281,8 @@ namespace BfresLibrary.TextConvert
                 if (dataType == RenderInfoType.String)
                     mat.SetRenderInfo(name, ((JArray)param.Value).ToObject<string[]>());
             }
-
-            foreach (var param in matJson.UserData)
-            {
-                string type = param.Key.Split('|')[0];
-                string name = param.Key.Split('|')[1];
-                UserDataType dataType = (UserDataType)Enum.Parse(typeof(UserDataType), type);
-
-                if (dataType == UserDataType.Single)
-                    mat.SetUserData(name, ((JArray)param.Value).ToObject<float[]>());
-                if (dataType == UserDataType.Int32)
-                    mat.SetUserData(name, ((JArray)param.Value).ToObject<int[]>());
-                if (dataType == UserDataType.Byte)
-                    mat.SetUserData(name, ((JArray)param.Value).ToObject<byte[]>());
-                if (dataType == UserDataType.String)
-                    mat.SetUserData(name, ((JArray)param.Value).ToObject<string[]>());
-                if (dataType == UserDataType.WString)
-                    mat.SetUserData(name, ((JArray)param.Value).ToObject<string[]>(), true);
-            }
+            mat.UserData = UserDataConvert.Convert(matJson.UserData);
+            return matJson.MeshInfo;
         }
 
         private static ShaderAssignStruct ConvertShaderAssign(ShaderAssign shader)

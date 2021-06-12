@@ -141,9 +141,11 @@ namespace BfresLibrary
         }
 
         public void Export(string FileName, ResFile ResFile) {
+            var model = ResFile.Models[0];
+
             string ext = Path.GetExtension(FileName);
             if (ext == ".json")
-                File.WriteAllText(FileName, TextConvert.MaterialConvert.ToJson(this));
+                File.WriteAllText(FileName, TextConvert.MaterialConvert.ToJson(this, model));
             else
                 ResFileSaver.ExportSection(FileName, this, ResFile);
         }

@@ -94,11 +94,11 @@ namespace BfresLibrary
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
-        public void Import(string FileName, ResFile ResFile) {
+        public virtual void Import(string FileName, ResFile ResFile) {
             ResFileLoader.ImportSection(FileName, this, ResFile);
         }
 
-        public void Export(string FileName, ResFile ResFile) {
+        public virtual void Export(string FileName, ResFile ResFile) {
             ResFileSaver.ExportSection(FileName, this, ResFile);
         }
 

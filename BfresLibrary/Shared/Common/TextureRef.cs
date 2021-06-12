@@ -42,7 +42,8 @@ namespace BfresLibrary
         void IResData.Save(ResFileSaver saver)
         {
             saver.SaveString(Name);
-            saver.Save(Texture);
+            saver.Write(0);
+            //saver.Save(Texture);
         }
     }
 }

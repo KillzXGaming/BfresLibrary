@@ -67,12 +67,22 @@ namespace BfresLibrary
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
-        public void Import(string FileName, ResFile ResFile) {
-            ResFileLoader.ImportSection(FileName, this, ResFile);
+        public void Import(string FileName, ResFile ResFile)
+        {
+            if (FileName.EndsWith(".json"))
+            {
+                TextConvert.SceneAnimConvert.FromJson(this, File.ReadAllText(FileName));
+            }
+            else
+                ResFileLoader.ImportSection(FileName, this, ResFile);
         }
 
-        public void Export(string FileName, ResFile ResFile) {
-            ResFileSaver.ExportSection(FileName, this, ResFile);
+        public void Export(string FileName, ResFile ResFile)
+        {
+            if (FileName.EndsWith(".json"))
+                File.WriteAllText(FileName, TextConvert.SceneAnimConvert.ToJson(this));
+            else
+                ResFileSaver.ExportSection(FileName, this, ResFile);
         }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------

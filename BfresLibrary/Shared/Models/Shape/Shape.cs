@@ -281,7 +281,7 @@ namespace BfresLibrary
                 if (SubMeshBoundingIndices == null) SubMeshBoundingIndices = new List<ushort>();
 
                 uint userPointer = loader.ReadUInt32();
-            }
+            }   
         }
 
         void IResData.Save(ResFileSaver saver)

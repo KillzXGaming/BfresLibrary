@@ -21,17 +21,17 @@ namespace BfresLibrary
         /// <summary>
         /// The scaling amount of the transformation.
         /// </summary>
-        public Vector2F Scaling;
+        public Vector2F Scaling { get; set; }
 
         /// <summary>
         /// The rotation angle of the transformation.
         /// </summary>
-        public float Rotation;
+        public float Rotation { get; set; }
 
         /// <summary>
         /// The translation amount of the transformation.
         /// </summary>
-        public Vector2F Translation;
+        public Vector2F Translation { get; set; }
     }
 
     /// <summary>
@@ -52,17 +52,17 @@ namespace BfresLibrary
         /// <summary>
         /// The scaling amount of the transformation.
         /// </summary>
-        public Vector3F Scaling;
+        public Vector3F Scaling { get; set; }
 
         /// <summary>
         /// The rotation amount of the transformation.
         /// </summary>
-        public Vector3F Rotation;
+        public Vector3F Rotation { get; set; }
 
         /// <summary>
         /// The translation amount of the transformation.
         /// </summary>
-        public Vector3F Translation;
+        public Vector3F Translation { get; set; }
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ namespace BfresLibrary
         /// <summary>
         /// The scaling amount of the transformation.
         /// </summary>
-        public Vector2F Scaling;
+        public Vector2F Scaling { get; set; }
 
         /// <summary>
         /// The rotation angle of the transformation.
@@ -98,7 +98,7 @@ namespace BfresLibrary
         /// <summary>
         /// The translation amount of the transformation.
         /// </summary>
-        public Vector2F Translation;
+        public Vector2F Translation { get; set; }
     }
 
     /// <summary>

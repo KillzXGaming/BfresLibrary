@@ -1,4 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿
+
+
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Authors>Syroot;</Authors>
     <AssemblyName>BfresLibrary</AssemblyName>

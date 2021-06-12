@@ -17,6 +17,11 @@ namespace BfresLibrary.Switch
         /// </summary>
         public Texture Texture { get; set; }
 
+        /// <summary>
+        /// The parent BNTX file instance
+        /// </summary>
+        public BntxFile BntxFile { get; set; }
+
         public SurfaceFormat Format
         {
             get { return Texture.Format; }
@@ -65,8 +70,19 @@ namespace BfresLibrary.Switch
             set => Texture.MipCount = value;
         }
 
-        public SwitchTexture(Texture texture) {
+        public SwitchTexture(BntxFile bntx, Texture texture) {
+            BntxFile = bntx;
             Texture = texture;
+        }
+
+        public override void Import(string FileName, ResFile ResFile)
+        {
+            Texture.Import(FileName);
+        }
+
+        public override void Export(string FileName, ResFile ResFile)
+        {
+            Texture.Export(FileName, BntxFile);
         }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------

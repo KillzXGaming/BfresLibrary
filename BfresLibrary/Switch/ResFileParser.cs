@@ -73,7 +73,7 @@ namespace BfresLibrary.Switch
                     BntxFile bntx = new BntxFile(new MemoryStream(ext.Value.Data));
                     ext.Value.LoadedFileData = bntx;
                     foreach (var tex in bntx.Textures)
-                        resFile.Textures.Add(tex.Name, new SwitchTexture(tex));
+                        resFile.Textures.Add(tex.Name, new SwitchTexture(bntx, tex));
                 }
             }
 
@@ -96,9 +96,9 @@ namespace BfresLibrary.Switch
                     resFile.TexSrtAnims.Add(anim.Name, anim);
                 else if (anim.Name.Contains("_fvt"))
                     resFile.MatVisibilityAnims.Add(anim.Name, anim);
-                else if (anim.MaterialAnimDataList.Any(x => x.VisibilyCount > 0))
+                else if (anim.MaterialAnimDataList != null && anim.MaterialAnimDataList.Any(x => x.VisibilyCount > 0))
                     resFile.MatVisibilityAnims.Add(anim.Name, anim);
-                else if (anim.MaterialAnimDataList.Any(x => x.TexturePatternCount > 0))
+                else if (anim.MaterialAnimDataList != null && anim.MaterialAnimDataList.Any(x => x.TexturePatternCount > 0))
                     resFile.TexPatternAnims.Add(anim.Name, anim);
                 else
                     resFile.ShaderParamAnims.Add(anim.Name, anim);
