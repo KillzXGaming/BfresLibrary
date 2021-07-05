@@ -458,6 +458,9 @@ namespace BfresLibrary
                     anim.Name = $"{anim.Name}_ftp";
                 }
 
+                // Workaround for Null "MatVisibilityAnims" variable
+                if (MatVisibilityAnims == null)
+                    MatVisibilityAnims = new ResDict<MaterialAnim>();
                 foreach (var anim in MatVisibilityAnims.Values) {
                     anim.Name = $"{anim.Name}_fvs";
                 }
