@@ -56,7 +56,7 @@ namespace BfresLibrary.Switch
                     int value = loader.ReadInt32();
 
                     //Bit shift each key value
-                    for (int j = 0; j < 0x1F; j++)
+                    for (int j = 0; j < 32; j++)
                     {
                         if (numAnim <= keyIndex) break;
 

@@ -1,5 +1,6 @@
 ﻿using BfresLibrary.Core;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace BfresLibrary
 {
@@ -310,7 +311,7 @@ namespace BfresLibrary
                     int value = (int)Keys[i, 0];
 
                     //Bit shift each key value
-                    for (int j = 0; j < 0x1F; j++)
+                    for (int j = 0; j < 32; j++)
                     {
                         if (numKey <= keyIndex) break;
 
@@ -330,6 +331,8 @@ namespace BfresLibrary
 
         void IResData.Save(ResFileSaver saver)
         {
+            UpdateBooleanKeys();
+
             if (saver.IsSwitch)
             {
                 PosFrameOffset = saver.SaveOffset();
@@ -375,6 +378,35 @@ namespace BfresLibrary
                     PosKeyDataOffset = saver.SaveOffsetPos();
                 }
             }
+        }
+
+        private void UpdateBooleanKeys()
+        {
+            if (CurveType != AnimCurveType.StepBool)
+                return;
+
+            int bitPosition = 0;
+            var keyData = KeyStepBoolData;
+            //32 boolean bits per key
+            List<uint> keys = new List<uint>() { 0 };
+
+            for (int i = 0; i < keyData.Length; i++) {
+                //Set bit for keyed data
+                if (keyData[i])
+                    keys[keys.Count - 1] |= (uint)(1 << bitPosition);
+
+                bitPosition++;
+                //Reset position and add a new key after 32 bits
+                //Make sure to skip adding a new key if this is the last boolean key
+                if (bitPosition > 32 && keyData.Length - 1 != i) {
+                    keys.Add(0);
+                    bitPosition = 0;
+                }
+            }
+            //Apply the key data
+            this.Keys = new float[keys.Count, 1];
+            for (int i = 0; i < keys.Count; i++)
+                this.Keys[i, 0] = keys[i];
         }
 
         public void SaveFrames(ResFileSaver saver)
