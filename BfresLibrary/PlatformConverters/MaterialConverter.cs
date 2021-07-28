@@ -23,13 +23,17 @@ namespace BfresLibrary.PlatformConverters
         /// Uses MK8 game preset.
         /// </summary>
         MK8,
+        /// <summary>
+        /// Uses 3DW game preset.
+        /// </summary>
+        SM3DW
     }
 
     class MaterialConverter
     {
         internal static void ConvertToSwitchMaterial(Material material, ConverterHandle handler)
         {
-            MaterialConverterBase converter= GetConverter(handler);
+            MaterialConverterBase converter = GetConverter(handler);
             converter.ConvertToSwitchMaterial(material);
         }
 
@@ -43,8 +47,9 @@ namespace BfresLibrary.PlatformConverters
         {
             switch (handler)
             {
-                case ConverterHandle.BOTW:  return new MaterialConverterBOTW();
+                case ConverterHandle.BOTW: return new MaterialConverterBOTW();
                 case ConverterHandle.MK8: return new MaterialConverterMK8();
+                case ConverterHandle.SM3DW: return new MaterialConverter3DW();
                 default: return new MaterialConverterBase();
             }
         }
