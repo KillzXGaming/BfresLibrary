@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace BfresLibrary.PlatformConverters
 {
     internal class MaterialConverter3DW : MaterialConverterBase
     {
-        //Changes with Switch 3DW
+        // Basic changes with Switch 3DW+BF
 
         // Parameters
         //alpha_test_value (Seems to be const "0,5")
@@ -21,6 +22,10 @@ namespace BfresLibrary.PlatformConverters
         //display_face
         //enable_depth_test
         //enable_depth_write
+
+        // Shader Options
+        //enable_alphamask
+        //alpha_test_func (Seems to be const "60")
 
         internal override void ConvertToWiiUMaterial(Material material)
         {
@@ -54,6 +59,10 @@ namespace BfresLibrary.PlatformConverters
                 material.RenderState.DepthControl.DepthWriteEnabled));
             material.SetRenderInfo("depth_test_func", CompareFunction[
                   material.RenderState.DepthControl.DepthFunc]);
+
+            material.ShaderAssign.ShaderOptions.Add("enable_alphamask", 
+                BitConverter.GetBytes(material.RenderState.AlphaControl.AlphaTestEnabled)[0].ToString());
+            material.ShaderAssign.ShaderOptions.Add("alpha_test_func", "60");
         }
 
         private string GetCullState(RenderState state) {
