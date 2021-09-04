@@ -32,21 +32,6 @@ namespace BfresLibrary
             VersionMajor2 = 4;
             VersionMinor = 0;
             VersionMinor2 = 4;
-
-            //Initialize Dictionaries
-            Models = new ResDict<Model>();
-            Textures = new ResDict<TextureShared>();
-            SkeletalAnims = new ResDict<SkeletalAnim>();
-            ShaderParamAnims = new ResDict<MaterialAnim>();
-            ColorAnims = new ResDict<MaterialAnim>();
-            TexSrtAnims = new ResDict<MaterialAnim>();
-            TexPatternAnims = new ResDict<MaterialAnim>();
-            BoneVisibilityAnims = new ResDict<VisibilityAnim>();
-            MatVisibilityAnims = new ResDict<MaterialAnim>();
-            ShapeAnims = new ResDict<ShapeAnim>();
-            SceneAnims = new ResDict<SceneAnim>();
-            ExternalFiles = new ResDict<ExternalFile>();
-            MaterialAnims = new ResDict<MaterialAnim>();
         }
 
         /// <summary>
@@ -55,7 +40,7 @@ namespace BfresLibrary
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to load the data from.</param>
         /// <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
-        public ResFile(Stream stream, bool leaveOpen = false)
+        public ResFile(Stream stream, bool leaveOpen = false) : base()
         {
             if (IsSwitchBinary(stream))
             {
@@ -76,7 +61,7 @@ namespace BfresLibrary
         /// <paramref name="fileName"/>.
         /// </summary>
         /// <param name="fileName">The name of the file to load the data from.</param>
-        public ResFile(string fileName)
+        public ResFile(string fileName) : base()
         {
             if (IsSwitchBinary(fileName))
             {
@@ -287,74 +272,74 @@ namespace BfresLibrary
         /// Gets or sets the stored <see cref="Model"/> (FMDL) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<Model> Models { get; set; }
+        public ResDict<Model> Models { get; set; } = new ResDict<Model>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="Texture"/> (FTEX) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<TextureShared> Textures { get; set; }
+        public ResDict<TextureShared> Textures { get; set; } = new ResDict<TextureShared>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="SkeletalAnim"/> (FSKA) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<SkeletalAnim> SkeletalAnims { get; set; }
+        public ResDict<SkeletalAnim> SkeletalAnims { get; set; } = new ResDict<SkeletalAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="ShaderParamAnim"/> (FSHU) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<MaterialAnim> ShaderParamAnims { get; set; }
+        public ResDict<MaterialAnim> ShaderParamAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="ShaderParamAnim"/> (FSHU) instances for color animations.
         /// </summary>
         [Browsable(false)]
-        public ResDict<MaterialAnim> ColorAnims { get; set; }
+        public ResDict<MaterialAnim> ColorAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="ShaderParamAnim"/> (FSHU) instances for texture SRT animations.
         /// </summary>
         [Browsable(false)]
-        public ResDict<MaterialAnim> TexSrtAnims { get; set; }
+        public ResDict<MaterialAnim> TexSrtAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="TexPatternAnim"/> (FTXP) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<MaterialAnim> TexPatternAnims { get; set; }
+        public ResDict<MaterialAnim> TexPatternAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="VisibilityAnim"/> (FVIS) instances for bone visibility animations.
         /// </summary>
         [Browsable(false)]
-        public ResDict<VisibilityAnim> BoneVisibilityAnims { get; set; }
+        public ResDict<VisibilityAnim> BoneVisibilityAnims { get; set; } = new ResDict<VisibilityAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="VisibilityAnim"/> (FVIS) instances for material visibility animations.
         /// </summary>
         [Browsable(false)]
-        public ResDict<MaterialAnim> MatVisibilityAnims { get; set; }
+        public ResDict<MaterialAnim> MatVisibilityAnims { get; set; } = new ResDict<MaterialAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="ShapeAnim"/> (FSHA) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<ShapeAnim> ShapeAnims { get; set; }
+        public ResDict<ShapeAnim> ShapeAnims { get; set; } = new ResDict<ShapeAnim>();
 
         /// <summary>
         /// Gets or sets the stored <see cref="SceneAnim"/> (FSCN) instances.
         /// </summary>
         [Browsable(false)]
-        public ResDict<SceneAnim> SceneAnims { get; set; }
+        public ResDict<SceneAnim> SceneAnims { get; set; } = new ResDict<SceneAnim>();
 
         /// <summary>
         /// Gets or sets attached <see cref="ExternalFile"/> instances. The key of the dictionary typically represents
         /// the name of the file they were originally created from.
         /// </summary>
         [Browsable(false)]
-        public ResDict<ExternalFile> ExternalFiles { get; set; }
+        public ResDict<ExternalFile> ExternalFiles { get; set; } = new ResDict<ExternalFile>();
 
         // ---- METHODS (INTERNAL) ---------------------------------------------------------------------------------------
 

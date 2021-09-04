@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace BfresLibrary.PlatformConverters
 {
     internal class MaterialConverter3DW : MaterialConverterBase
     {
-        //Changes with Switch 3DW
+        // Basic changes with Switch 3DW+BF
 
         // Parameters
         //alpha_test_value (Seems to be const "0,5")
@@ -22,12 +23,18 @@ namespace BfresLibrary.PlatformConverters
         //enable_depth_test
         //enable_depth_write
 
+        // Shader Options
+        //enable_alphamask
+        //alpha_test_func (Seems to be const "60")
+
         internal override void ConvertToWiiUMaterial(Material material)
         {
         }
 
         internal override void ConvertToSwitchMaterial(Material material) 
         {
+            material.SetShaderParameter("alpha_test_value", ShaderParamType.Float, 0.5f);
+
             material.SetRenderInfo("color_blend_alpha_dst_func", BlendFunction[
                   material.RenderState.BlendControl.AlphaDestinationBlend]);
             material.SetRenderInfo("color_blend_alpha_op", BlendCombine[
@@ -38,11 +45,11 @@ namespace BfresLibrary.PlatformConverters
             material.SetRenderInfo("color_blend_const_color", new float[4] { 0, 0, 0, 0 });
 
             material.SetRenderInfo("color_blend_rgb_dst_func", BlendFunction[
-                  material.RenderState.BlendControl.ColorSourceBlend]);
-            material.SetRenderInfo("color_blend_rgb_op", BlendFunction[
                   material.RenderState.BlendControl.ColorDestinationBlend]);
-            material.SetRenderInfo("color_blend_rgb_src_func", BlendCombine[
+            material.SetRenderInfo("color_blend_rgb_op", BlendCombine[
                   material.RenderState.BlendControl.ColorCombine]);
+            material.SetRenderInfo("color_blend_rgb_src_func", BlendFunction[
+                  material.RenderState.BlendControl.ColorSourceBlend]);
 
             material.SetRenderInfo("display_face", GetCullState(material.RenderState));
 
@@ -52,6 +59,10 @@ namespace BfresLibrary.PlatformConverters
                 material.RenderState.DepthControl.DepthWriteEnabled));
             material.SetRenderInfo("depth_test_func", CompareFunction[
                   material.RenderState.DepthControl.DepthFunc]);
+
+            material.ShaderAssign.ShaderOptions.Add("enable_alphamask", 
+                BitConverter.GetBytes(material.RenderState.AlphaControl.AlphaTestEnabled)[0].ToString());
+            material.ShaderAssign.ShaderOptions.Add("alpha_test_func", "60");
         }
 
         private string GetCullState(RenderState state) {
@@ -74,14 +85,14 @@ namespace BfresLibrary.PlatformConverters
 
         Dictionary<GX2.GX2CompareFunction, string> CompareFunction = new Dictionary<GX2.GX2CompareFunction, string>()
         {
-            { GX2.GX2CompareFunction.Always, "always" },
-            { GX2.GX2CompareFunction.Never, "never" },
-            { GX2.GX2CompareFunction.GreaterOrEqual, "gequal" },
-            { GX2.GX2CompareFunction.LessOrEqual, "lequal" },
-            { GX2.GX2CompareFunction.Equal, "equal" },
-            { GX2.GX2CompareFunction.Less, "less" },
-            { GX2.GX2CompareFunction.Greater, "greater" },
-            { GX2.GX2CompareFunction.NotEqual, "noequal" },
+            { GX2.GX2CompareFunction.Always, "Always" },
+            { GX2.GX2CompareFunction.Never, "Never" },
+            { GX2.GX2CompareFunction.GreaterOrEqual, "Gequal" },
+            { GX2.GX2CompareFunction.LessOrEqual, "Lequal" },
+            { GX2.GX2CompareFunction.Equal, "Equal" },
+            { GX2.GX2CompareFunction.Less, "Less" },
+            { GX2.GX2CompareFunction.Greater, "Greater" },
+            { GX2.GX2CompareFunction.NotEqual, "Noequal" },
         };
 
         Dictionary<GX2.GX2BlendFunction, string> BlendFunction = new Dictionary<GX2.GX2BlendFunction, string>()
