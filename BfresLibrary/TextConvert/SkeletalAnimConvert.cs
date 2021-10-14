@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Syroot.Maths;
 
 namespace BfresLibrary.TextConvert
 {
@@ -44,7 +45,18 @@ namespace BfresLibrary.TextConvert
 
             public List<CurveAnimStruct> Curves { get; set; }
 
-            public BoneAnimData BaseData { get; set; }
+            public BaseData BaseData { get; set; }
+        }
+
+        internal struct BaseData
+        {
+            public uint Flags;
+
+            public Vector3F Scale;
+
+            public Vector3F Translate;
+
+            public Vector4F Rotate;
         }
 
         public static string ToJson(SkeletalAnim anim)
@@ -63,7 +75,23 @@ namespace BfresLibrary.TextConvert
                 BoneAnimStruct boneAnimConv = new BoneAnimStruct();
                 boneAnimConv.Curves = new List<CurveAnimStruct>();
                 boneAnimConv.Name = boneAnim.Name;
-                boneAnimConv.BaseData = boneAnim.BaseData;
+                Vector4F rotation = boneAnim.BaseData.Rotate;
+                if (animConv.UseDegrees && animConv.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
+                {
+                    rotation = new Vector4F(
+                        rotation.X * CurveConvert.Rad2Deg,
+                        rotation.Y * CurveConvert.Rad2Deg, 
+                        rotation.Z * CurveConvert.Rad2Deg,
+                        rotation.W);
+                }
+
+                boneAnimConv.BaseData = new BaseData()
+                {
+                    Flags = boneAnim.BaseData.Flags,
+                    Rotate = rotation,
+                    Translate = boneAnim.BaseData.Translate,
+                    Scale = boneAnim.BaseData.Scale,
+                };
                 boneAnimConv.SegmentScaleCompensate = boneAnim.ApplySegmentScaleCompensate;
                 boneAnimConv.UseBaseTranslation = boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Translate);
                 boneAnimConv.UseBaseRotation = boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Rotate);
@@ -127,7 +155,23 @@ namespace BfresLibrary.TextConvert
                 boneAnim.BeginRotate = 3;
                 boneAnim.BeginTranslate = 6;
                 boneAnim.BeginBaseTranslate = 7;
-                boneAnim.BaseData = boneAnimJson.BaseData;
+                Vector4F rotation = boneAnim.BaseData.Rotate;
+                if (animJson.UseDegrees && animJson.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
+                {
+                    rotation = new Vector4F(
+                        rotation.X * CurveConvert.Deg2Rad,
+                        rotation.Y * CurveConvert.Deg2Rad,
+                        rotation.Z * CurveConvert.Deg2Rad,
+                        rotation.W);
+                }
+                boneAnim.BaseData = new BoneAnimData()
+                {
+                    Flags = boneAnimJson.BaseData.Flags,
+                    Rotate = rotation,
+                    Translate = boneAnimJson.BaseData.Translate,
+                    Scale = boneAnimJson.BaseData.Scale,
+                };
+
                 boneAnim.FlagsTransform |= BoneAnimFlagsTransform.Identity;
                 if (boneAnimJson.UseBaseTranslation)
                     boneAnim.FlagsBase |= BoneAnimFlagsBase.Translate;
