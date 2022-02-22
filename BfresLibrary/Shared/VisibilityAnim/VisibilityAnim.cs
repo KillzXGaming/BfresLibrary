@@ -33,7 +33,7 @@ namespace BfresLibrary
 
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
-        private const string _signature = "FBVS";
+        private const string _signature = "FVIS";
 
         private const ushort _flagsMask = 0b00000000_00000111;
         private const ushort _flagsMaskType = 0b00000001_00000000;
