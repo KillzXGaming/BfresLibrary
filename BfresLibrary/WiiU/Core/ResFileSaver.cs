@@ -179,7 +179,7 @@ namespace BfresLibrary.WiiU.Core
                 ((IResData)ExportableData).Save(this);
 
                 SaveEntries();
-                WriteShaderParamAnimations((MaterialAnim)ExportableData);
+                WriteMaterialAnimations((MaterialAnim)ExportableData);
                 SaveEntries();
             }
             else if (ExportableData is SceneAnim)
@@ -308,18 +308,18 @@ namespace BfresLibrary.WiiU.Core
             for (int i = 0; i < ResFile.SkeletalAnims.Count; i++)
                 WriteSkeletonAnimations(ResFile.SkeletalAnims[i]);
             for (int i = 0; i < ResFile.ShaderParamAnims.Count; i++)
-                WriteShaderParamAnimations(ResFile.ShaderParamAnims[i]);
+                WriteMaterialAnimations(ResFile.ShaderParamAnims[i]);
             for (int i = 0; i < ResFile.ColorAnims.Count; i++)
-                WriteShaderParamAnimations(ResFile.ColorAnims[i]);
+                WriteMaterialAnimations(ResFile.ColorAnims[i]);
             for (int i = 0; i < ResFile.TexSrtAnims.Count; i++)
-                WriteShaderParamAnimations(ResFile.TexSrtAnims[i]);
+                WriteMaterialAnimations(ResFile.TexSrtAnims[i]);
             for (int i = 0; i < ResFile.TexPatternAnims.Count; i++)
-                WriteShaderParamAnimations(ResFile.TexPatternAnims[i]);
+                WriteMaterialAnimations(ResFile.TexPatternAnims[i]);
 
             SaveEntries();
         }
 
-        private void WriteShaderParamAnimations(MaterialAnim anim)
+        private void WriteMaterialAnimations(MaterialAnim anim)
         {
             if (anim.BindIndices?.Length > 0)
             {
