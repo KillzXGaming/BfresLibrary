@@ -177,6 +177,10 @@ namespace BfresLibrary.WiiU.Core
             {
                 WriteHeader("fresSUB", "FTXP\0\0\0\0");
                 ((IResData)ExportableData).Save(this);
+
+                SaveEntries();
+                WriteShaderParamAnimations((MaterialAnim)ExportableData);
+                SaveEntries();
             }
             else if (ExportableData is SceneAnim)
             {

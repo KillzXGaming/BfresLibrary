@@ -14,7 +14,7 @@ namespace BfresLibrary.Switch
         public static void Read(ResFileSwitchLoader loader, Shape shape)
         {
             if (loader.ResFile.VersionMajor2 == 9)
-                shape.Flags = loader.ReadEnum<ShapeFlags>(true);
+                shape.Flags = loader.ReadEnum<ShapeFlags>(false);
             else
                 loader.LoadHeaderBlock();
 
