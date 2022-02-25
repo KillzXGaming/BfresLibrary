@@ -34,16 +34,19 @@ namespace BfresLibrary.WiiU
             resFile.TexPatternAnims = loader.LoadDict<MaterialAnim>();
             resFile.BoneVisibilityAnims = loader.LoadDict<VisibilityAnim>();
             loader.LoadDict<VisibilityAnim>();
-            resFile.ShapeAnims = loader.LoadDict<ShapeAnim>();
+            if (loader.ResFile.Version >= 0x02040000) 
+            { 
+                resFile.ShapeAnims = loader.LoadDict<ShapeAnim>();
+                resFile.SceneAnims = loader.LoadDict<SceneAnim>();
+                resFile.ExternalFiles = loader.LoadDict<ExternalFile>();
+            }
 
             resFile.Textures = new ResDict<TextureShared>();
             foreach (var tex in textures)
-                resFile.Textures.Add(tex.Key, tex.Value);
-
-            if (loader.ResFile.Version >= 0x02040000) 
-            { 
-                resFile.SceneAnims = loader.LoadDict<SceneAnim>();
-                resFile.ExternalFiles = loader.LoadDict<ExternalFile>();
+            resFile.Textures.Add(tex.Key, tex.Value);
+            
+            if (loader.ResFile.Version >= 01000005)
+            {
                 ushort numModel = loader.ReadUInt16();
                 ushort numTexture = loader.ReadUInt16();
                 ushort numSkeletalAnim = loader.ReadUInt16();
@@ -53,9 +56,12 @@ namespace BfresLibrary.WiiU
                 ushort numTexPatternAnim = loader.ReadUInt16();
                 ushort numBoneVisibilityAnim = loader.ReadUInt16();
                 ushort numMatVisibilityAnim = loader.ReadUInt16();
-                ushort numShapeAnim = loader.ReadUInt16();
-                ushort numSceneAnim = loader.ReadUInt16();
-                ushort numExternalFile = loader.ReadUInt16();
+                if (loader.ResFile.Version >= 0x02040000) 
+                { 
+                    ushort numShapeAnim = loader.ReadUInt16();
+                    ushort numSceneAnim = loader.ReadUInt16();
+                    ushort numExternalFile = loader.ReadUInt16();
+                }
                 uint userPointer = loader.ReadUInt32();
             }
             else //Note very old versions have no counts and is mostly unkown atm
