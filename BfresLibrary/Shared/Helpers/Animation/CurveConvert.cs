@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using BfresLibrary.TextConvert;
 
-namespace BfresLibrary.TextConvert
+namespace BfresLibrary
 {
-    public class CurveAnimStruct
+    public class CurveAnimHelper
     {
         public string Target { get; set; }
 
@@ -29,31 +30,10 @@ namespace BfresLibrary.TextConvert
 
         [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
         public Dictionary<float, object> KeyFrames { get; set; }
-    }
 
-    public class HermiteKey
-    {
-        public float Value { get; set; }
-        public float In { get; set; }
-        public float Out { get; set; }
-    }
-
-    public class BooleanKey
-    {
-        public bool Value { get; set; }
-    }
-
-    public class KeyFrame
-    {
-        public float Value { get; set; }
-    }
-
-    public class CurveConvert
-    {
-        public static CurveAnimStruct FromCurve(AnimCurve curve,
-            string target, bool useDegrees)
+        public static CurveAnimHelper FromCurve(AnimCurve curve, string target, bool useDegrees)
         {
-            var convCurve = new CurveAnimStruct();
+            var convCurve = new CurveAnimHelper();
             convCurve.KeyFrames = new Dictionary<float, object>();
             convCurve.Target = target;
             convCurve.Scale = curve.Scale;
@@ -72,12 +52,12 @@ namespace BfresLibrary.TextConvert
                     case AnimCurveType.Cubic:
                         {
                             var coef0 = curve.Keys[i, 0] * valueScale + curve.Offset;
-                            var slopes = CurveConvert.GetSlopes(curve, i);
+                            var slopes = GetSlopes(curve, i);
                             if (useDegrees)
                             {
-                                coef0 *= CurveConvert.Rad2Deg;
-                                slopes[0] *= CurveConvert.Rad2Deg;
-                                slopes[1] *= CurveConvert.Rad2Deg;
+                                coef0 *= Rad2Deg;
+                                slopes[0] *= Rad2Deg;
+                                slopes[1] *= Rad2Deg;
                             }
 
                             convCurve.KeyFrames.Add(frame, new HermiteKey()
@@ -100,21 +80,37 @@ namespace BfresLibrary.TextConvert
                             Value = (int)curve.Keys[i, 0] + (int)curve.Offset
                         });
                         break;
-                    default:
-                        var value = curve.Keys[i, 0] * valueScale + curve.Offset;
-                        if (useDegrees)
-                            value *= CurveConvert.Rad2Deg;
+                    case AnimCurveType.Linear:
+                        {
+                            var value = curve.Keys[i, 0] * valueScale + curve.Offset;
+                            if (useDegrees)
+                                value *= Rad2Deg;
 
-                        convCurve.KeyFrames.Add(frame, new KeyFrame() {
-                            Value = value
-                        });
+                            convCurve.KeyFrames.Add(frame, new LinearKeyFrame()
+                            {
+                                Value = value,
+                                Delta = curve.Keys[i, 1] * valueScale,
+                            });
+                        }
+                        break;
+                    default:
+                        {
+                            var value = curve.Keys[i, 0] * valueScale + curve.Offset;
+                            if (useDegrees)
+                                value *= Rad2Deg;
+
+                            convCurve.KeyFrames.Add(frame, new KeyFrame()
+                            {
+                                Value = value
+                            });
+                        }
                         break;
                 }
             }
             return convCurve;
         }
 
-        public static AnimCurve GenerateCurve(CurveAnimStruct curveJson, uint target, bool isDegrees)
+        public static AnimCurve GenerateCurve(CurveAnimHelper curveJson, uint target, bool isDegrees)
         {
             AnimCurve curve = new AnimCurve();
             curve.Offset = curveJson.Offset;
@@ -124,7 +120,7 @@ namespace BfresLibrary.TextConvert
             curve.KeyType = curveJson.KeyType;
             curve.AnimDataOffset = target;
 
-           var first = curveJson.KeyFrames.First();
+            var first = curveJson.KeyFrames.First();
             var last = curveJson.KeyFrames.Last();
             curve.EndFrame = last.Key;
             curve.StartFrame = first.Key;
@@ -141,7 +137,7 @@ namespace BfresLibrary.TextConvert
                 switch (curve.CurveType)
                 {
                     case AnimCurveType.Cubic:
-                        var hermiteKey = ((JObject)keys[i]).ToObject<HermiteKey>();
+                        var hermiteKey = ToObject<HermiteKey>(keys[i]);
 
                         float time = 0;
                         float value = hermiteKey.Value;
@@ -150,7 +146,7 @@ namespace BfresLibrary.TextConvert
                         float nextInSlope = 0;
                         if (i < keys.Count - 1)
                         {
-                            var nextKey = ((JObject)keys[i + 1]).ToObject<HermiteKey>();
+                            var nextKey = ToObject<HermiteKey>(keys[i + 1]);
                             var nextFrame = frames[i + 1];
 
                             nextValue = nextKey.Value;
@@ -178,27 +174,22 @@ namespace BfresLibrary.TextConvert
                         }
                         break;
                     case AnimCurveType.StepBool:
-                        var booleanKey = ((JObject)keys[i]).ToObject<BooleanKey>();
+                        var booleanKey = ToObject<BooleanKey>(keys[i]);
                         curve.KeyStepBoolData[i] = booleanKey.Value;
                         break;
                     case AnimCurveType.Linear:
-                        var linearKey = ((JObject)keys[i]).ToObject<KeyFrame>();
+                        var linearKey = ToObject<LinearKeyFrame>(keys[i]);
 
                         float linearValue = linearKey.Value;
-                        if (isDegrees) {
+                        if (isDegrees)
+                        {
                             linearValue *= Deg2Rad;
                         }
                         curve.Keys[i, 0] = linearValue;
-                        if (i < keys.Count - 1)
-                        {
-                            //Get next value. Calculate delta
-                            var nextLinearKey = ((JObject)keys[i+1]).ToObject<KeyFrame>();
-                            var delta = nextLinearKey.Value - linearValue;
-                            curve.Keys[i, 1] = delta;
-                        }
+                        curve.Keys[i, 1] = linearKey.Delta;
                         break;
                     case AnimCurveType.StepInt:
-                        var stepKey = ((JObject)keys[i]).ToObject<KeyFrame>();
+                        var stepKey = ToObject<KeyFrame>(keys[i]);
                         curve.Keys[i, 0] = stepKey.Value;
                         break;
                 }
@@ -211,7 +202,7 @@ namespace BfresLibrary.TextConvert
 
                 curve.Delta = lastKey - firstKey;
             }
-            
+
             for (int i = 0; i < keys.Count; i++)
             {
                 curve.Keys[i, 0] -= curve.Offset;
@@ -238,6 +229,13 @@ namespace BfresLibrary.TextConvert
             }
 
             return curve;
+        }
+
+        static T ToObject<T>(object obj)
+        {
+            if (obj is JObject) return ((JObject)obj).ToObject<T>();
+            else
+                return (T)obj;
         }
 
         public static float Rad2Deg = (float)(360 / (System.Math.PI * 2));
@@ -301,6 +299,28 @@ namespace BfresLibrary.TextConvert
             float inSlope = param / time - outSlope;
             return new float[2] { inSlope, coef[1] == 0 ? 0 : outSlope };
         }
+    }
 
+    public class HermiteKey
+    {
+        public float Value { get; set; }
+        public float In { get; set; }
+        public float Out { get; set; }
+    }
+
+    public class BooleanKey
+    {
+        public bool Value { get; set; }
+    }
+
+    public class LinearKeyFrame
+    {
+        public float Value { get; set; }
+        public float Delta { get; set; }
+    }
+
+    public class KeyFrame
+    {
+        public float Value { get; set; }
     }
 }

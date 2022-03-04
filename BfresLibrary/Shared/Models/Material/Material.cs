@@ -132,6 +132,10 @@ namespace BfresLibrary
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
+        public void Import(Stream stream, ResFile ResFile) {
+            ResFileLoader.ImportSection(stream, this, ResFile);
+        }
+
         public void Import(string FileName, ResFile ResFile) {
             string ext = Path.GetExtension(FileName);
             if (ext == ".json")

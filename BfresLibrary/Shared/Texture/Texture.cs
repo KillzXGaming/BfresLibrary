@@ -94,6 +94,10 @@ namespace BfresLibrary
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
+        public void Import(System.IO.Stream stream, ResFile ResFile) {
+            ResFileLoader.ImportSection(stream, this, ResFile);
+        }
+
         public virtual void Import(string FileName, ResFile ResFile) {
             ResFileLoader.ImportSection(FileName, this, ResFile);
         }

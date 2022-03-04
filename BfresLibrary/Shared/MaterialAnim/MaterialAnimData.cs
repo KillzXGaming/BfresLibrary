@@ -177,7 +177,10 @@ namespace BfresLibrary
             {
                 saver.Write((ushort)ParamAnimInfos.Count);
                 saver.Write((ushort)Curves.Count);
-                saver.Write((ushort)Constants.Count);
+                if (Constants != null)
+                    saver.Write((ushort)Constants.Count);
+                else
+                    saver.Write((ushort)0);
                 saver.Seek(2);
                 saver.Write(ShaderParamCurveIndex);
                 saver.Write(InfoIndex);

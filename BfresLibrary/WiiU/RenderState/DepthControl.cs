@@ -5,7 +5,7 @@ namespace BfresLibrary.GX2
     /// <summary>
     /// Represents GX2 settings controlling how depth and stencil buffer checks are performed and handled.
     /// </summary>
-    public struct DepthControl
+    public class DepthControl
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 

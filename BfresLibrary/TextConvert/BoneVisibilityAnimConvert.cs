@@ -31,7 +31,7 @@ namespace BfresLibrary.TextConvert
 
             public bool BaseVisible { get; set; }
 
-            public List<CurveAnimStruct> Curves { get; set; }
+            public List<CurveAnimHelper> Curves { get; set; }
         }
 
         public static string ToJson(VisibilityAnim anim)
@@ -46,7 +46,7 @@ namespace BfresLibrary.TextConvert
 
             for (int i = 0; i < anim.Names?.Count; i++) {
                 VisAnimGroupStruct groupConv = new VisAnimGroupStruct();
-                groupConv.Curves = new List<CurveAnimStruct>();
+                groupConv.Curves = new List<CurveAnimHelper>();
                 groupConv.BaseVisible = anim.BaseDataList[i];
                 groupConv.Name = anim.Names[i];
                 animConv.Groups.Add(groupConv);
@@ -54,7 +54,7 @@ namespace BfresLibrary.TextConvert
                 foreach (var curve in anim.Curves)
                 {
                     if (curve.AnimDataOffset == i)
-                        groupConv.Curves.Add(CurveConvert.FromCurve(curve, "", false));
+                        groupConv.Curves.Add(CurveAnimHelper.FromCurve(curve, "", false));
                 }
             }
 

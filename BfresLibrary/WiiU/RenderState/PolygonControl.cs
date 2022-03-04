@@ -5,7 +5,7 @@ namespace BfresLibrary.GX2
     /// <summary>
     /// Represents GX2 polygon drawing settings controlling if and how triangles are rendered.
     /// </summary>
-    public struct PolygonControl
+    public class PolygonControl
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 

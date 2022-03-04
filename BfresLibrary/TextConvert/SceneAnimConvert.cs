@@ -36,7 +36,7 @@ namespace BfresLibrary.TextConvert
             public bool EulerRotation { get; set; }
             public bool Perspective { get; set; }
 
-            public List<CurveAnimStruct> Curves { get; set; }
+            public List<CurveAnimHelper> Curves { get; set; }
 
             public CameraAnimData BaseData { get; set; }
         }
@@ -56,7 +56,7 @@ namespace BfresLibrary.TextConvert
             public bool BaseDistAttn { get; set; }
             public bool BasePos { get; set; }
 
-            public List<CurveAnimStruct> Curves { get; set; }
+            public List<CurveAnimHelper> Curves { get; set; }
 
             public LightAnimData BaseData { get; set; }
         }
@@ -72,7 +72,7 @@ namespace BfresLibrary.TextConvert
             public sbyte DistanceAttnFuncIndex { get; set; }
             public string DistanceAttnFuncName { get; set; }
 
-            public List<CurveAnimStruct> Curves { get; set; }
+            public List<CurveAnimHelper> Curves { get; set; }
 
             public FogAnimData BaseData { get; set; }
         }
@@ -88,7 +88,7 @@ namespace BfresLibrary.TextConvert
 
             foreach (var camAnim in anim.CameraAnims.Values) {
                 CameraAnimStruct camAnimConv = new CameraAnimStruct();
-                camAnimConv.Curves = new List<CurveAnimStruct>();
+                camAnimConv.Curves = new List<CurveAnimHelper>();
                 camAnimConv.Name = camAnim.Name;
                 camAnimConv.FrameCount = camAnim.FrameCount;
                 camAnimConv.Loop = camAnim.Flags.HasFlag(CameraAnimFlags.Looping);
@@ -102,13 +102,13 @@ namespace BfresLibrary.TextConvert
                     string target = ((CameraAnimDataOffset)curve.AnimDataOffset).ToString();
 
                     bool isDegrees = target.Contains("Rotation") && animConv.UseDegrees && camAnimConv.EulerRotation;
-                    var convCurve = CurveConvert.FromCurve(curve, target, isDegrees);
+                    var convCurve = CurveAnimHelper.FromCurve(curve, target, isDegrees);
                     camAnimConv.Curves.Add(convCurve);
                 }
             }
             foreach (var lightAnim in anim.LightAnims.Values) {
                 LightAnimStruct lightAnimConv = new LightAnimStruct();
-                lightAnimConv.Curves = new List<CurveAnimStruct>();
+                lightAnimConv.Curves = new List<CurveAnimHelper>();
                 lightAnimConv.Name = lightAnim.Name;
                 lightAnimConv.FrameCount = lightAnim.FrameCount;
                 lightAnimConv.Loop = lightAnim.Flags.HasFlag(LightAnimFlags.Looping);
@@ -126,13 +126,13 @@ namespace BfresLibrary.TextConvert
                 foreach (var curve in lightAnim.Curves)
                 {
                     string target = ((LightAnimDataOffset)curve.AnimDataOffset).ToString();
-                    var convCurve = CurveConvert.FromCurve(curve, target, false);
+                    var convCurve = CurveAnimHelper.FromCurve(curve, target, false);
                     lightAnimConv.Curves.Add(convCurve);
                 }
             }
             foreach (var fogAnim in anim.FogAnims.Values) {
                 FogAnimStruct fogAnimConv = new FogAnimStruct();
-                fogAnimConv.Curves = new List<CurveAnimStruct>();
+                fogAnimConv.Curves = new List<CurveAnimHelper>();
                 fogAnimConv.Name = fogAnim.Name;
                 fogAnimConv.FrameCount = fogAnim.FrameCount;
                 fogAnimConv.Loop = fogAnim.Flags.HasFlag(FogAnimFlags.Looping);
@@ -145,7 +145,7 @@ namespace BfresLibrary.TextConvert
                 foreach (var curve in fogAnim.Curves)
                 {
                     string target = ((FogAnimDataOffset)curve.AnimDataOffset).ToString();
-                    var convCurve = CurveConvert.FromCurve(curve, target, false);
+                    var convCurve = CurveAnimHelper.FromCurve(curve, target, false);
                     fogAnimConv.Curves.Add(convCurve);
                 }
             }
@@ -203,7 +203,7 @@ namespace BfresLibrary.TextConvert
                 {
                     var target = (CameraAnimDataOffset)Enum.Parse(typeof(CameraAnimDataOffset), curveJson.Target);
 
-                    var curve = CurveConvert.GenerateCurve(curveJson, (uint)target, false);
+                    var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     camAnim.Curves.Add(curve);
                 }
             }
@@ -233,7 +233,7 @@ namespace BfresLibrary.TextConvert
                 {
                     var target = (CameraAnimDataOffset)Enum.Parse(typeof(CameraAnimDataOffset), curveJson.Target);
 
-                    var curve = CurveConvert.GenerateCurve(curveJson, (uint)target, false);
+                    var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     lightAnim.Curves.Add(curve);
                 }
             }
@@ -256,7 +256,7 @@ namespace BfresLibrary.TextConvert
                 {
                     var target = (CameraAnimDataOffset)Enum.Parse(typeof(CameraAnimDataOffset), curveJson.Target);
 
-                    var curve = CurveConvert.GenerateCurve(curveJson, (uint)target, false);
+                    var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     fogAnim.Curves.Add(curve);
                 }
             }

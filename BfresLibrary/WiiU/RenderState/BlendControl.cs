@@ -5,7 +5,7 @@ namespace BfresLibrary.GX2
     /// <summary>
     /// Represents GX2 settings controlling color and alpha blending.
     /// </summary>
-    public struct BlendControl
+    public class BlendControl
     {
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 

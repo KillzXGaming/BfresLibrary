@@ -7,61 +7,33 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Syroot.Maths;
+using BfresLibrary.TextConvert;
 
-namespace BfresLibrary.TextConvert
+namespace BfresLibrary.Helpers
 {
-    public class SkeletalAnimConvert
+    public class SkeletalAnimHelper
     {
-        internal class SkeletalAnimStruct
-        {
-            public string Name { get; set; }
-            public string Path { get; set; }
-            public int FrameCount { get; set; }
-            public bool Loop { get; set; }
-            public bool Baked { get; set; }
-            public bool UseDegrees { get; set; } = true;
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public int FrameCount { get; set; }
+        public bool Loop { get; set; }
+        public bool Baked { get; set; }
+        public bool UseDegrees { get; set; } = true;
 
-            [JsonConverter(typeof(StringEnumConverter))]
-            public SkeletalAnimFlagsScale FlagsScale { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SkeletalAnimFlagsScale FlagsScale { get; set; }
 
-            [JsonConverter(typeof(StringEnumConverter))]
-            public SkeletalAnimFlagsRotate FlagsRotate { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SkeletalAnimFlagsRotate FlagsRotate { get; set; }
 
-            public List<BoneAnimStruct> BoneAnims { get; set; }
+        public List<BoneAnimHelper> BoneAnims { get; set; }
 
-            [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
-            public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
-        }
-
-        internal class BoneAnimStruct
-        {
-            public string Name { get; set; }
-
-            public bool SegmentScaleCompensate { get; set; }
-
-            public bool UseBaseTranslation { get; set; }
-            public bool UseBaseRotation { get; set; }
-            public bool UseBaseScale { get; set; }
-
-            public List<CurveAnimStruct> Curves { get; set; }
-
-            public BaseData BaseData { get; set; }
-        }
-
-        internal struct BaseData
-        {
-            public uint Flags;
-
-            public Vector3F Scale;
-
-            public Vector3F Translate;
-
-            public Vector4F Rotate;
-        }
+        [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
+        public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
 
         public static string ToJson(SkeletalAnim anim)
         {
-            SkeletalAnimStruct animConv = new SkeletalAnimStruct();
+            SkeletalAnimHelper animConv = new SkeletalAnimHelper();
             animConv.Name = anim.Name;
             animConv.Path = anim.Path;
             animConv.Loop = anim.Loop;
@@ -69,23 +41,24 @@ namespace BfresLibrary.TextConvert
             animConv.FrameCount = anim.FrameCount;
             animConv.FlagsScale = anim.FlagsScale;
             animConv.FlagsRotate = anim.FlagsRotate;
-            animConv.BoneAnims = new List<BoneAnimStruct>();
+            animConv.BoneAnims = new List<BoneAnimHelper>();
 
-            foreach (var boneAnim in anim.BoneAnims) {
-                BoneAnimStruct boneAnimConv = new BoneAnimStruct();
-                boneAnimConv.Curves = new List<CurveAnimStruct>();
+            foreach (var boneAnim in anim.BoneAnims)
+            {
+                BoneAnimHelper boneAnimConv = new BoneAnimHelper();
+                boneAnimConv.Curves = new List<CurveAnimHelper>();
                 boneAnimConv.Name = boneAnim.Name;
                 Vector4F rotation = boneAnim.BaseData.Rotate;
                 if (animConv.UseDegrees && animConv.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
                 {
                     rotation = new Vector4F(
-                        rotation.X * CurveConvert.Rad2Deg,
-                        rotation.Y * CurveConvert.Rad2Deg, 
-                        rotation.Z * CurveConvert.Rad2Deg,
+                        rotation.X * CurveAnimHelper.Rad2Deg,
+                        rotation.Y * CurveAnimHelper.Rad2Deg,
+                        rotation.Z * CurveAnimHelper.Rad2Deg,
                         rotation.W);
                 }
 
-                boneAnimConv.BaseData = new BaseData()
+                boneAnimConv.BaseData = new BaseDataHelper()
                 {
                     Flags = boneAnim.BaseData.Flags,
                     Rotate = rotation,
@@ -98,9 +71,10 @@ namespace BfresLibrary.TextConvert
                 boneAnimConv.UseBaseScale = boneAnim.FlagsBase.HasFlag(BoneAnimFlagsBase.Scale);
                 animConv.BoneAnims.Add(boneAnimConv);
 
-                foreach (var curve in boneAnim.Curves) {
-                    string target = ((AnimTarget)curve.AnimDataOffset).ToString(); 
-                    var convCurve = CurveConvert.FromCurve(curve, target,
+                foreach (var curve in boneAnim.Curves)
+                {
+                    string target = ((AnimTarget)curve.AnimDataOffset).ToString();
+                    var convCurve = CurveAnimHelper.FromCurve(curve, target,
                         target.Contains("Rotate") && animConv.UseDegrees);
                     boneAnimConv.Curves.Add(convCurve);
                 }
@@ -118,6 +92,13 @@ namespace BfresLibrary.TextConvert
             return JsonConvert.SerializeObject(animConv, Formatting.Indented);
         }
 
+        public static SkeletalAnim FromStruct(SkeletalAnimHelper skelAnim)
+        {
+            SkeletalAnim anim = new SkeletalAnim();
+            FromStruct(anim, skelAnim);
+            return anim;
+        }
+
         public static SkeletalAnim FromJson(string json)
         {
             SkeletalAnim anim = new SkeletalAnim();
@@ -133,8 +114,11 @@ namespace BfresLibrary.TextConvert
                 return settings;
             };
 
-            var animJson = JsonConvert.DeserializeObject<SkeletalAnimStruct>(json);
+            FromStruct(anim, JsonConvert.DeserializeObject<SkeletalAnimHelper>(json));
+        }
 
+        public static void FromStruct(SkeletalAnim anim, SkeletalAnimHelper animJson)
+        {
             anim.Name = animJson.Name;
             anim.Baked = animJson.Baked;
             anim.Loop = animJson.Loop;
@@ -146,7 +130,8 @@ namespace BfresLibrary.TextConvert
             anim.BindIndices = new ushort[animJson.BoneAnims.Count];
             anim.UserData = UserDataConvert.Convert(animJson.UserData);
 
-            foreach (var boneAnimJson in animJson.BoneAnims) {
+            foreach (var boneAnimJson in animJson.BoneAnims)
+            {
                 BoneAnim boneAnim = new BoneAnim();
                 anim.BoneAnims.Add(boneAnim);
 
@@ -155,13 +140,13 @@ namespace BfresLibrary.TextConvert
                 boneAnim.BeginRotate = 3;
                 boneAnim.BeginTranslate = 6;
                 boneAnim.BeginBaseTranslate = 7;
-                Vector4F rotation = boneAnim.BaseData.Rotate;
+                Vector4F rotation = boneAnimJson.BaseData.Rotate;
                 if (animJson.UseDegrees && animJson.FlagsRotate == SkeletalAnimFlagsRotate.EulerXYZ)
                 {
                     rotation = new Vector4F(
-                        rotation.X * CurveConvert.Deg2Rad,
-                        rotation.Y * CurveConvert.Deg2Rad,
-                        rotation.Z * CurveConvert.Deg2Rad,
+                        rotation.X * CurveAnimHelper.Deg2Rad,
+                        rotation.Y * CurveAnimHelper.Deg2Rad,
+                        rotation.Z * CurveAnimHelper.Deg2Rad,
                         rotation.W);
                 }
                 boneAnim.BaseData = new BoneAnimData()
@@ -183,7 +168,7 @@ namespace BfresLibrary.TextConvert
                 {
                     var target = (AnimTarget)Enum.Parse(typeof(AnimTarget), curveJson.Target);
 
-                    var curve = CurveConvert.GenerateCurve(curveJson, (uint)target, 
+                    var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target,
                         curveJson.Target.Contains("Rotate") && animJson.UseDegrees);
                     boneAnim.Curves.Add(curve);
                     boneAnim.FlagsCurve = SetCurveTarget(target);
@@ -192,6 +177,7 @@ namespace BfresLibrary.TextConvert
                 boneAnim.ApplySegmentScaleCompensate = boneAnimJson.SegmentScaleCompensate;
             }
         }
+
 
         static BoneAnimFlagsCurve SetCurveTarget(AnimTarget target)
         {
@@ -225,5 +211,31 @@ namespace BfresLibrary.TextConvert
             RotateZ = 0x28,
             RotateW = 0x2C,
         }
+    }
+
+    public class BoneAnimHelper
+    {
+        public string Name { get; set; }
+
+        public bool SegmentScaleCompensate { get; set; }
+
+        public bool UseBaseTranslation { get; set; }
+        public bool UseBaseRotation { get; set; }
+        public bool UseBaseScale { get; set; }
+
+        public List<CurveAnimHelper> Curves { get; set; }
+
+        public BaseDataHelper BaseData { get; set; }
+    }
+
+    public struct BaseDataHelper
+    {
+        public uint Flags;
+
+        public Vector3F Scale;
+
+        public Vector3F Translate;
+
+        public Vector4F Rotate;
     }
 }

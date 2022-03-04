@@ -179,9 +179,8 @@ namespace BfresLibrary
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
         public void Import(string FileName, ResFile ResFile) {
-            if (FileName.EndsWith(".json"))
-            {
-               TextConvert.SkeletalAnimConvert.FromJson(this, File.ReadAllText(FileName));
+            if (FileName.EndsWith(".json")) {
+               Helpers.SkeletalAnimHelper.FromJson(this, File.ReadAllText(FileName));
             }
             else
                 ResFileLoader.ImportSection(FileName, this, ResFile);
@@ -189,7 +188,7 @@ namespace BfresLibrary
 
         public void Export(string FileName, ResFile ResFile) {
             if (FileName.EndsWith(".json"))
-                File.WriteAllText(FileName, TextConvert.SkeletalAnimConvert.ToJson(this));
+                File.WriteAllText(FileName, Helpers.SkeletalAnimHelper.ToJson(this));
             else
                 ResFileSaver.ExportSection(FileName, this, ResFile);
         }
