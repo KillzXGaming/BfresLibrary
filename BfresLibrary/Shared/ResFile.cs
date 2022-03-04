@@ -443,9 +443,6 @@ namespace BfresLibrary
                     anim.Name = $"{anim.Name}_ftp";
                 }
 
-                // Workaround for Null "MatVisibilityAnims" variable
-                if (MatVisibilityAnims == null)
-                    MatVisibilityAnims = new ResDict<MaterialAnim>();
                 foreach (var anim in MatVisibilityAnims.Values) {
                     anim.Name = $"{anim.Name}_fvs";
                 }
@@ -467,6 +464,12 @@ namespace BfresLibrary
                  Switch.ResFileParser.Load((Switch.Core.ResFileSwitchLoader)loader, this);
             else
                 WiiU.ResFileParser.Load((WiiU.Core.ResFileWiiULoader)loader, this);
+            //Custom external file loading
+            foreach (var file in ExternalFiles)
+            {
+                if (file.Key.EndsWith(".brtcamera"))
+                    file.Value.LoadedFileData = new Brtcamera(new MemoryStream(file.Value.Data), !IsPlatformSwitch);
+            }
         }
 
         void IResData.Save(ResFileSaver saver) {
@@ -544,6 +547,7 @@ namespace BfresLibrary
 
             foreach (var anim in TexPatternAnims.Values)
             {
+                anim.signature = IsPlatformSwitch ? "FMAA" : "FTXP";
                 int curveIndex = 0;
                 int infoIndex = 0;
                 if (calculateBakeSizes)
@@ -566,6 +570,7 @@ namespace BfresLibrary
 
             foreach (var anim in TexSrtAnims.Values)
             {
+                anim.signature = IsPlatformSwitch ? "FMAA" : "FSHU";
                 int curveIndex = 0;
                 int infoIndex = 0;
                 if (calculateBakeSizes)
@@ -588,6 +593,7 @@ namespace BfresLibrary
 
             foreach (var anim in ColorAnims.Values)
             {
+                anim.signature = IsPlatformSwitch ? "FMAA" : "FSHU";
                 int curveIndex = 0;
                 int infoIndex = 0;
                 if (calculateBakeSizes)
@@ -610,6 +616,7 @@ namespace BfresLibrary
 
             foreach (var anim in ShaderParamAnims.Values)
             {
+                anim.signature = IsPlatformSwitch ? "FMAA" : "FSHU";
                 int curveIndex = 0;
                 int infoIndex = 0;
                 if (calculateBakeSizes)
@@ -690,6 +697,19 @@ namespace BfresLibrary
                 for (int i = 0; i < MaterialAnims.Count; i++)
                 {
                     MaterialAnims[i].signature = "FMAA";
+                }
+            }
+
+            //Custom external file loading
+            foreach (var file in ExternalFiles)
+            {
+                if (file.Value.LoadedFileData is Brtcamera)
+                {
+                    var cam = file.Value.LoadedFileData as Brtcamera;
+                    cam.IsBigEndian = !IsPlatformSwitch;
+                    var mem = new MemoryStream();
+                    cam.Save(mem);
+                    file.Value.Data = mem.ToArray();
                 }
             }
         }

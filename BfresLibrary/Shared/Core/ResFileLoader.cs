@@ -71,23 +71,28 @@ namespace BfresLibrary.Core
 
         // ---- METHODS (INTERNAL) -------------------------------------------------------------------------------------
 
-        static internal void ImportSection(string fileName, IResData resData, ResFile resFile)
+        static internal void ImportSection(string fileName, IResData resData, ResFile resFile) {
+            ImportSection(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read), resData, resFile);
+        }
+
+        static internal void ImportSection(Stream stream, IResData resData, ResFile resFile)
         {
             bool platformSwitch = false;
-            using (var reader = new BinaryDataReader(File.OpenRead(fileName))) {
+
+            using (var reader = new BinaryDataReader(stream, true)) {
                 reader.Seek(24, SeekOrigin.Begin);
                 platformSwitch = reader.ReadUInt32() != 0;
             }
 
             if (platformSwitch)
             {
-                using (var reader = new Switch.Core.ResFileSwitchLoader(resData, resFile, fileName)) {
+                using (var reader = new Switch.Core.ResFileSwitchLoader(resData, resFile, stream)) {
                     reader.ImportSection();
                 }
             }
             else
             {
-                using (var reader = new WiiU.Core.ResFileWiiULoader(resData, resFile, fileName)) {
+                using (var reader = new WiiU.Core.ResFileWiiULoader(resData, resFile, stream)) {
                     reader.ImportSection();
                 }
             }
