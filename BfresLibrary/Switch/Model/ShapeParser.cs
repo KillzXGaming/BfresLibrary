@@ -13,7 +13,7 @@ namespace BfresLibrary.Switch
     {
         public static void Read(ResFileSwitchLoader loader, Shape shape)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
                 shape.Flags = loader.ReadEnum<ShapeFlags>(false);
             else
                 loader.LoadHeaderBlock();
@@ -35,7 +35,7 @@ namespace BfresLibrary.Switch
                 long UserPointer = loader.ReadInt64();
                 shape.RadiusArray.Add(loader.ReadSingle());
             }
-            if (loader.ResFile.VersionMajor2 != 9)
+            if (loader.ResFile.VersionMajor2 < 9)
                 shape.Flags = loader.ReadEnum<ShapeFlags>(true);
             ushort idx = loader.ReadUInt16();
             shape.MaterialIndex = loader.ReadUInt16();
@@ -48,7 +48,7 @@ namespace BfresLibrary.Switch
             byte numTargetAttr = loader.ReadByte();
             if (loader.ResFile.VersionMajor2 <= 2 && loader.ResFile.VersionMajor == 0)
                 loader.Seek(2); //padding
-            else if (loader.ResFile.VersionMajor2 == 9)
+            else if (loader.ResFile.VersionMajor2 >= 9)
                 loader.Seek(2); //padding
             else
                 loader.Seek(6); //padding

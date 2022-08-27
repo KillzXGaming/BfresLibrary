@@ -108,7 +108,7 @@ namespace BfresLibrary
             loader.CheckSignature(_signature);
             if (loader.IsSwitch)
             {
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                     _flags = loader.ReadUInt32();
                 else
                     ((Switch.Core.ResFileSwitchLoader)loader).LoadHeaderBlock();
@@ -122,11 +122,11 @@ namespace BfresLibrary
 
                 if (loader.ResFile.VersionMajor2 == 8)
                     loader.Seek(16);
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                     loader.Seek(8);
 
                 long userPointer = loader.ReadInt64();
-                if (loader.ResFile.VersionMajor2 != 9)
+                if (loader.ResFile.VersionMajor2 < 9)
                     _flags = loader.ReadUInt32();
                 ushort numBone = loader.ReadUInt16();
                 ushort numSmoothMatrix = loader.ReadUInt16();
@@ -162,7 +162,7 @@ namespace BfresLibrary
             saver.WriteSignature(_signature);
             if (saver.IsSwitch)
             {
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Write(_flags);
                 else
                     ((Switch.Core.ResFileSwitchSaver)saver).SaveHeaderBlock();
@@ -174,18 +174,18 @@ namespace BfresLibrary
                 PosInverseModelMatricesOffset = saver.SaveOffset();
                 if (saver.ResFile.VersionMajor2 == 8)
                     saver.Seek(16);
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Seek(8);
                 saver.Write(0L); // UserPointer
 
-                if (saver.ResFile.VersionMajor2 != 9)
+                if (saver.ResFile.VersionMajor2 < 9)
                     saver.Write(_flags);
 
                 saver.Write((ushort)Bones.Count);
                 saver.Write((ushort)InverseModelMatrices.Count); // NumSmoothMatrix
                 saver.Write((ushort)(MatrixToBoneList.Count - InverseModelMatrices.Count)); // NumRigidMatrix
 
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Seek(2);
                 else
                     saver.Seek(6);

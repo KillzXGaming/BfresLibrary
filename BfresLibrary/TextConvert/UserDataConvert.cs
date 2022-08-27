@@ -9,7 +9,7 @@ using Newtonsoft.Json.Converters;
 
 namespace BfresLibrary.TextConvert
 {
-    class UserDataConvert
+    public class UserDataConvert
     {
         public static ResDict<UserData> Convert(Dictionary<string, object> userData)
         {

@@ -28,7 +28,7 @@ namespace BfresLibrary.Switch
             resFile.Name = loader.LoadString();
             long modelOffset = loader.ReadOffset();
             long modelDictOffset = loader.ReadOffset();
-            if (loader.ResFile.VersionMajor2 == 9) {
+            if (loader.ResFile.VersionMajor2 >= 9) {
                 loader.ReadBytes(32); //reserved
             }
             resFile.SkeletalAnims = loader.LoadDictValues<SkeletalAnim>();
@@ -36,6 +36,8 @@ namespace BfresLibrary.Switch
             resFile.BoneVisibilityAnims = loader.LoadDictValues<VisibilityAnim>();
             resFile.ShapeAnims = loader.LoadDictValues<ShapeAnim>();
             resFile.SceneAnims = loader.LoadDictValues<SceneAnim>();
+
+
             resFile.MemoryPool = loader.Load<MemoryPool>();
             resFile.BufferInfo = loader.Load<BufferInfo>();
             resFile.ExternalFiles = loader.LoadDictValues<ExternalFile>();
@@ -47,7 +49,7 @@ namespace BfresLibrary.Switch
             //Read models after buffer data
             resFile.Models = loader.LoadDictValues<Model>(modelDictOffset, modelOffset);
 
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 //Count for 2 new sections
                 ushort unkCount = loader.ReadUInt16();

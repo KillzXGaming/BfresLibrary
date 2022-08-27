@@ -338,7 +338,7 @@ namespace BfresLibrary
                 Name = loader.LoadString();
                 uint CurveOffset = loader.ReadOffset();
                 uint BaseDataOffset = loader.ReadOffset();
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                 {
                     long unk1 = loader.ReadInt64();
                     long unk2 = loader.ReadInt64();
@@ -376,7 +376,7 @@ namespace BfresLibrary
                 saver.SaveString(Name);
                 PosCurvesOffset = saver.SaveOffset();
                 PosBaseDataOffset = saver.SaveOffset();
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Seek(16);
 
                 saver.Write(_flags);

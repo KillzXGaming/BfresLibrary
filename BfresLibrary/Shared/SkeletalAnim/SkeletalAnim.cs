@@ -200,7 +200,7 @@ namespace BfresLibrary
             loader.CheckSignature(_signature);
             if (loader.IsSwitch)
             {
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                     _flags = loader.ReadUInt32();
                 else
                     ((Switch.Core.ResFileSwitchLoader)loader).LoadHeaderBlock();
@@ -211,7 +211,7 @@ namespace BfresLibrary
                 uint BindIndexArray = loader.ReadOffset();
                 uint BoneAnimArrayOffset = loader.ReadOffset();
                 UserData = loader.LoadDictValues<UserData>();
-                if (loader.ResFile.VersionMajor2 != 9)
+                if (loader.ResFile.VersionMajor2 < 9)
                     _flags = loader.ReadUInt32();
 
                 FrameCount = loader.ReadInt32();
@@ -220,7 +220,7 @@ namespace BfresLibrary
                 ushort numBoneAnim = loader.ReadUInt16();
                 ushort numUserData = loader.ReadUInt16();
 
-                if (loader.ResFile.VersionMajor2 != 9)
+                if (loader.ResFile.VersionMajor2 < 9)
                     loader.ReadUInt32(); //Padding
 
                 BoneAnims = loader.LoadList<BoneAnim>(numBoneAnim, BoneAnimArrayOffset).ToList();
@@ -287,7 +287,7 @@ namespace BfresLibrary
             saver.WriteSignature(_signature);
             if (saver.IsSwitch)
             {
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Write(_flags);
                 else
                     ((Switch.Core.ResFileSwitchSaver)saver).SaveHeaderBlock();
@@ -299,7 +299,7 @@ namespace BfresLibrary
                 PosBoneAnimsOffset = saver.SaveOffset();
                 PosUserDataOffset = saver.SaveOffset();
                 PosUserDataDictOffset = saver.SaveOffset();
-                if (saver.ResFile.VersionMajor2 != 9)
+                if (saver.ResFile.VersionMajor2 < 9)
                     saver.Write(_flags);
                 saver.Write(FrameCount);
                 saver.Write(BoneAnims.Sum((x) => x.Curves.Count));
@@ -307,7 +307,7 @@ namespace BfresLibrary
                 saver.Write((ushort)BoneAnims.Count);
                 saver.Write((ushort)UserData.Count);
 
-                if (saver.ResFile.VersionMajor2 != 9)
+                if (saver.ResFile.VersionMajor2 < 9)
                     saver.Write(0); //padding
             }
             else

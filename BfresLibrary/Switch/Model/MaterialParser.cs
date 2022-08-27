@@ -13,12 +13,19 @@ namespace BfresLibrary.Switch
     {
         public static void Load(ResFileSwitchLoader loader, Material mat)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
                 mat.Flags = loader.ReadEnum<MaterialFlags>(true);
             else
                 loader.LoadHeaderBlock();
 
             mat.Name = loader.LoadString();
+
+            if (loader.ResFile.VersionMajor2 == 10)
+            {
+                MaterialParserV10.Load(loader, mat);
+                return;
+            }
+
             mat.RenderInfos = loader.LoadDictValues<RenderInfo>();
             mat.ShaderAssign = loader.Load<ShaderAssign>();
             long TextureArrayOffset = loader.ReadInt64();
@@ -32,7 +39,7 @@ namespace BfresLibrary.Switch
             long userPointer = loader.ReadInt64();
             long SamplerSlotArrayOffset = loader.ReadInt64();
             long TexSlotArrayOffset = loader.ReadInt64();
-            if (loader.ResFile.VersionMajor2 != 9)
+            if (loader.ResFile.VersionMajor2 < 9)
                 mat.Flags = loader.ReadEnum<MaterialFlags>(true);
             ushort idx = loader.ReadUInt16();
             ushort numRenderInfo = loader.ReadUInt16();
@@ -44,7 +51,7 @@ namespace BfresLibrary.Switch
             ushort sizParamRaw = loader.ReadUInt16();
             ushort numUserData = loader.ReadUInt16();
 
-            if (loader.ResFile.VersionMajor2 != 9)
+            if (loader.ResFile.VersionMajor2 < 9)
                 loader.ReadUInt32(); //Padding
 
             var textures = loader.LoadCustom(() => loader.LoadStrings(numTextureRef), (uint)TextureNameArray);

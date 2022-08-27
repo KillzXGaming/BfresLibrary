@@ -13,7 +13,7 @@ namespace BfresLibrary.Switch
     {
         internal static void Read(ResFileSwitchLoader loader, Model model)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
                 model.Flags = loader.ReadUInt32();
             else
                 loader.LoadHeaderBlock();
@@ -23,12 +23,21 @@ namespace BfresLibrary.Switch
             model.Skeleton = loader.Load<Skeleton>();
             long VertexArrayOffset = loader.ReadOffset();
             model.Shapes = loader.LoadDictValues<Shape>();
-            long materialValuesOffset = loader.ReadOffset();
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
+            {
+                long materialValuesOffset = loader.ReadOffset();
                 loader.ReadOffset(); //padding?
+                long materialDictOffset = loader.ReadOffset();
+                model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
+            }
+            else
+            {
+                long materialValuesOffset = loader.ReadOffset();
+                long materialDictOffset = loader.ReadOffset();
+                loader.ReadOffset(); //padding?
+                model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
+            }
 
-            long materialDictOffset = loader.ReadOffset();
-            model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
             model.UserData = loader.LoadDictValues<UserData>();
             long UserPointer = loader.ReadOffset();
             ushort numVertexBuffer = loader.ReadUInt16();
@@ -36,7 +45,7 @@ namespace BfresLibrary.Switch
             ushort numMaterial = loader.ReadUInt16();
 
             ushort numUserData = 0;
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 loader.ReadUInt16(); //padding?
                 numUserData = loader.ReadUInt16();
