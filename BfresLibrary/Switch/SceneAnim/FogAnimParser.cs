@@ -12,7 +12,7 @@ namespace BfresLibrary.Switch
     {
         public static void Read(ResFileSwitchLoader loader, FogAnim fogAnim)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 fogAnim.Flags = loader.ReadEnum<FogAnimFlags>(true);
                 loader.Seek(2);
@@ -27,7 +27,7 @@ namespace BfresLibrary.Switch
 
             ushort numUserData = 0;
             byte numCurve = 0;
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 fogAnim.FrameCount = loader.ReadInt32();
                 numCurve = loader.ReadByte();
@@ -52,7 +52,7 @@ namespace BfresLibrary.Switch
 
         public static void Write(ResFileSwitchSaver saver, FogAnim fogAnim)
         {
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(fogAnim.Flags, true);
                 saver.Seek(2);
@@ -68,7 +68,7 @@ namespace BfresLibrary.Switch
             fogAnim.PosUserDataDictOffset = saver.SaveOffset();
             saver.SaveString(fogAnim.DistanceAttnFuncName);
 
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(fogAnim.FrameCount);
                 saver.Write((byte)fogAnim.Curves.Count);

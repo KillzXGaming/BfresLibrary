@@ -13,6 +13,7 @@ namespace BfresLibrary.Switch
     {
         public static void Read(ResFileSwitchLoader loader, VisibilityAnim visibilityAnim)
         {
+            loader.CheckSignature("FBVS");
             if (loader.ResFile.VersionMajor2 >= 9)
             {
                 visibilityAnim._flags = loader.ReadUInt16();
@@ -31,8 +32,6 @@ namespace BfresLibrary.Switch
 
             if (loader.ResFile.VersionMajor2 < 9)
                 visibilityAnim._flags = loader.ReadUInt16();
-            else
-                loader.ReadUInt16(); //Idk what this is
 
             ushort numUserData = loader.ReadUInt16();
             visibilityAnim.FrameCount = loader.ReadInt32();
@@ -73,6 +72,7 @@ namespace BfresLibrary.Switch
 
         public static void Write(ResFileSwitchSaver saver, VisibilityAnim visibilityAnim)
         {
+            saver.WriteSignature("FBVS");
             if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(visibilityAnim._flags);

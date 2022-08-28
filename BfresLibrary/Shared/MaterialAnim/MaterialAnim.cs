@@ -174,7 +174,7 @@ namespace BfresLibrary
 
             if (signature == "FMAA")
             {
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                 {
                     Flags = loader.ReadEnum<MaterialAnimFlags>(true);
                     loader.ReadUInt16();
@@ -192,13 +192,13 @@ namespace BfresLibrary
                 UserData = loader.LoadDictValues<UserData>();
                 uint TextureBindArrayOffset = loader.ReadOffset();
 
-                if (loader.ResFile.VersionMajor2 != 9)
+                if (loader.ResFile.VersionMajor2 < 9)
                     Flags = loader.ReadEnum<MaterialAnimFlags>(true);
 
                 ushort numUserData = 0;
                 ushort CurveCount = 0;
 
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                 {
                     FrameCount = loader.ReadInt32();
                     BakedSize = loader.ReadUInt32();
@@ -220,7 +220,7 @@ namespace BfresLibrary
                 ushort VisabiltyAnimCount = loader.ReadUInt16();
                 ushort TextureCount = loader.ReadUInt16();
 
-                if (loader.ResFile.VersionMajor2 == 9)
+                if (loader.ResFile.VersionMajor2 >= 9)
                     loader.ReadUInt16(); //padding
 
                 BindIndices = loader.LoadCustom(() => loader.ReadUInt16s(materialCount), BindIndicesOffset);
@@ -350,7 +350,7 @@ namespace BfresLibrary
             saver.WriteSignature(signature);
             if (signature == "FMAA")
             {
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                 {
                     saver.Write(Flags, true);
                     saver.Seek(2);
@@ -377,10 +377,10 @@ namespace BfresLibrary
                 PosUserDataOffset = saver.SaveOffset();
                 PosUserDataDictOffset = saver.SaveOffset();
                 PosTextureBindArrayOffset = saver.SaveOffset();
-                if (saver.ResFile.VersionMajor2 != 9)
+                if (saver.ResFile.VersionMajor2 < 9)
                     saver.Write(Flags, true);
 
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                 {
                     saver.Write(FrameCount);
                     saver.Write(BakedSize);
@@ -401,7 +401,7 @@ namespace BfresLibrary
                 saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.TexturePatternCount));
                 saver.Write((ushort)MaterialAnimDataList.Sum((x) => x.VisibilyCount));
                 saver.Write(TextureNames != null ? (ushort)TextureNames.Count : (ushort)0);
-                if (saver.ResFile.VersionMajor2 == 9)
+                if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Write((ushort)0);
             }
             else if (signature == "FSHU")

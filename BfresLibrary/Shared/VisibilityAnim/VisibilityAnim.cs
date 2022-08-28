@@ -186,11 +186,11 @@ namespace BfresLibrary
 
         void IResData.Load(ResFileLoader loader)
         {
-            loader.CheckSignature(_signature);
             if (loader.IsSwitch)
                 Switch.VisibilityAnimParser.Read((Switch.Core.ResFileSwitchLoader)loader, this);
             else
             {
+                loader.CheckSignature(_signature);
                 Name = loader.LoadString();
                 Path = loader.LoadString();
                 _flags = loader.ReadUInt16();
@@ -240,11 +240,11 @@ namespace BfresLibrary
 
         void IResData.Save(ResFileSaver saver)
         {
-            saver.WriteSignature(_signature);
             if (saver.IsSwitch)
                 Switch.VisibilityAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
             else
             {
+                saver.WriteSignature(_signature);
                 saver.SaveString(Name);
                 saver.SaveString(Path);
                 saver.Write(_flags);

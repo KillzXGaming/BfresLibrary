@@ -38,6 +38,9 @@ namespace BfresLibrary.Switch
                 model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
             }
 
+            if (loader.ResFile.VersionMajor2 >= 10)
+                loader.ReadOffset(); //padding?
+
             model.UserData = loader.LoadDictValues<UserData>();
             long UserPointer = loader.ReadOffset();
             ushort numVertexBuffer = loader.ReadUInt16();

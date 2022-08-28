@@ -12,7 +12,7 @@ namespace BfresLibrary.Switch
     {
         public static void Read(ResFileSwitchLoader loader, LightAnim lightAnim)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 lightAnim.Flags = loader.ReadEnum<LightAnimFlags>(true);
                 loader.Seek(2);
@@ -29,7 +29,7 @@ namespace BfresLibrary.Switch
 
             ushort numUserData = 0;
             byte numCurve = 0;
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
             {
                 lightAnim.FrameCount = loader.ReadInt32();
                 numCurve = loader.ReadByte();

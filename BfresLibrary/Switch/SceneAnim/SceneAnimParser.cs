@@ -12,7 +12,7 @@ namespace BfresLibrary.Switch
     {
         internal static void Read(ResFileSwitchLoader loader, SceneAnim sceneAnim)
         {
-            if (loader.ResFile.VersionMajor2 == 9)
+            if (loader.ResFile.VersionMajor2 >= 9)
                 sceneAnim.Flags = loader.ReadUInt32();
             else
                 loader.LoadHeaderBlock();
@@ -31,7 +31,7 @@ namespace BfresLibrary.Switch
 
         public static void Write(ResFileSwitchSaver saver, SceneAnim sceneAnim)
         {
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
                 saver.Write(sceneAnim.Flags);
             else
                 saver.SaveHeaderBlock();
