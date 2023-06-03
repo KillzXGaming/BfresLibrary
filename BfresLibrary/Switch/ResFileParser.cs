@@ -39,7 +39,6 @@ namespace BfresLibrary.Switch
             resFile.MemoryPool = loader.Load<MemoryPool>();
             resFile.BufferInfo = loader.Load<BufferInfo>();
 
-
             if (loader.ResFile.VersionMajor2 >= 10)
             {
                 //Peek at external flags
@@ -66,6 +65,18 @@ namespace BfresLibrary.Switch
                         }
                     }
                     return;
+                }
+                //GPU section for TOTK
+                if (flag.HasFlag(ResFile.ExternalFlags.HasExternalGPU))
+                {
+                    using (loader.TemporarySeek(sizFile, SeekOrigin.Begin))
+                    {
+                        uint gpuDataOffset = loader.ReadUInt32();
+                        uint gpuBufferSize = loader.ReadUInt32();
+
+                        resFile.BufferInfo = new BufferInfo();
+                        BufferInfo.BufferOffset = sizFile + 288;
+                    }
                 }
             }
 

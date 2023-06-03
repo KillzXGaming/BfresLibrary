@@ -235,6 +235,13 @@ namespace BfresLibrary.Helpers
                 {
                     reader.Position = attrib.Offset + i * buffer.Stride;
                     elements[i] = callback.Invoke(reader);
+                    if (attrib.Name.Contains("_i"))
+                    {
+                        switch (attrib.Format)
+                        {
+                            case GX2.GX2AttribFormat.Format_16_SNorm: elements[i].X = elements[i].X * 32767f; break;
+                        }
+                    }
                 }
                 return elements;
             }

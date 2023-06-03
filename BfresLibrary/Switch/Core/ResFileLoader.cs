@@ -106,6 +106,46 @@ namespace BfresLibrary.Switch.Core
             long size = ReadInt64();
         }
 
+        internal override string LoadString(Encoding encoding = null)
+        {
+            var offset = ReadInt64();
+            if (offset == 0) return null;
+
+            if (StringCache.Strings.ContainsKey(offset))
+                return StringCache.Strings[offset];
+
+            encoding = encoding ?? Encoding;
+            using (TemporarySeek(offset, SeekOrigin.Begin))
+            {
+                return ReadString(encoding);
+            }
+        }
+
+        internal override IList<string> LoadStrings(int count, Encoding encoding = null)
+        {
+            long[] offsets = ReadInt64s(count);
+
+            encoding = encoding ?? Encoding;
+            string[] names = new string[offsets.Length];
+            using (TemporarySeek())
+            {
+                for (int i = 0; i < offsets.Length; i++)
+                {
+                    var offset = offsets[i];
+                    if (offset == 0) continue;
+
+                    if (StringCache.Strings.ContainsKey(offset))
+                        names[i] = StringCache.Strings[offset];
+                    else
+                    {
+                        Position = offset;
+                        names[i] = ReadString(encoding);
+                    }
+                }
+                return names;
+            }
+        }
+
         public override string ReadString(Encoding encoding = null) {
             short size = ReadInt16();
             return ReadString(BinaryStringFormat.ZeroTerminated, encoding);

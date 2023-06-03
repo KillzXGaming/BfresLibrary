@@ -259,7 +259,7 @@ namespace BfresLibrary.Core
         /// <param name="encoding">The optional encoding of the text.</param>
         /// <returns>The read text.</returns>
         [DebuggerStepThrough]
-        internal string LoadString(Encoding encoding = null)
+        internal virtual string LoadString(Encoding encoding = null)
         {
             uint offset = ReadOffset();
             if (offset == 0) return null;
@@ -281,7 +281,7 @@ namespace BfresLibrary.Core
         /// <param name="encoding">The optional encoding of the texts.</param>
         /// <returns>The read texts.</returns>
         [DebuggerStepThrough]
-        internal IList<string> LoadStrings(int count, Encoding encoding = null)
+        internal virtual IList<string> LoadStrings(int count, Encoding encoding = null)
         {
             uint[] offsets = ReadOffsets(count);
 
