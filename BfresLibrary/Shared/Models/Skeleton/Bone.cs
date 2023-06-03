@@ -399,9 +399,9 @@ namespace BfresLibrary
             {
                 Name = loader.LoadString();
                 UserData = loader.LoadDictValues<UserData>();
-                if (loader.ResFile.VersionMajor2 >= 9)
+                if (loader.ResFile.VersionMajor2 > 9)
                     loader.Seek(8);
-                else if (loader.ResFile.VersionMajor2 == 8)
+                if (loader.ResFile.VersionMajor2 == 8 || loader.ResFile.VersionMajor2 == 9)
                     loader.Seek(16);
 
                 ushort idx = loader.ReadUInt16();
@@ -443,9 +443,9 @@ namespace BfresLibrary
                 saver.SaveString(Name);
                 PosUserDataOffset = saver.SaveOffset();
                 PosUserDataDictOffset = saver.SaveOffset();
-                if (saver.ResFile.VersionMajor2 >= 9)
+                if (saver.ResFile.VersionMajor2 > 9)
                     saver.Seek(8);
-                else if (saver.ResFile.VersionMajor2 == 8)
+                else if (saver.ResFile.VersionMajor2 == 8 || saver.ResFile.VersionMajor2 == 9)
                     saver.Seek(16);
 
                 saver.Write((ushort)saver.CurrentIndex);

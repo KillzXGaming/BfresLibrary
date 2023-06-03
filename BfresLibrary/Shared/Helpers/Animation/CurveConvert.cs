@@ -178,15 +178,28 @@ namespace BfresLibrary
                         curve.KeyStepBoolData[i] = booleanKey.Value;
                         break;
                     case AnimCurveType.Linear:
-                        var linearKey = ToObject<LinearKeyFrame>(keys[i]);
-
-                        float linearValue = linearKey.Value;
-                        if (isDegrees)
+                        if (keys[i] is LinearKeyFrame)
                         {
-                            linearValue *= Deg2Rad;
+                            var linearKey = ToObject<LinearKeyFrame>(keys[i]);
+                            float linearValue = linearKey.Value;
+                            if (isDegrees)
+                            {
+                                linearValue *= Deg2Rad;
+                            }
+                            curve.Keys[i, 0] = linearValue;
+                            curve.Keys[i, 1] = linearKey.Delta;
                         }
-                        curve.Keys[i, 0] = linearValue;
-                        curve.Keys[i, 1] = linearKey.Delta;
+                        else
+                        {
+                            var linearKey = ToObject<KeyFrame>(keys[i]);
+                            float linearValue = linearKey.Value;
+                            if (isDegrees)
+                            {
+                                linearValue *= Deg2Rad;
+                            }
+                            curve.Keys[i, 0] = linearValue;
+                            curve.Keys[i, 1] = 0;
+                        }
                         break;
                     case AnimCurveType.StepInt:
                         var stepKey = ToObject<KeyFrame>(keys[i]);

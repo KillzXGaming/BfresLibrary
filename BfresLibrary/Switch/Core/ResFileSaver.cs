@@ -1122,7 +1122,7 @@ namespace BfresLibrary.Switch.Core
                     Align(8);
                 }
             }
-            if (bnanim.baseDataBytes.Count > 0)
+            if (bnanim.BaseDataList?.Length > 0)
             {
                 WriteOffset(bnanim.PosBaseDataOffset);
                 bnanim.WriteBaseData(this);

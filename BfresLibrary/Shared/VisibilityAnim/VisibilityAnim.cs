@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using BfresLibrary.Core;
+using System.Linq;
 
 namespace BfresLibrary
 {
@@ -27,7 +28,6 @@ namespace BfresLibrary
             Curves = new List<AnimCurve>();
             BindIndices = new ushort[0];
             Names = new List<string>();
-            BaseDataList = new bool[0];
             UserData = new ResDict<UserData>();
         }
 
@@ -152,7 +152,10 @@ namespace BfresLibrary
         /// <see cref="Material"/>.
         /// </summary>
         [Browsable(false)]
-        public bool[] BaseDataList { get; set; }
+        public bool[] BaseDataList
+        {
+            get { return GetBooleans(); }
+        }
 
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
@@ -217,25 +220,30 @@ namespace BfresLibrary
                 BindIndices = loader.LoadCustom(() => loader.ReadUInt16s(numAnim));
                 Names = loader.LoadCustom(() => loader.LoadStrings(numAnim)); // Offset to name list.
                 Curves = loader.LoadList<AnimCurve>(numCurve);
-                baseDataBytes = new List<byte>();
-                BaseDataList = loader.LoadCustom(() =>
+                baseDataBytes = loader.LoadCustom(() =>
                 {
-                    bool[] baseData = new bool[numAnim];
-                    int i = 0;
-                    while (i < numAnim)
-                    {
-                        byte b = loader.ReadByte();
-                        baseDataBytes.Add(b);
-                        for (int j = 0; j < 8 && i < numAnim; j++)
-                        {
-                            baseData[i] = b.GetBit(j);
-                        }
-                        i++;
-                    }
-                    return baseData;
+                   return loader.ReadBytes((int)numAnim).ToList();
                 });
                 UserData = loader.LoadDict<UserData>();
             }
+        }
+
+        private bool[] GetBooleans()
+        {
+            if (baseDataBytes == null) baseDataBytes = new List<byte>();
+
+            bool[] baseData = new bool[baseDataBytes.Count];
+            int i = 0;
+            while (i < baseDataBytes.Count)
+            {
+                byte b = baseDataBytes[i];
+                for (int j = 0; j < 8 && i < baseDataBytes.Count; j++)
+                {
+                    baseData[i] = b.GetBit(j);
+                }
+                i++;
+            }
+            return baseData;
         }
 
         void IResData.Save(ResFileSaver saver)
@@ -271,7 +279,7 @@ namespace BfresLibrary
                 saver.SaveCustom(Names, () => saver.SaveStrings(Names));
                 saver.SaveList(Curves);
                 if (baseDataBytes.Count > 0) {
-                    saver.SaveCustom(BaseDataList, () =>
+                    saver.SaveCustom(baseDataBytes, () =>
                     {
                         WriteBaseData(saver);
                     });

@@ -32,6 +32,8 @@ namespace BfresLibrary.Switch
 
             if (loader.ResFile.VersionMajor2 < 9)
                 visibilityAnim._flags = loader.ReadUInt16();
+            else
+                loader.ReadUInt16(); //Idk what this is
 
             ushort numUserData = loader.ReadUInt16();
             visibilityAnim.FrameCount = loader.ReadInt32();
@@ -43,30 +45,9 @@ namespace BfresLibrary.Switch
             visibilityAnim.Names = loader.LoadCustom(() => loader.LoadStrings(numAnim), (uint)NameArrayOffset); // Offset to name list.
             visibilityAnim.Curves = loader.LoadList<AnimCurve>(numCurve, (uint)CurveArrayOffset);
 
-            visibilityAnim.baseDataBytes = new List<byte>();
-            visibilityAnim.BaseDataList = loader.LoadCustom(() =>
+            visibilityAnim.baseDataBytes = loader.LoadCustom(() =>
             {
-                bool[] baseData = new bool[numAnim];
-                int keyIndex = 0;
-                for (int i = 0; i < numAnim; i++)
-                {
-                    if (numAnim <= keyIndex) break;
-
-                    int value = loader.ReadInt32();
-
-                    //Bit shift each key value
-                    for (int j = 0; j < 32; j++)
-                    {
-                        if (numAnim <= keyIndex) break;
-
-                        bool set = (value & 0x1) != 0;
-                        value >>= 1;
-
-                        baseData[keyIndex] = set;
-                        keyIndex++;
-                    }
-                }
-                return baseData;
+                return loader.ReadBytes(numAnim).ToList();
             }, (uint)BaseDataArrayOffset);
         }
 

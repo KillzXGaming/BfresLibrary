@@ -9,7 +9,8 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            ResFile animFile = new ResFile("Npc_BankaraIdolA.bfres.zs.dec");
+            new ResFile("ExternalBinaryString.bfres");
+            ResFile animFile = new ResFile("Animal_Bass.Bass.bfres");
 
 
           /*  animFile.Save("JugemObjRB.bfres");

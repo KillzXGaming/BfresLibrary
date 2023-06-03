@@ -36,10 +36,39 @@ namespace BfresLibrary.Switch
             resFile.BoneVisibilityAnims = loader.LoadDictValues<VisibilityAnim>();
             resFile.ShapeAnims = loader.LoadDictValues<ShapeAnim>();
             resFile.SceneAnims = loader.LoadDictValues<SceneAnim>();
-
-
             resFile.MemoryPool = loader.Load<MemoryPool>();
             resFile.BufferInfo = loader.Load<BufferInfo>();
+
+
+            if (loader.ResFile.VersionMajor2 >= 10)
+            {
+                //Peek at external flags
+                byte PeekFlags()
+                {
+                    using (loader.TemporarySeek(0xee, SeekOrigin.Begin)) {
+                        return loader.ReadByte();
+                    }
+                }
+
+                var flag = (ResFile.ExternalFlags)PeekFlags();
+                if (flag.HasFlag(ResFile.ExternalFlags.HoldsExternalStrings))
+                {
+                    long externalFileOffset = loader.ReadOffset();
+                    var externalFileDict = loader.LoadDict<ResString>();
+
+                    using (loader.TemporarySeek(externalFileOffset, SeekOrigin.Begin))
+                    {
+                        StringCache.Strings.Clear();
+                        foreach (var str in externalFileDict.Keys)
+                        {
+                            long stringID = loader.ReadInt64();
+                            StringCache.Strings.Add(stringID, str);
+                        }
+                    }
+                    return;
+                }
+            }
+
             resFile.ExternalFiles = loader.LoadDictValues<ExternalFile>();
             long padding1 = loader.ReadInt64();
             resFile.StringTable = loader.Load<StringTable>();
@@ -65,7 +94,8 @@ namespace BfresLibrary.Switch
             ushort numShapeAnim = loader.ReadUInt16();
             ushort numSceneAnim = loader.ReadUInt16();
             ushort numExternalFile = loader.ReadUInt16();
-            uint padding2 = loader.ReadUInt16();
+            resFile.ExternalFlag = (ResFile.ExternalFlags)loader.ReadByte();
+            loader.ReadByte();
             uint padding3 = loader.ReadUInt32();
 
             resFile.Textures = new ResDict<TextureShared>();

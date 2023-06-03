@@ -160,7 +160,7 @@ namespace BfresLibrary
                 {
                     if (PatternAnimInfos[i].BeginConstant != ushort.MaxValue)
                         BaseDataList[i] = (ushort)((int)Constants[PatternAnimInfos[i].BeginConstant].Value);
-                    else if (PatternAnimInfos[i].CurveIndex != ushort.MaxValue)
+                    else if (PatternAnimInfos[i].CurveIndex != -1)
                         BaseDataList[i] = (ushort)Curves[PatternAnimInfos[i].CurveIndex].Keys[0,0];
                 }
             }

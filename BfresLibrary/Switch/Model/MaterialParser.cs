@@ -20,7 +20,7 @@ namespace BfresLibrary.Switch
 
             mat.Name = loader.LoadString();
 
-            if (loader.ResFile.VersionMajor2 == 10)
+            if (loader.ResFile.VersionMajor2 >= 10)
             {
                 MaterialParserV10.Load(loader, mat);
                 return;

@@ -70,26 +70,7 @@ namespace BfresLibrary
         /// </summary>
         public byte VertexSkinCount { get; set; }
 
-        /// <summary>
-        /// Gets the number of vertices stored by the <see cref="Buffers"/>. It is calculated from the size of the first
-        /// <see cref="Buffer"/> in bytes divided by the <see cref="Buffer.Stride"/>.
-        /// </summary>
-        public uint VertexCount
-        {
-            get
-            {
-                Buffer firstBuffer = Buffers[0];
-                int dataSize = firstBuffer.Data[0].Length;
-                
-                // Throw an exception if the stride does not yield complete elements.
-                if (dataSize % firstBuffer.Stride != 0)
-                {
-                    throw new InvalidDataException($"Stride of {firstBuffer} does not yield complete elements."); 
-                }
-
-                return (uint)(dataSize / firstBuffer.Stride);
-            }
-        }
+        public uint VertexCount;
 
         /// <summary>
         /// Gets or sets the dictionary of <see cref="VertexAttrib"/> instances describing how to interprete data in the
@@ -124,7 +105,7 @@ namespace BfresLibrary
                 byte numVertexAttrib = loader.ReadByte();
                 byte numBuffer = loader.ReadByte();
                 ushort idx = loader.ReadUInt16();
-                uint vertexCount = loader.ReadUInt32();
+                VertexCount = loader.ReadUInt32();
                 VertexSkinCount = loader.ReadByte();
                 loader.Seek(3);
                 uint ofsVertexAttribList = loader.ReadOffset(); // Only load dict.

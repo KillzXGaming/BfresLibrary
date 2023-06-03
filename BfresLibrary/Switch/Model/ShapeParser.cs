@@ -132,10 +132,10 @@ namespace BfresLibrary.Switch
             saver.Write((byte)shape.KeyShapes.Count);
             saver.Write(shape.TargetAttribCount);
 
-            if (saver.ResFile.VersionMajor2 != 9)
-                saver.Seek(6);
+             if (saver.ResFile.VersionMajor2 >= 9)
+                saver.Seek(2); //padding
             else
-                saver.Seek(2);
+                saver.Seek(6); //padding
         }
     }
 }

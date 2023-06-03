@@ -341,6 +341,8 @@ namespace BfresLibrary
         [Browsable(false)]
         public ResDict<ExternalFile> ExternalFiles { get; set; } = new ResDict<ExternalFile>();
 
+        public ExternalFlags ExternalFlag;
+
         // ---- METHODS (INTERNAL) ---------------------------------------------------------------------------------------
 
         internal void SetVersionInfo(uint Version)
@@ -349,6 +351,19 @@ namespace BfresLibrary
             VersionMajor2 = Version >> 16 & 0xFF;
             VersionMinor = Version >> 8 & 0xFF;
             VersionMinor2 = Version & 0xFF;
+        }
+
+        // ---- ENUMS ------------------------------------------------------------------------------------------------
+
+        //Flags thanks to watertoon
+        public enum ExternalFlags : byte
+        {
+            IsExternalModelUninitalized = 1 << 0,
+            HasExternalString = 1 << 1,
+            HoldsExternalStrings = 1 << 2,
+            HasExternalGPU = 1 << 3,
+
+            MeshCodecResave = 1 << 7,
         }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------

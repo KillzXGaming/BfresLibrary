@@ -264,6 +264,9 @@ namespace BfresLibrary.Core
             uint offset = ReadOffset();
             if (offset == 0) return null;
 
+            if (StringCache.Strings.ContainsKey(offset))
+                return StringCache.Strings[offset];
+
             encoding = encoding ?? Encoding;
             using (TemporarySeek(offset, SeekOrigin.Begin))
             {
@@ -291,8 +294,13 @@ namespace BfresLibrary.Core
                     uint offset = offsets[i];
                     if (offset == 0) continue;
 
-                    Position = offset;
-                    names[i] = ReadString(encoding);
+                    if (StringCache.Strings.ContainsKey(offset))
+                        names[i] = StringCache.Strings[offset];
+                    else
+                    {
+                        Position = offset;
+                        names[i] = ReadString(encoding);
+                    }
                 }
                 return names;
             }

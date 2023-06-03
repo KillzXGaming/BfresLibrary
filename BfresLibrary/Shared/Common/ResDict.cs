@@ -190,6 +190,20 @@ namespace BfresLibrary
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public string GetKey(int index)
+        {
+            if (Lookup(index, out Node node, true))
+            {
+                return node.Key;
+            }
+            return "";
+        }
+
+        /// <summary>
         /// Searches for the specified <paramref name="key"/> and returns the zero-based index of the first occurrence
         /// within the entire dictionary.
         /// </summary>

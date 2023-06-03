@@ -23,7 +23,7 @@ namespace BfresLibrary.Switch
             model.Skeleton = loader.Load<Skeleton>();
             long VertexArrayOffset = loader.ReadOffset();
             model.Shapes = loader.LoadDictValues<Shape>();
-            if (loader.ResFile.VersionMajor2 >= 9)
+            if (loader.ResFile.VersionMajor2 == 9)
             {
                 long materialValuesOffset = loader.ReadOffset();
                 loader.ReadOffset(); //padding?
@@ -34,12 +34,11 @@ namespace BfresLibrary.Switch
             {
                 long materialValuesOffset = loader.ReadOffset();
                 long materialDictOffset = loader.ReadOffset();
-                loader.ReadOffset(); //padding?
                 model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
             }
 
             if (loader.ResFile.VersionMajor2 >= 10)
-                loader.ReadOffset(); //padding?
+                loader.ReadOffset(); //shader assign offset
 
             model.UserData = loader.LoadDictValues<UserData>();
             long UserPointer = loader.ReadOffset();
@@ -50,7 +49,7 @@ namespace BfresLibrary.Switch
             ushort numUserData = 0;
             if (loader.ResFile.VersionMajor2 >= 9)
             {
-                loader.ReadUInt16(); //padding?
+                loader.ReadUInt16(); //shader assign count
                 numUserData = loader.ReadUInt16();
                 loader.ReadUInt16(); //padding?
                 uint padding = loader.ReadUInt32();

@@ -37,7 +37,7 @@ namespace BfresLibrary
         /// <summary>
         /// Gets the <see cref="RenderInfoType"/> determining the data type of the stored value.
         /// </summary>
-        public RenderInfoType Type { get; private set; }
+        public RenderInfoType Type { get; internal set; }
 
         /// <summary>
         /// Gets or sets the name with which the instance can be referenced uniquely in
@@ -167,7 +167,25 @@ namespace BfresLibrary
                 }
             }
         }
-        
+
+        internal void ReadData(ResFileLoader loader, RenderInfoType type, int count)
+        {
+            Type = type;
+
+            switch (Type)
+            {
+                case RenderInfoType.Int32:
+                    _value = loader.ReadInt32s(count);
+                    break;
+                case RenderInfoType.Single:
+                    _value = loader.ReadSingles(count);
+                    break;
+                case RenderInfoType.String:
+                    _value = loader.LoadStrings(count);
+                    break;
+            }
+        }
+
         void IResData.Save(ResFileSaver saver)
         {
             if (saver.IsSwitch)

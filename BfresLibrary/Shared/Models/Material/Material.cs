@@ -122,6 +122,8 @@ namespace BfresLibrary
         internal long[] TextureSlotArray { get; set; }
         internal long[] SamplerSlotArray { get; set; }
 
+        internal int[] ParamIndices { get; set; }
+
         private long[] FillSlots(int count)
         {
             long[] slots = new long[count];

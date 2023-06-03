@@ -30,7 +30,7 @@ namespace BfresLibrary.Switch
             byte numVertexAttrib = loader.ReadByte();
             byte numBuffer = loader.ReadByte();
             ushort Idx = loader.ReadUInt16();
-            uint vertexCount = loader.ReadUInt32();
+            vertexBuffer.VertexCount = loader.ReadUInt32();
             vertexBuffer.VertexSkinCount = (byte)loader.ReadUInt32();
 
             //Buffers use the index buffer offset from memory info section

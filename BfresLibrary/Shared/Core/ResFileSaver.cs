@@ -455,6 +455,16 @@ namespace BfresLibrary.Core
             Write(Encoding.ASCII.GetBytes(value));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        internal void Write(sbyte[] value)
+        {
+            for (int i = 0; i < value.Length; i++)
+                Write(value[i]);
+        }
+
         internal long SaveOffset()
         {
             long pos = Position;

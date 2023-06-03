@@ -66,15 +66,14 @@ namespace BfresLibrary.Helpers
                     info.Name = samplerInfo.Name;
                     info.CurveIndex = -1;
 
-                    if (samplerInfo.Curve != null)
-                        info.CurveIndex = (short)matAnim.Curves.Count;
-
                     matAnim.PatternAnimInfos.Add(info);
                     texturePatternBase.Add(samplerInfo.Constant);
 
                     if (samplerInfo.Curve != null)
+                    {
+                        info.CurveIndex = (short)matAnim.Curves.Count;
                         matAnim.Curves.Add(CurveAnimHelper.GenerateCurve(samplerInfo.Curve, 0, false));
-
+                    }
                 }
 
                 ushort curveIndex = 0;
