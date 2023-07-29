@@ -1125,7 +1125,7 @@ namespace BfresLibrary.Switch.Core
             if (bnanim.BaseDataList?.Length > 0)
             {
                 WriteOffset(bnanim.PosBaseDataOffset);
-                bnanim.WriteBaseData(this);
+                WriteBit32Booleans(bnanim.BaseDataList);
                 Align(8);
             }
         }

@@ -45,9 +45,9 @@ namespace BfresLibrary.Switch
             visibilityAnim.Names = loader.LoadCustom(() => loader.LoadStrings(numAnim), (uint)NameArrayOffset); // Offset to name list.
             visibilityAnim.Curves = loader.LoadList<AnimCurve>(numCurve, (uint)CurveArrayOffset);
 
-            visibilityAnim.baseDataBytes = loader.LoadCustom(() =>
+            visibilityAnim.BaseDataList = loader.LoadCustom(() =>
             {
-                return loader.ReadBytes(numAnim).ToList();
+                return loader.ReadBit32Booleans(numAnim);
             }, (uint)BaseDataArrayOffset);
         }
 

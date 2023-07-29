@@ -22,6 +22,9 @@ namespace BfresLibrary.TextConvert
 
             public List<MaterialAnimGroupStruct> MaterialAnims { get; set; }
 
+            public List<string> Textures { get; set; } = new List<string>();
+
+
             [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
             public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
         }
@@ -48,6 +51,10 @@ namespace BfresLibrary.TextConvert
             animConv.FrameCount = anim.FrameCount;
             animConv.Loop = anim.Flags.HasFlag(MaterialAnim.MaterialAnimFlags.Looping);
             animConv.Baked = anim.Flags.HasFlag(MaterialAnim.MaterialAnimFlags.BakedCurve);
+
+            animConv.Textures.Clear();
+            foreach (var tex in anim.TextureNames)
+                animConv.Textures.Add(tex.Key);
 
             foreach (var matAnim in anim.MaterialAnimDataList) {
                 MaterialAnimGroupStruct matAnimConv = new MaterialAnimGroupStruct();
@@ -109,6 +116,12 @@ namespace BfresLibrary.TextConvert
                 anim.Flags |= MaterialAnim.MaterialAnimFlags.Looping;
             if (animJson.Baked)
                 anim.Flags |= MaterialAnim.MaterialAnimFlags.BakedCurve;
+
+            foreach (var tex in animJson.Textures)
+                anim.TextureNames.Add(tex, new TextureRef()
+                {
+                    Name = tex,
+                });
 
             foreach (var matAnimJson in animJson.MaterialAnims) {
                 MaterialAnimData matAnim = new MaterialAnimData();

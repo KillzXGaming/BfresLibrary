@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Syroot.Maths;
 using Syroot.BinaryData;
+using Newtonsoft.Json.Linq;
 
 namespace BfresLibrary.Core
 {
@@ -395,6 +396,28 @@ namespace BfresLibrary.Core
                 values[i] = ReadOffset();
             }
             return values;
+        }
+
+        internal bool[] ReadBit32Booleans(int count)
+        {
+            bool[] booleans = new bool[count];
+            if (count == 0) return booleans;
+
+            int idx = 0;
+            while (idx < count)
+            {
+                uint value = ReadUInt32();
+                for (int i = 0; i < 32; i++)
+                {
+                    if (count <= idx) break;
+
+                    booleans[idx] = (value & 0x1) != 0;
+                    value >>= 1;
+
+                    idx++;
+                }
+            }
+            return booleans;
         }
 
         // ---- METHODS (PRIVATE) --------------------------------------------------------------------------------------

@@ -472,6 +472,27 @@ namespace BfresLibrary.Core
             return pos;
         }
 
+        internal void WriteBit32Booleans(bool[] booleans)
+        {
+            if (booleans.Length == 0) return;
+
+            int idx = 0;
+            while (idx < booleans.Length)
+            {
+                uint value = 0;
+                for (int i = 0; i < 32; i++)
+                {
+                    if (booleans.Length <= idx) break;
+
+                    if (booleans[idx])
+                        value |= (uint)(1 << i);
+
+                    idx++;
+                }
+                Write(value);
+            }
+        }
+
         // ---- METHODS (PRIVATE) --------------------------------------------------------------------------------------
 
         private bool TryGetItemEntry(object data, ItemEntryType type, out ItemEntry entry)

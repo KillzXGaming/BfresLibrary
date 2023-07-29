@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using BfresLibrary.Core;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace BfresLibrary
 {
@@ -152,18 +153,13 @@ namespace BfresLibrary
         /// <see cref="Material"/>.
         /// </summary>
         [Browsable(false)]
-        public bool[] BaseDataList
-        {
-            get { return GetBooleans(); }
-        }
+        public bool[] BaseDataList { get; set; }
 
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
         [Browsable(false)]
         public ResDict<UserData> UserData { get; set; }
-
-        internal List<byte> baseDataBytes = new List<byte>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 
@@ -220,30 +216,12 @@ namespace BfresLibrary
                 BindIndices = loader.LoadCustom(() => loader.ReadUInt16s(numAnim));
                 Names = loader.LoadCustom(() => loader.LoadStrings(numAnim)); // Offset to name list.
                 Curves = loader.LoadList<AnimCurve>(numCurve);
-                baseDataBytes = loader.LoadCustom(() =>
+                BaseDataList = loader.LoadCustom(() =>
                 {
-                   return loader.ReadBytes((int)numAnim).ToList();
+                    return loader.ReadBit32Booleans(numAnim);
                 });
                 UserData = loader.LoadDict<UserData>();
             }
-        }
-
-        private bool[] GetBooleans()
-        {
-            if (baseDataBytes == null) baseDataBytes = new List<byte>();
-
-            bool[] baseData = new bool[baseDataBytes.Count];
-            int i = 0;
-            while (i < baseDataBytes.Count)
-            {
-                byte b = baseDataBytes[i];
-                for (int j = 0; j < 8 && i < baseDataBytes.Count; j++)
-                {
-                    baseData[i] = b.GetBit(j);
-                }
-                i++;
-            }
-            return baseData;
         }
 
         void IResData.Save(ResFileSaver saver)
@@ -278,18 +256,12 @@ namespace BfresLibrary
                 saver.SaveCustom(BindIndices, () => saver.Write(BindIndices));
                 saver.SaveCustom(Names, () => saver.SaveStrings(Names));
                 saver.SaveList(Curves);
-                if (baseDataBytes.Count > 0) {
-                    saver.SaveCustom(baseDataBytes, () =>
-                    {
-                        WriteBaseData(saver);
-                    });
-                }
+                saver.SaveCustom(BaseDataList, () =>
+                {
+                    saver.WriteBit32Booleans(BaseDataList);
+                });
                 saver.SaveDict(UserData);
             }
-        }
-
-        internal void WriteBaseData(ResFileSaver saver) {
-            saver.Write(baseDataBytes.ToArray());
         }
 
         internal long PosBindIndicesOffset;
