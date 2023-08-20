@@ -149,6 +149,8 @@ namespace BfresLibrary.Helpers
             int lastElementCount = Attributes[0].Data.Length;
             int numBuffers = Attributes.Max(x => x.BufferIndex + 1);
             vertexBuffer.Buffers = new List<Buffer>(numBuffers);
+            vertexBuffer.VertexCount = (uint)lastElementCount;
+
             foreach (VertexBufferHelperAttrib helperAttrib in Attributes)
             {
                 // Check if the length of data does not match another attribute's data length.

@@ -100,7 +100,7 @@ namespace BfresLibrary
                 saver.Write(BeginConstant);
                 saver.Write(ConstantCount);
                 saver.Write(SubBindIndex);
-                saver.Seek(4); //padding
+                saver.Write(0); //padding
             }
             else
             {
