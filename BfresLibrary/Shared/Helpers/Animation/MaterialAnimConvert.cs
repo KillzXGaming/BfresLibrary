@@ -90,6 +90,8 @@ namespace BfresLibrary.Helpers
                     info.Name = paramInfo.Name;
                     matAnim.ParamAnimInfos.Add(info);
 
+                    Console.WriteLine($"Param {info.Name} constantIndex {constantIndex} ConstantCount {info.ConstantCount}");
+
                     if (paramInfo.Curves.Count > 0)
                         matAnim.VisualConstantIndex = 0;
 
@@ -101,8 +103,8 @@ namespace BfresLibrary.Helpers
                     foreach (var constJson in paramInfo.Constants)
                         matAnim.Constants.Add(constJson);
 
-                    curveIndex += (ushort)matAnim.Curves.Count;
-                    constantIndex += (ushort)matAnim.Constants.Count;
+                    curveIndex += (ushort)paramInfo.Curves.Count;
+                    constantIndex += (ushort)paramInfo.Constants.Count;
                 }
                 matAnim.BaseDataList = texturePatternBase.ToArray();
             }
