@@ -91,46 +91,50 @@ namespace BfresLibrary.TextConvert
             anim.Baked = animJson.Baked;
             anim.Loop = animJson.Loop;
             anim.FrameCount = animJson.FrameCount;
-            anim.Baked = animJson.Baked;
             anim.BindIndices = new ushort[animJson.Groups.Count];
             anim.UserData = UserDataConvert.Convert(animJson.UserData);
+            anim.BaseDataList = new bool[animJson.Groups.Count];
+            anim.Names = new string[animJson.Groups.Count];
+            anim.Curves.Clear();
 
-            foreach (var groupAnimJson in animJson.Groups) {
-                var curve = groupAnimJson.Curves;
-            }
-        }
-
-        static BoneAnimFlagsCurve SetCurveTarget(AnimTarget target)
-        {
-            BoneAnimFlagsCurve flags = (BoneAnimFlagsCurve)0;
-            switch (target)
+            int index = 0;
+            foreach (var groupAnimJson in animJson.Groups)
             {
-                case AnimTarget.PositionX: flags |= BoneAnimFlagsCurve.TranslateX; break;
-                case AnimTarget.PositionY: flags |= BoneAnimFlagsCurve.TranslateY; break;
-                case AnimTarget.PositionZ: flags |= BoneAnimFlagsCurve.TranslateZ; break;
-                case AnimTarget.ScaleX: flags |= BoneAnimFlagsCurve.ScaleX; break;
-                case AnimTarget.ScaleY: flags |= BoneAnimFlagsCurve.ScaleY; break;
-                case AnimTarget.ScaleZ: flags |= BoneAnimFlagsCurve.ScaleZ; break;
-                case AnimTarget.RotateX: flags |= BoneAnimFlagsCurve.RotateX; break;
-                case AnimTarget.RotateY: flags |= BoneAnimFlagsCurve.RotateY; break;
-                case AnimTarget.RotateZ: flags |= BoneAnimFlagsCurve.RotateZ; break;
-                case AnimTarget.RotateW: flags |= BoneAnimFlagsCurve.RotateW; break;
+                anim.BaseDataList[index] = groupAnimJson.BaseVisible;
+                anim.Names[index] = groupAnimJson.Name;
+
+                foreach (var curve in groupAnimJson.Curves)
+                    anim.Curves.Add(ConvertCurve(curve, index));
+
+                index++;
             }
-            return flags;
         }
 
-        public enum AnimTarget
+        static AnimCurve ConvertCurve(CurveAnimHelper curve, int index)
         {
-            ScaleX = 0x4,
-            ScaleY = 0x8,
-            ScaleZ = 0xC,
-            PositionX = 0x10,
-            PositionY = 0x14,
-            PositionZ = 0x18,
-            RotateX = 0x20,
-            RotateY = 0x24,
-            RotateZ = 0x28,
-            RotateW = 0x2C,
+            AnimCurve animCurve = new AnimCurve();
+            animCurve.AnimDataOffset = (uint)index;
+            animCurve.CurveType = AnimCurveType.StepBool;
+            animCurve.Frames = curve.KeyFrames.Select(x => x.Key).ToArray();
+            animCurve.KeyStepBoolData = curve.KeyFrames.Select(x => ToObject<BooleanKey>(x.Value).Value).ToArray();
+            animCurve.Delta = 0;
+            animCurve.StartFrame = 0;
+            animCurve.EndFrame = curve.KeyFrames.LastOrDefault().Key;
+            animCurve.KeyType = AnimCurveKeyType.Single;
+            animCurve.FrameType = AnimCurveFrameType.Single;
+            //Get max frame value
+            float frame = curve.KeyFrames.Max(x => x.Key);
+            if (frame < byte.MaxValue) animCurve.FrameType = AnimCurveFrameType.Byte;
+            else if (frame < ushort.MaxValue) animCurve.FrameType = AnimCurveFrameType.Decimal10x5;
+
+            return animCurve;
+        }
+
+        static T ToObject<T>(object obj)
+        {
+            if (obj is JObject) return ((JObject)obj).ToObject<T>();
+            else
+                return (T)obj;
         }
     }
 }

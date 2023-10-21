@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using BfresLibrary.Core;
 using System.ComponentModel;
+using BfresLibrary.Switch;
 
 namespace BfresLibrary
 {
@@ -75,6 +76,11 @@ namespace BfresLibrary
         /// </summary>
         [Browsable(false)]
         public ResDict<UserData> UserData { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<MaterialParserV10.ShaderAssignV10> ShaderAssign = new List<MaterialParserV10.ShaderAssignV10>();
 
         /// <summary>
         /// Gets the total number of vertices to process when drawing this model.

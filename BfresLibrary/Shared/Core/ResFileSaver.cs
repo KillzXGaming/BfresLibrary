@@ -191,7 +191,7 @@ namespace BfresLibrary.Core
             ((IResData)ResFile).Save(this);
         }
 
-        private void SaveEntries()
+        public virtual void SaveEntries()
         {
             // Store all queued items. Iterate via index as subsequent calls append to the list.
             for (int i = 0; i < _savedItems.Count; i++)
@@ -284,7 +284,7 @@ namespace BfresLibrary.Core
             {
                 _savedItems.Add(new ItemEntry(resData, ItemEntryType.ResData, (uint)Position, index: index));
             }
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace BfresLibrary.Core
                     index++;
                 }
             }
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace BfresLibrary.Core
             {
                 _savedItems.Add(new ItemEntry(dict, ItemEntryType.Dict, (uint)Position));
             }
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace BfresLibrary.Core
             {
                 _savedItems.Add(new ItemEntry(data, ItemEntryType.Custom, (uint)Position, callback: callback));
             }
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace BfresLibrary.Core
             {
                 _savedStrings.Add(str, new StringEntry((uint)Position, encoding));
             }
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace BfresLibrary.Core
         /// <param name="strings">The names to save.</param>
         /// <param name="encoding">The <see cref="Encoding"/> in which the names will be stored.</param>
         [DebuggerStepThrough]
-        internal void SaveStrings(IEnumerable<string> strings, Encoding encoding = null)
+        internal virtual void SaveStrings(IEnumerable<string> strings, Encoding encoding = null)
         {
             foreach (string str in strings)
             {
@@ -443,7 +443,7 @@ namespace BfresLibrary.Core
                 _savedBlocks.Add(data, new BlockEntry((uint)Position, alignment, callback));
             }
 
-            WriteZeroOffset(UInt32.MaxValue);
+            WriteZeroOffset(0);
         }
 
         /// <summary>
@@ -493,9 +493,7 @@ namespace BfresLibrary.Core
             }
         }
 
-        // ---- METHODS (PRIVATE) --------------------------------------------------------------------------------------
-
-        private bool TryGetItemEntry(object data, ItemEntryType type, out ItemEntry entry)
+        internal bool TryGetItemEntry(object data, ItemEntryType type, out ItemEntry entry)
         {
             foreach (ItemEntry savedItem in _savedItems)
             {
@@ -508,6 +506,9 @@ namespace BfresLibrary.Core
             entry = null;
             return false;
         }
+
+        // ---- METHODS (PRIVATE) --------------------------------------------------------------------------------------
+
 
         private void WriteStrings()
         {
@@ -564,7 +565,7 @@ namespace BfresLibrary.Core
             }
         }
 
-        private void WriteOffsets()
+        internal void WriteOffsets()
         {
             using (TemporarySeek())
             {

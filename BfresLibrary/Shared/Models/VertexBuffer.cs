@@ -72,6 +72,8 @@ namespace BfresLibrary
 
         public uint VertexCount;
 
+        public ushort GPUBufferAlignent = 8;
+
         /// <summary>
         /// Gets or sets the dictionary of <see cref="VertexAttrib"/> instances describing how to interprete data in the
         /// <see cref="Buffers"/>.

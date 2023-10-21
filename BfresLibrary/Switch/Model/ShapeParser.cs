@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using BfresLibrary.Switch.Core;
 using BfresLibrary.Core;
 using BfresLibrary;
+using Syroot.Maths;
+using System.IO;
 
 namespace BfresLibrary.Switch
 {
@@ -53,11 +55,28 @@ namespace BfresLibrary.Switch
             else
                 loader.Seek(6); //padding
 
+            shape.RadiusArray = new List<float>();
+            if (RadiusOffset != 0 && numMesh > 0)
+            {
+                using (loader.TemporarySeek(RadiusOffset, SeekOrigin.Begin))
+                {
+                    if (loader.ResFile.VersionMajor2 >= 10)
+                    {
+                        //A offset + radius size. Can be per mesh or per bone if there is skinning used.
+                        int numBoundings = numSkinBoneIndex == 0 ? numMesh : numSkinBoneIndex;
+                        for (int i = 0; i < numBoundings; i++)
+                            shape.BoundingRadiusList.Add(loader.ReadVector4F());
+                        //Get largest radius for bounding radius list
+                        var max = shape.BoundingRadiusList.Max(x => x.W);
+                        shape.RadiusArray.Add(max);
+                    }
+                    else
+                        shape.RadiusArray = loader.ReadSingles(numMesh).ToList();
+                }
+            }
+
             shape.Meshes = numMesh == 0 ? new List<Mesh>() : loader.LoadList<Mesh>(numMesh, (uint)MeshArrayOffset).ToList();
             shape.SkinBoneIndices = numSkinBoneIndex == 0 ? new List<ushort>() : loader.LoadCustom(() => loader.ReadUInt16s(numSkinBoneIndex), (uint)SkinBoneIndexListOffset)?.ToList();
-
-            if (RadiusOffset != 0)
-                shape.RadiusArray = numMesh == 0 ? new List<float>() : loader.LoadCustom(() => loader.ReadSingles(numMesh), (uint)RadiusOffset).ToList();
 
             int boundingboxCount = shape.Meshes.Sum(x => x.SubMeshes.Count + 1);
             shape.SubMeshBoundings = boundingboxCount == 0 ? new List<Bounding>() : loader.LoadCustom(() => 
@@ -68,7 +87,19 @@ namespace BfresLibrary.Switch
 
         public static void Write(ResFileSwitchSaver saver, Shape shape)
         {
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 10)
+            {
+                int numBoundings = shape.SkinBoneIndices.Count == 0 ? shape.Meshes.Count : shape.SkinBoneIndices.Count;
+                //Regenerate if list is off
+                if (numBoundings != shape.BoundingRadiusList.Count)
+                {
+                    shape.BoundingRadiusList.Clear();
+                    for (int i = 0; i < numBoundings; i++)
+                        shape.BoundingRadiusList.Add(new Vector4F(0, 0, 0, shape.RadiusArray.Max(x => x)));
+                }
+            }
+
+            if (saver.ResFile.VersionMajor2 >= 9)
                 saver.Write(shape.Flags, true);
             else
                 saver.Seek(12);
@@ -120,7 +151,7 @@ namespace BfresLibrary.Switch
             shape.PosSubMeshBoundingsOffset = saver.SaveOffset();
             shape.PosRadiusArrayOffset = saver.SaveOffset();
             saver.Write(0L); //padding
-            if (saver.ResFile.VersionMajor2 != 9)
+            if (saver.ResFile.VersionMajor2 < 9)
                 saver.Write(shape.Flags, true);
             saver.Write((ushort)saver.CurrentIndex);
             saver.Write(shape.MaterialIndex);

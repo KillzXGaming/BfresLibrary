@@ -45,6 +45,9 @@ namespace BfresLibrary
                     Switch.Core.ResFileSwitchSaver.Section5, "External files");
             }
 
+            if (Data ==  null)
+                Data = new byte[0];
+
             if (Data.Length <= 3)
                 saver.SaveBlock(Data, (int)512, () => saver.Write(Data));
             else

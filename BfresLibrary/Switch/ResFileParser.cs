@@ -106,8 +106,14 @@ namespace BfresLibrary.Switch
             ushort numSceneAnim = loader.ReadUInt16();
             ushort numExternalFile = loader.ReadUInt16();
             resFile.ExternalFlag = (ResFile.ExternalFlags)loader.ReadByte();
-            loader.ReadByte();
+            byte reserve10 = loader.ReadByte();
+
             uint padding3 = loader.ReadUInt32();
+
+            if (reserve10 == 1 || resFile.ExternalFlag != 0)
+            {
+                resFile.DataAlignmentOverride = 0x1000;
+            }
 
             resFile.Textures = new ResDict<TextureShared>();
             foreach (var ext in resFile.ExternalFiles) {
@@ -153,6 +159,17 @@ namespace BfresLibrary.Switch
             if (resFile.Models.Count > 0 && resFile.Models.Values.Any(x => x.Shapes.Count > 0)) {
                 resFile.MemoryPool = new MemoryPool();
                 resFile.BufferInfo = new BufferInfo();
+
+                foreach (var model in resFile.Models.Values)
+                {
+                    foreach (var vertexBuffer in model.VertexBuffers)
+                        vertexBuffer.MemoryPool = resFile.MemoryPool;
+
+                    foreach (var shape in model.Shapes.Values) {
+                        foreach (var mesh in shape.Meshes)
+                            mesh.MemoryPool = resFile.MemoryPool;
+                    }
+                }
             }
 
             saver.WriteSignature("FRES");
@@ -177,7 +194,7 @@ namespace BfresLibrary.Switch
             resFile.ModelDictOffset = saver.SaveOffset();
 
             //2 New sections
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(0L);
                 saver.Write(0L);
@@ -214,7 +231,7 @@ namespace BfresLibrary.Switch
             saver.Write((ushort)resFile.Models.Count);
 
             //2 New sections
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write((ushort)0);
                 saver.Write((ushort)0);
@@ -227,8 +244,11 @@ namespace BfresLibrary.Switch
             saver.Write((ushort)resFile.SceneAnims.Count);
             saver.Write((ushort)resFile.ExternalFiles.Count);
 
-            if (saver.ResFile.VersionMajor2 == 9)
-                saver.Seek(2); // padding
+            if (saver.ResFile.VersionMajor2 >= 9)
+            {
+                saver.Write((byte)0); //external flags (set to 0)
+                saver.Write((byte)1); //saved flags
+            }
             else
                 saver.Seek(6); // padding
         }

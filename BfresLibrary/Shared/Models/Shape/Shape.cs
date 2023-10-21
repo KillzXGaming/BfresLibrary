@@ -157,6 +157,8 @@ namespace BfresLibrary
         [DisplayName("Bounding Radius")]
         public List<float> RadiusArray { get; set; }
 
+        public List<Vector4F> BoundingRadiusList { get; set; } = new List<Vector4F>();
+
         /// <summary>
         /// Gets or sets the number of bones influencing the vertices stored in this buffer. 0 influences equal
         /// rigidbodies (no skinning), 1 equal rigid skinning and 2 or more smooth skinning.

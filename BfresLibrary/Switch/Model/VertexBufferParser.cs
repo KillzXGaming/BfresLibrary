@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BfresLibrary.Switch.Core;
 using BfresLibrary.Core;
 using BfresLibrary;
+using System.IO;
 
 namespace BfresLibrary.Switch
 {
@@ -31,7 +32,8 @@ namespace BfresLibrary.Switch
             byte numBuffer = loader.ReadByte();
             ushort Idx = loader.ReadUInt16();
             vertexBuffer.VertexCount = loader.ReadUInt32();
-            vertexBuffer.VertexSkinCount = (byte)loader.ReadUInt32();
+            vertexBuffer.VertexSkinCount = (byte)loader.ReadUInt16();
+            vertexBuffer.GPUBufferAlignent = loader.ReadUInt16();
 
             //Buffers use the index buffer offset from memory info section
             //This goes to a section in the memory pool which stores all the buffer data, including faces
@@ -41,24 +43,18 @@ namespace BfresLibrary.Switch
             var VertexBufferSizeArray = loader.LoadList<VertexBufferSize>(numBuffer, (uint)VertexBufferSizeOffset);
 
             vertexBuffer.Buffers = new List<Buffer>();
-            for (int buff = 0; buff < numBuffer; buff++)
+            using (loader.TemporarySeek(BufferInfo.BufferOffset + BufferOffset, SeekOrigin.Begin))
             {
-                Buffer data = new Buffer();
-                data.Flags = VertexBufferSizeArray[buff].GpuAccessFlags;
-                data.Stride = (ushort)StrideArray[buff].Stride;
-                uint size = VertexBufferSizeArray[buff].Size;
-
-                if (buff == 0) data.BufferOffset = ((int)BufferInfo.BufferOffset + BufferOffset);
-                if (buff > 0) data.BufferOffset = vertexBuffer.Buffers[buff - 1].BufferOffset + vertexBuffer.Buffers[buff - 1].Size;
-                if (data.BufferOffset % 8 != 0) data.BufferOffset = data.BufferOffset + (8 - (data.BufferOffset % 8));
-
-                data.Data = new byte[1][];
-                data.Data[0] = loader.LoadCustom(() =>  //Load buffer data from mem block
+                for (int buff = 0; buff < numBuffer; buff++)
                 {
-                    return loader.ReadBytes((int)size);
-                }, (uint)data.BufferOffset);
+                    Buffer buffer = new Buffer();
+                    buffer.Data = new byte[1][];
+                    buffer.Stride = (ushort)StrideArray[buff].Stride;
 
-                vertexBuffer.Buffers.Add(data);
+                    loader.Align(8);
+                    buffer.Data[0] = loader.ReadBytes((int)VertexBufferSizeArray[buff].Size);
+                    vertexBuffer.Buffers.Add(buffer);
+                }
             }
         }
 
@@ -86,7 +82,8 @@ namespace BfresLibrary.Switch
             saver.Write((byte)vertexBuffer.Buffers.Count);
             saver.Write((ushort)saver.CurrentIndex);
             saver.Write(vertexBuffer.VertexCount);
-            saver.Write((uint)vertexBuffer.VertexSkinCount);
+            saver.Write((ushort)vertexBuffer.VertexSkinCount);
+            saver.Write((ushort)vertexBuffer.GPUBufferAlignent);
 
         }
 

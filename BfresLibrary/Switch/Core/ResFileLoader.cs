@@ -114,6 +114,9 @@ namespace BfresLibrary.Switch.Core
             if (StringCache.Strings.ContainsKey(offset))
                 return StringCache.Strings[offset];
 
+            if (offset < 0 || offset > this.BaseStream.Length)
+                return "";
+
             encoding = encoding ?? Encoding;
             using (TemporarySeek(offset, SeekOrigin.Begin))
             {

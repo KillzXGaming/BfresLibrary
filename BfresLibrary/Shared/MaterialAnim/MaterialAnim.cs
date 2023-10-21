@@ -127,7 +127,7 @@ namespace BfresLibrary
         public ResDict<UserData> UserData { get; set; }
 
         [Browsable(false)]
-        public IList<MaterialAnimData> MaterialAnimDataList { get; set; }
+        public IList<MaterialAnimData> MaterialAnimDataList { get; set; } = new List<MaterialAnimData>();
 
         [Browsable(false)]
         public ResDict<TextureRef> TextureNames { get; set; }
@@ -230,7 +230,12 @@ namespace BfresLibrary
                 if (textureList == null) textureList = new List<string>();
 
                 foreach (var tex in textureList)
-                    TextureNames.Add(tex, new TextureRef() { Name = tex });
+                {
+                    if (TextureNames.ContainsKey(tex))
+                        TextureNames.Add(tex + TextureNames.Count, new TextureRef() { Name = tex });
+                    else
+                        TextureNames.Add(tex, new TextureRef() { Name = tex });
+                }
             }
             else if (signature == "FSHU")
             {
@@ -340,6 +345,9 @@ namespace BfresLibrary
                     materialAnims.Add(new MaterialAnimData(loader, signature));
                 return materialAnims;
             }, materialAnimOffset);
+
+            if (MaterialAnimDataList == null)
+                MaterialAnimDataList = new List<MaterialAnimData>();
         }
 
         void IResData.Save(ResFileSaver saver)

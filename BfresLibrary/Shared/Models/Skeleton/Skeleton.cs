@@ -176,6 +176,8 @@ namespace BfresLibrary
                     saver.Seek(16);
                 if (saver.ResFile.VersionMajor2 >= 9)
                     saver.Seek(8);
+
+                ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, Switch.Core.ResFileSwitchSaver.Section1, "FSKL UserPointer");
                 saver.Write(0L); // UserPointer
 
                 if (saver.ResFile.VersionMajor2 < 9)

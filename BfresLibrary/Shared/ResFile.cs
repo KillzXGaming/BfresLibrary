@@ -171,6 +171,8 @@ namespace BfresLibrary
             }
         }
 
+        public int DataAlignmentOverride = 0;
+
         /// <summary>
         /// Gets or sets the target adress size to use for raw data blocks in the file.
         /// </summary>

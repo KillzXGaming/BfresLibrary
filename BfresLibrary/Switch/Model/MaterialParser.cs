@@ -83,10 +83,17 @@ namespace BfresLibrary.Switch
             if (mat.ShaderParamData == null)
                 mat.ShaderParamData = new byte[0];
 
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
                 saver.Write(mat.Flags, true);
             else
                 saver.Seek(12);
+
+            if (saver.ResFile.VersionMajor2 >= 10)
+            {
+                MaterialParserV10.Save(saver, mat);
+                return;
+            }
+
             saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "FMAT");
             saver.SaveString(mat.Name);
             mat.PosRenderInfoOffset = saver.SaveOffset();

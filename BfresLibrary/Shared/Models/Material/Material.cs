@@ -6,6 +6,7 @@ using System.IO;
 using System.ComponentModel;
 using System.Linq;
 using Syroot.BinaryData;
+using BfresLibrary.Switch;
 
 namespace BfresLibrary
 {
@@ -39,7 +40,7 @@ namespace BfresLibrary
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
         private const string _signature = "FMAT";
-        
+
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -80,6 +81,13 @@ namespace BfresLibrary
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Shader Assign")]
         public ShaderAssign ShaderAssign { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MaterialParserV10.ShaderInfo ShaderInfoV10 { get; set; }
+
+        internal int RenderInfoSize;
 
         /// <summary>
         /// Gets or sets the list of <see cref="TextureRef"/> instances referencing the <see cref="Texture"/> instances

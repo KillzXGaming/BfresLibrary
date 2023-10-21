@@ -3,6 +3,7 @@ using System.Diagnostics;
 using BfresLibrary.Core;
 using System.ComponentModel;
 using System.Globalization;
+using BfresLibrary.Switch.Core;
 
 namespace BfresLibrary
 {

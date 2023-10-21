@@ -111,6 +111,23 @@ namespace BfresLibrary.Switch.Core
 
         // ---- METHODS (INTERNAL) -------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Reserves space for offsets to the <paramref name="strings"/> written later in the string pool with the
+        /// specified <paramref name="encoding"/>
+        /// </summary>
+        /// <param name="strings">The names to save.</param>
+        /// <param name="encoding">The <see cref="Encoding"/> in which the names will be stored.</param>
+        [DebuggerStepThrough]
+        internal void SaveStringsRelocated(IEnumerable<string> strings, Encoding encoding = null)
+        {
+            SaveRelocateEntryToSection(Position, (uint)strings.ToList().Count, 1, 0, Section1, "SaveStrings");
+
+            foreach (string str in strings)
+            {
+                SaveString(str, encoding);
+            }
+        }
+
         public override void ExportSection()
         {
             Initialize();
@@ -164,6 +181,9 @@ namespace BfresLibrary.Switch.Core
             }
             if (ExportableData is Material)
             {
+                if (ResFile.VersionMajor2 >= 10)
+                    MaterialParserV10.PrepareSave((Material)ExportableData);
+
                 WriteHeader("fmdlSUB", "FMAT\0\0\0\0");
                 ((IResData)ExportableData).Save(this);
                 WriteMaterials((Material)ExportableData);
@@ -439,7 +459,7 @@ namespace BfresLibrary.Switch.Core
             }
             if (ResFile.SkeletalAnims.Count > 0)
             {
-                if (ResFile.VersionMajor2 == 9)
+                if (ResFile.VersionMajor2 >= 9)
                 {
                     SaveRelocateEntryToSection(Position + 8, 2, (uint)ResFile.SkeletalAnims.Count, 8, Section1, "Skeleton Animation");
                     SaveRelocateEntryToSection(Position + 32, 4, (uint)ResFile.SkeletalAnims.Count, 6, Section1, "Skeleton Animation");
@@ -464,7 +484,7 @@ namespace BfresLibrary.Switch.Core
             }
             if (ResFile.BoneVisibilityAnims.Count > 0)
             {
-                if (ResFile.VersionMajor2 == 9)
+                if (ResFile.VersionMajor2 >= 9)
                 {
                     SaveRelocateEntryToSection(Position + 8, 2, (uint)ResFile.BoneVisibilityAnims.Count, 10, Section1, "Bone Vis Animation");
                     SaveRelocateEntryToSection(Position + 32, 6, (uint)ResFile.BoneVisibilityAnims.Count, 6, Section1, "Bone Vis Animation");
@@ -481,7 +501,7 @@ namespace BfresLibrary.Switch.Core
             }
             if (ResFile.ShapeAnims.Count > 0)
             {
-                if (ResFile.VersionMajor2 == 9)
+                if (ResFile.VersionMajor2 >= 9)
                 {
                     SaveRelocateEntryToSection(Position + 8, 2, (uint)ResFile.ShapeAnims.Count, 10, Section1, "Shape Animation");
                     SaveRelocateEntryToSection(Position + 32, 6, (uint)ResFile.ShapeAnims.Count, 6, Section1, "Shape Animation");
@@ -498,7 +518,7 @@ namespace BfresLibrary.Switch.Core
             }
             if (ResFile.SceneAnims.Count > 0)
             {
-                if (ResFile.VersionMajor2 == 9)
+                if (ResFile.VersionMajor2 >= 9)
                 {
                     SaveRelocateEntryToSection(Position + 8, 2, (uint)ResFile.SceneAnims.Count, 10, Section1, "Scene Animation");
                     SaveRelocateEntryToSection(Position + 32, 6, (uint)ResFile.SceneAnims.Count, 6, Section1, "Scene Animation");
@@ -651,7 +671,7 @@ namespace BfresLibrary.Switch.Core
         private void WriteMemoryPool()
         {
             long oldPos = Position;
-            Align(ResFile.DataAlignment);
+            Align((int)ResFile.DataAlignmentOverride != 0 ? (int)ResFile.DataAlignmentOverride : ResFile.DataAlignment);
 
             WriteTotalBufferSize(Position); //Write the total buffer size after memory pool is aligned
 
@@ -679,6 +699,8 @@ namespace BfresLibrary.Switch.Core
         uint SectionCount = 5;
         private void WriteRelocationTable()
         {
+            Align(256);
+
             uint relocationTableOffset = (uint)Position;
             WriteSignature("_RLT");
             _ofsEndOfBlock = (uint)Position;
@@ -763,7 +785,9 @@ namespace BfresLibrary.Switch.Core
         {
             if (mdl.Skeleton.Bones.Count > 0)
             {
-                if (ResFile.VersionMajor2 >= 8)
+                if (ResFile.VersionMajor2 >= 10)
+                    SaveRelocateEntryToSection(Position, 3, (uint)mdl.Skeleton.Bones.Count, 8, Section1, "Bone array");
+                else if (ResFile.VersionMajor2 >= 8)
                     SaveRelocateEntryToSection(Position, 3, (uint)mdl.Skeleton.Bones.Count, 9, Section1, "Bone array");
                 else
                     SaveRelocateEntryToSection(Position, 3, (uint)mdl.Skeleton.Bones.Count, 7, Section1, "Bone array");
@@ -873,7 +897,18 @@ namespace BfresLibrary.Switch.Core
             if (shp.RadiusArray.Count > 0)
             {
                 WriteOffset(shp.PosRadiusArrayOffset);
-                Write(shp.RadiusArray);
+                if (ResFile.VersionMajor2 >= 10)
+                {
+                    foreach (var radius in shp.BoundingRadiusList)
+                    {
+                        Write(radius.X);
+                        Write(radius.Y);
+                        Write(radius.Z);
+                        Write(radius.W);
+                    }
+                }
+                else
+                    Write(shp.RadiusArray);
             }
             foreach (Mesh msh in shp.Meshes)
             {
@@ -950,7 +985,7 @@ namespace BfresLibrary.Switch.Core
             if (ska.BoneAnims.Count > 0)
             {
                 Align(8);
-                if (ResFile.VersionMajor2 == 9)
+                if (ResFile.VersionMajor2 >= 9)
                     SaveRelocateEntryToSection(Position, 3, (uint)ska.BoneAnims.Count, 4, Section1, "Bone Animation");
                 else
                     SaveRelocateEntryToSection(Position, 3, (uint)ska.BoneAnims.Count, 2, Section1, "Bone Animation");
@@ -1066,7 +1101,7 @@ namespace BfresLibrary.Switch.Core
 
                     SaveRelocateEntryToSection(Position, (uint)matanim.TextureNames.Count, 1, 0, Section1, "Texture Pat List");
                     WriteOffset(matanim.PosTextureNamesOffset);
-                    SaveStrings(matanim.TextureNames.Keys.ToList());
+                    SaveStrings(matanim.TextureNames.Values.Select(x => x.Name).ToList());
 
                     WriteOffset(matanim.PosTextureBindArrayOffset);
                     Write(matanim.TextureBindArray);
@@ -1338,6 +1373,22 @@ namespace BfresLibrary.Switch.Core
 
         private void WriteMaterials(Material mat)
         {
+            if (this.ResFile.VersionMajor2 >= 10)
+            {
+                SaveEntries();
+
+                if (mat.UserData.Count > 0)
+                {
+                    SaveUserData(mat.UserData, mat.PosUserDataMaterialOffset);
+
+                    WriteOffset(mat.PosUserDataDictMaterialOffset);
+                    ((IResData)mat.UserData).Save(this);
+                    SaveUserDataData(mat.UserData);
+                    Align(8);
+                }
+                return;
+            }
+
             if (mat.RenderInfos == null)
                 mat.RenderInfos = new ResDict<RenderInfo>();
             if (mat.ShaderParams == null)
@@ -1627,7 +1678,7 @@ namespace BfresLibrary.Switch.Core
             _savedSection4Entries = _savedSection4Entries.OrderBy(o => o.Position).ToList();
             _savedSection5Entries = _savedSection5Entries.OrderBy(o => o.Position).ToList();
 
-            bool PrintDebug = false;
+            bool PrintDebug = true;
 
             if (PrintDebug)
             {
@@ -1699,7 +1750,7 @@ namespace BfresLibrary.Switch.Core
 
         private void WriteIndexBuffer()
         {
-            Align(ResFile.DataAlignment);
+            Align((int)ResFile.DataAlignmentOverride != 0 ? (int)ResFile.DataAlignmentOverride : ResFile.DataAlignment);
             bufferInfoOffset = Position;
             for (int i = 0; i < ResFile.BufferInfo.IndexBufferData.Length; i++)
             {
@@ -1728,7 +1779,7 @@ namespace BfresLibrary.Switch.Core
             foreach (uint offset in offsets)
             {
                 Position = offset;
-                Write((int)(target));
+                Write((ulong)target);;
             }
         }
 
@@ -1800,6 +1851,61 @@ namespace BfresLibrary.Switch.Core
         {
             Write(Size);
             Write(Offset);
+        }
+
+        public override void SaveEntries()
+        {
+            // Store all queued items. Iterate via index as subsequent calls append to the list.
+            for (int i = 0; i < _savedItems.Count; i++)
+            {
+                if (_savedItems[i].Target != null)
+                {
+                    // Ignore if it has already been written (list or dict elements).
+                    continue;
+                }
+
+                ItemEntry entry = _savedItems[i];
+
+                Align(8);
+                switch (entry.Type)
+                {
+                    case ItemEntryType.List:
+                        IEnumerable<IResData> list = (IEnumerable<IResData>)entry.Data;
+                        // Check if the first item has already been written by a previous dict.
+                        if (TryGetItemEntry(list.First(), ItemEntryType.ResData, out ItemEntry firstElement))
+                        {
+                            entry.Target = firstElement.Target;
+                        }
+                        else
+                        {
+                            entry.Target = (uint)Position;
+                            CurrentIndex = 0;
+                            foreach (IResData element in list)
+                            {
+                                _savedItems.Add(new ItemEntry(element, ItemEntryType.ResData, target: (uint)Position,
+                                    index: CurrentIndex));
+                                element.Save(this);
+                                CurrentIndex++;
+                            }
+                        }
+                        break;
+
+                    case ItemEntryType.Dict:
+                    case ItemEntryType.ResData:
+                        entry.Target = (uint)Position;
+                        CurrentIndex = entry.Index;
+                        ((IResData)entry.Data).Save(this);
+                        break;
+
+                    case ItemEntryType.Custom:
+                        entry.Target = (uint)Position;
+                        entry.Callback.Invoke();
+                        break;
+                }
+            }
+            WriteOffsets();
+
+            _savedItems.Clear();
         }
 
         private class RelocationSection
