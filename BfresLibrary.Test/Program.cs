@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
-using BfresLibrary;
-using BfresLibrary.TextConvert;
+﻿using BfresLibrary;
+using BfresLibrary.Helpers;
+using BfresLibrary.Switch;
 
 namespace TestApp
 {
@@ -9,41 +8,56 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            var resFileR = new ResFile("PlayerMarioSuper.bfres");
-            resFileR.Save("PlayerMarioSuperRB.bfres");
+            var resFile = new ResFile("PlayerMarioSuper.bfres");
+            LoadMeshData(resFile);
+            LoadTextureData(resFile);
 
-            return;
+            resFile.Save("PlayerMarioSuperRB.bfres");
+        }
 
-            var resFile = new ResFile("CapManAnimationRB.bfres");
-
-            foreach (var vis in resFile.BoneVisibilityAnims.Values)
+        static void LoadMeshData(ResFile resFile)
+        {
+            foreach (var model in resFile.Models.Values)
             {
-                var visOG = resFile.BoneVisibilityAnims[vis.Name];
-                for (int i = 0; i < vis.BaseDataList?.Length; i++)
+                foreach (var shape in model.Shapes.Values)
                 {
-                    if (vis.BaseDataList[i] != visOG.BaseDataList[i])
-                        throw new Exception();
+                    var material = model.Materials[shape.MaterialIndex];
+                    var vertexBuffer = model.VertexBuffers[shape.VertexBufferIndex];
+
+                    //Indices
+                    var mesh = shape.Meshes[0]; //first LOD
+                    var faces = mesh.GetIndices();
+
+                    //Vertex data
+                    VertexBufferHelper helper = new VertexBufferHelper(vertexBuffer, resFile.ByteOrder);
+                    foreach (var att in helper.Attributes)
+                    {
+                        if (att.Name == "_p0") //positions
+                        {
+                            var vertex_positions = att.Data;
+                        }
+                        if (att.Name == "_n0") //normals
+                        {
+                            var vertex_normals = att.Data;
+                        }
+                        if (att.Name == "_u0") //uvs
+                        {
+                            var vertex_uvs = att.Data;
+                        }
+                    }
                 }
             }
+        }
 
-            // 
-
-
-            /*  animFile.Save("JugemObjRB.bfres");
-              return;
-
-              ResFile resFile = new ResFile(args[0]);
-
-              string folder = Path.GetFileNameWithoutExtension(args[0]);
-              foreach (var model in resFile.Models.Values)
-              {
-                  if (!Directory.Exists($"{folder}/Models/{model.Name}"))
-                      Directory.CreateDirectory($"{folder}/Models/{model.Name}");
-
-                  foreach (var mat in model.Materials.Values) {
-                      File.WriteAllText($"{folder}/Models/{model.Name}/{mat.Name}.json", MaterialConvert.ToJson(mat));
-                  }
-              }*/
+        static void LoadTextureData(ResFile resFile)
+        {
+            foreach (var texture in resFile.Textures.Values)
+            {
+                var bntxTexture = ((SwitchTexture)texture).Texture; //Get raw bntx texture
+                //Image must be decompressed by format using another library (astc, bcn, etc)
+                var format = bntxTexture.Format;
+                var imageData = texture.GetDeswizzledData(0, 0);
+            }
         }
     }
 }
