@@ -22,7 +22,7 @@
     <RootNamespace>BfresLibrary</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Syroot.BinaryData">
