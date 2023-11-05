@@ -21,4 +21,4 @@ A reworked version of NintenTools.Bfres with Wii U and Switch support and many v
 
 ## LICENSE
 
-https://gitlab.com/Syroot/NintenTools.Bfres/-/blob/master/LICENS
+https://gitlab.com/Syroot/NintenTools.Bfres/-/blob/master/LICENSE
