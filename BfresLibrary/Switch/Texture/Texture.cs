@@ -176,6 +176,11 @@ namespace BfresLibrary.Switch
             Texture.TextureData[arrayLevel][0] = combinedMips;
         }
 
+        public void Set(Texture tex)
+        {
+            this.Texture = tex;
+        }
+
         void IResData.Load(ResFileLoader loader)
         {
         }
