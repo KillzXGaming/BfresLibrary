@@ -495,10 +495,11 @@ namespace BfresLibrary.Switch
 
             private void SetupOptionBooleans(int count)
             {
-                var flags = _optionBitFlags.ToArray();
-
                 OptionToggles = new bool[count];
 
+                if (count == 0) return;
+
+                var flags = _optionBitFlags.ToArray();
                 int idx = 0;
                 for (int i = 0; i < count; i++)
                 {

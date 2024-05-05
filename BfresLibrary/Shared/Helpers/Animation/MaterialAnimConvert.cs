@@ -69,6 +69,13 @@ namespace BfresLibrary.Helpers
                     matAnim.PatternAnimInfos.Add(info);
                     texturePatternBase.Add(samplerInfo.Constant);
 
+                    info.BeginConstant = (ushort)matAnim.Constants.Count;
+
+                    matAnim.Constants.Add(new AnimConstant()
+                    {
+                        Value = (int)samplerInfo.Constant,
+                    }); 
+
                     if (samplerInfo.Curve != null)
                     {
                         info.CurveIndex = (short)matAnim.Curves.Count;

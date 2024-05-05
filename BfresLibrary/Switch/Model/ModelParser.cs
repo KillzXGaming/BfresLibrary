@@ -26,8 +26,11 @@ namespace BfresLibrary.Switch
             if (loader.ResFile.VersionMajor2 == 9)
             {
                 long materialValuesOffset = loader.ReadOffset();
+                long off = loader.ReadOffset(); //padding?
                 long materialDictOffset = loader.ReadOffset();
-                loader.ReadOffset(); //padding?
+                if (materialDictOffset == 0)
+                    materialDictOffset = off;
+
                 model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
             }
             else
@@ -35,10 +38,9 @@ namespace BfresLibrary.Switch
                 long materialValuesOffset = loader.ReadOffset();
                 long materialDictOffset = loader.ReadOffset();
                 model.Materials = loader.LoadDictValues<Material>(materialDictOffset, materialValuesOffset);
+                if (loader.ResFile.VersionMajor2 >= 10)
+                    loader.ReadOffset(); //shader assign offset
             }
-
-            if (loader.ResFile.VersionMajor2 >= 10)
-                loader.ReadOffset(); //shader assign offset
 
             model.UserData = loader.LoadDictValues<UserData>();
             long UserPointer = loader.ReadOffset();
@@ -102,9 +104,13 @@ namespace BfresLibrary.Switch
             model.ShapeOffset = saver.SaveOffset();
             model.ShapeDictOffset = saver.SaveOffset();
             model.MaterialsOffset = saver.SaveOffset();
+
+            if (saver.ResFile.VersionMajor2 == 9)
+                saver.Write((ulong)0);
+
             model.MaterialsDictOffset = saver.SaveOffset();
 
-            if (saver.ResFile.VersionMajor2 >= 9)
+            if (saver.ResFile.VersionMajor2 >= 10)
                 saver.SaveList(model.ShaderAssign);
 
             model.PosUserDataOffset = saver.SaveOffset();

@@ -199,6 +199,15 @@ namespace BfresLibrary
                             }
                             curve.Keys[i, 0] = linearValue;
                             curve.Keys[i, 1] = 0;
+                            if (i + 1 < keys.Count)
+                            {
+                                var key2 = ToObject<KeyFrame>(keys[i]);
+                                float v = linearKey.Value;
+                                if (isDegrees)
+                                    v *= Deg2Rad;
+
+                                curve.Keys[i, 1] = v - linearValue;
+                            }
                         }
                         break;
                     case AnimCurveType.StepInt:
