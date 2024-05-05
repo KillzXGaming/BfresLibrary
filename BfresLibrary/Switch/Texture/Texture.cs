@@ -137,6 +137,15 @@ namespace BfresLibrary.Switch
             }
         }
 
+        public void Set(Texture tex)
+        {
+            var idx = this.BntxFile.TextureDict.IndexOf(this.Name);
+
+            this.Texture = tex;
+
+            this.BntxFile.Textures[idx] = tex;
+        }
+
         /// <summary>
         /// returns the raw swizzled data in bytes.
         /// </summary>
@@ -174,11 +183,6 @@ namespace BfresLibrary.Switch
 
             byte[] combinedMips = ByteUtils.CombineArray(mipmaps.ToArray());
             Texture.TextureData[arrayLevel][0] = combinedMips;
-        }
-
-        public void Set(Texture tex)
-        {
-            this.Texture = tex;
         }
 
         void IResData.Load(ResFileLoader loader)

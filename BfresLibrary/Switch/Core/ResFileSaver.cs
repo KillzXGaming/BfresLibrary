@@ -1678,7 +1678,7 @@ namespace BfresLibrary.Switch.Core
             _savedSection4Entries = _savedSection4Entries.OrderBy(o => o.Position).ToList();
             _savedSection5Entries = _savedSection5Entries.OrderBy(o => o.Position).ToList();
 
-            bool PrintDebug = true;
+            bool PrintDebug = false;
 
             if (PrintDebug)
             {

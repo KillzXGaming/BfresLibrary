@@ -101,6 +101,9 @@ namespace BfresLibrary
             return indices;
         }
 
+        public ushort NumSmoothMatrices { get; private set; }
+        public ushort NumRigidMatrices { get; private set; }
+
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)
@@ -129,12 +132,12 @@ namespace BfresLibrary
                 if (loader.ResFile.VersionMajor2 < 9)
                     _flags = loader.ReadUInt32();
                 ushort numBone = loader.ReadUInt16();
-                ushort numSmoothMatrix = loader.ReadUInt16();
-                ushort numRigidMatrix = loader.ReadUInt16();
+                NumSmoothMatrices = loader.ReadUInt16();
+                NumRigidMatrices = loader.ReadUInt16();
                 loader.Seek(6);
 
-                MatrixToBoneList = loader.LoadCustom(() => loader.ReadUInt16s((numSmoothMatrix + numRigidMatrix)), MatrixToBoneListOffset);
-                InverseModelMatrices = loader.LoadCustom(() => loader.ReadMatrix3x4s(numSmoothMatrix), InverseModelMatricesOffset)?.ToList();
+                MatrixToBoneList = loader.LoadCustom(() => loader.ReadUInt16s((NumSmoothMatrices + NumRigidMatrices)), MatrixToBoneListOffset);
+                InverseModelMatrices = loader.LoadCustom(() => loader.ReadMatrix3x4s(NumSmoothMatrices), InverseModelMatricesOffset)?.ToList();
             }
             else
             {

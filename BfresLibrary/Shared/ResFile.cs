@@ -5,6 +5,7 @@ using System.Linq;
 using Syroot.BinaryData;
 using BfresLibrary.Core;
 using System.ComponentModel;
+using Syroot.NintenTools.NSW.Bntx;
 
 namespace BfresLibrary
 {
@@ -726,6 +727,13 @@ namespace BfresLibrary
                     cam.IsBigEndian = !IsPlatformSwitch;
                     var mem = new MemoryStream();
                     cam.Save(mem);
+                    file.Value.Data = mem.ToArray();
+                }
+                if (file.Value.LoadedFileData is BntxFile)
+                {
+                    var bntx = file.Value.LoadedFileData as BntxFile;
+                    var mem = new MemoryStream();
+                    bntx.Save(mem);
                     file.Value.Data = mem.ToArray();
                 }
             }

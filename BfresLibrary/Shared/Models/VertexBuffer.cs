@@ -4,6 +4,7 @@ using Syroot.BinaryData;
 using BfresLibrary.Core;
 using BfresLibrary.Helpers;
 using Syroot.Maths;
+using System.Linq;
 
 namespace BfresLibrary
 {
@@ -88,6 +89,20 @@ namespace BfresLibrary
         internal MemoryPool MemoryPool = new MemoryPool();
 
         internal uint Flags;
+
+        public Vector4F[] GetPositions()
+        {
+            VertexBufferHelper helper = new VertexBufferHelper(this, ByteOrder.LittleEndian);
+            var positions = helper.Attributes.FirstOrDefault(x => x.Name == "_p0");
+            return positions != null ? positions.Data : new Vector4F[0]; 
+        }
+
+        public Vector4F[] GetBoneIndices()
+        {
+            VertexBufferHelper helper = new VertexBufferHelper(this, ByteOrder.LittleEndian);
+            var positions = helper.Attributes.FirstOrDefault(x => x.Name == "_i0");
+            return positions != null ? positions.Data : new Vector4F[0];
+        }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------
 

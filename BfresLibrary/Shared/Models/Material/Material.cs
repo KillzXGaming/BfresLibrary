@@ -164,12 +164,28 @@ namespace BfresLibrary
                 ResFileSaver.ExportSection(FileName, this, ResFile);
         }
 
-        public string GetRenderInfoString(string name)
+
+        public string GetRenderInfoString(string key)
         {
-            if (RenderInfos.ContainsKey(name))
-                return RenderInfos[name].GetValueStrings().FirstOrDefault();
+            if (this.RenderInfos.ContainsKey(key))
+                return this.RenderInfos[key].GetValueStrings().FirstOrDefault();
             return "";
         }
+
+        public float GetRenderInfoFloat(string key)
+        {
+            if (this.RenderInfos.ContainsKey(key))
+                return this.RenderInfos[key].GetValueSingles().FirstOrDefault();
+            return 1f;
+        }
+
+        public int GetRenderInfoInt(string key)
+        {
+            if (this.RenderInfos.ContainsKey(key))
+                return this.RenderInfos[key].GetValueInt32s().FirstOrDefault();
+            return 1;
+        }
+
 
         /// <summary>
         /// Sets a value directly to render info given the name and value.

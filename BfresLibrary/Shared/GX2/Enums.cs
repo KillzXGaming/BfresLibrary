@@ -532,7 +532,8 @@ namespace BfresLibrary.GX2
         ClampHalfBorder,
         MirrorOnceHalfBorder,
         ClampBorder,
-        MirrorOnceBorder
+        MirrorOnceBorder,
+        ClampToEdge,
     }
 
     /// <summary>
