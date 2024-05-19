@@ -70,6 +70,8 @@ namespace BfresLibrary.TextConvert
             [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
             public Dictionary<string, object> UserData { get; set; }
 
+            public int RenderInfoSize { get; set; }
+
             public ShaderAssignStruct ShaderAssign { get; set; }
 
             public RenderState RenderState { get; set; }
@@ -119,6 +121,8 @@ namespace BfresLibrary.TextConvert
 
             foreach (var param in material.UserData.Values)
                 matConv.UserData.Add($"{param.Type}|{param.Name}", param.GetData());
+
+            matConv.RenderInfoSize = material.RenderInfoSize;
 
             //It is important that we attach mesh information to the material
             //Shaders rely on both mesh and material data to match up nicely
@@ -282,6 +286,7 @@ namespace BfresLibrary.TextConvert
                     mat.SetRenderInfo(name, ((JArray)param.Value).ToObject<string[]>());
             }
             mat.UserData = UserDataConvert.Convert(matJson.UserData);
+            mat.RenderInfoSize = matJson.RenderInfoSize;
             return matJson.MeshInfo;
         }
 
