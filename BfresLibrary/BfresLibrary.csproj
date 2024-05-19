@@ -20,6 +20,7 @@
     <VersionPrefix>1.6.0</VersionPrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>BfresLibrary</RootNamespace>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
