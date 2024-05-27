@@ -846,6 +846,13 @@ namespace BfresLibrary.Switch.Core
                 this.Write(skl.InverseModelMatrices);
             }
 
+            if (skl.userIndices?.Length > 0)
+            {
+                Align(8);
+                WriteOffset(skl.PosUserPointer);
+                Write(skl.userIndices);
+            }
+
             if (skl.Bones.Count > 0)
             {
                 WriteOffset(skl.PosBoneDictOffset);
@@ -1228,24 +1235,39 @@ namespace BfresLibrary.Switch.Core
 
         private void WriteSceneAnimations(SceneAnim scnanim)
         {
-            Seek(104);
             if (scnanim.CameraAnims.Count > 0)
             {
-                int CurCam = 0;
+                WriteOffset(scnanim.PosCameraAnimArrayOffset);
                 foreach (CameraAnim camanim in scnanim.CameraAnims.Values)
-                {
-                    if (CurCam == 0)
-                        WriteOffset(scnanim.PosCameraAnimArrayOffset);
-
                     ((IResData)camanim).Save(this);
-                    CurCam++;
-                }
+            }
+            if (scnanim.LightAnims.Count > 0)
+            {
+                WriteOffset(scnanim.PosLightAnimArrayOffset);
+                foreach (LightAnim anim in scnanim.LightAnims.Values)
+                    ((IResData)anim).Save(this);
+            }
+            if (scnanim.FogAnims.Count > 0)
+            {
+                WriteOffset(scnanim.PosFogAnimArrayOffset);
+                foreach (FogAnim anim in scnanim.FogAnims.Values)
+                    ((IResData)anim).Save(this);
             }
 
             if (scnanim.CameraAnims.Count > 0)
             {
                 WriteOffset(scnanim.PosCameraAnimDictOffset);
                 ((IResData)scnanim.CameraAnims).Save(this);
+            }
+            if (scnanim.LightAnims.Count > 0)
+            {
+                WriteOffset(scnanim.PosLightAnimDictOffset);
+                ((IResData)scnanim.LightAnims).Save(this);
+            }
+            if (scnanim.FogAnims.Count > 0)
+            {
+                WriteOffset(scnanim.PosFogAnimDictOffset);
+                ((IResData)scnanim.FogAnims).Save(this);
             }
 
             foreach (CameraAnim camanim in scnanim.CameraAnims.Values)
@@ -1351,18 +1373,6 @@ namespace BfresLibrary.Switch.Core
                     SaveUserDataData(foganim.UserData);
                     Align(8);
                 }
-            }
-
-
-            if (scnanim.LightAnims.Count > 0)
-            {
-                WriteOffset(scnanim.PosLightAnimDictOffset);
-                ((IResData)scnanim.LightAnims).Save(this);
-            }
-            if (scnanim.FogAnims.Count > 0)
-            {
-                WriteOffset(scnanim.PosFogAnimDictOffset);
-                ((IResData)scnanim.FogAnims).Save(this);
             }
             if (scnanim.UserData.Count > 0)
             {

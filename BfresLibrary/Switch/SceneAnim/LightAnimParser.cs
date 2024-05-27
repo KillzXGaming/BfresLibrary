@@ -14,8 +14,8 @@ namespace BfresLibrary.Switch
         {
             if (loader.ResFile.VersionMajor2 >= 9)
             {
-                lightAnim.Flags = loader.ReadEnum<LightAnimFlags>(true);
-                loader.Seek(2);
+                lightAnim._flags = loader.ReadUInt16();
+                loader.ReadUInt16();
             }
             else
                 loader.LoadHeaderBlock();
@@ -32,12 +32,12 @@ namespace BfresLibrary.Switch
             if (loader.ResFile.VersionMajor2 >= 9)
             {
                 lightAnim.FrameCount = loader.ReadInt32();
+                lightAnim.BakedSize = loader.ReadUInt32();
+                numUserData = loader.ReadUInt16();
                 numCurve = loader.ReadByte();
                 lightAnim.LightTypeIndex = loader.ReadSByte();
                 lightAnim.DistanceAttnFuncIndex = loader.ReadSByte();
                 lightAnim.AngleAttnFuncIndex = loader.ReadSByte();
-                lightAnim.BakedSize = loader.ReadUInt32();
-                numUserData = loader.ReadUInt16();
                 loader.Seek(2);
             }
             else
@@ -58,8 +58,8 @@ namespace BfresLibrary.Switch
         {
             if (saver.ResFile.VersionMajor2 == 9)
             {
-                saver.Write(lightAnim.Flags, true);
-                saver.Seek(2);
+                saver.Write((ushort)lightAnim._flags);
+                saver.Write((ushort)0);
             }
             else
                 saver.Seek(12);
@@ -76,12 +76,12 @@ namespace BfresLibrary.Switch
             if (saver.ResFile.VersionMajor2 == 9)
             {
                 saver.Write(lightAnim.FrameCount);
+                saver.Write(lightAnim.BakedSize);
+                saver.Write((ushort)lightAnim.UserData.Count);
                 saver.Write((byte)lightAnim.Curves.Count);
                 saver.Write(lightAnim.LightTypeIndex);
                 saver.Write(lightAnim.DistanceAttnFuncIndex);
                 saver.Write(lightAnim.AngleAttnFuncIndex);
-                saver.Write(lightAnim.BakedSize);
-                saver.Write((ushort)lightAnim.UserData.Count);
                 saver.Seek(2);
             }
             else

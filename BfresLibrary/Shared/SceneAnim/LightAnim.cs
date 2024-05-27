@@ -42,7 +42,7 @@ namespace BfresLibrary
 
         // ---- FIELDS -------------------------------------------------------------------------------------------------
 
-        private ushort _flags;
+        internal ushort _flags;
 
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
@@ -164,11 +164,12 @@ namespace BfresLibrary
         
         void IResData.Save(ResFileSaver saver)
         {
+            saver.WriteSignature(_signature);
+
             if (saver.IsSwitch)
                 Switch.LightAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
             else
             {
-                saver.WriteSignature(_signature);
                 saver.Write(Flags, true);
                 saver.Write((ushort)UserData.Count);
                 saver.Write(FrameCount);

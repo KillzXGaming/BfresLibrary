@@ -39,6 +39,9 @@ namespace BfresLibrary.TextConvert
             public List<CurveAnimHelper> Curves { get; set; }
 
             public CameraAnimData BaseData { get; set; }
+
+            [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
+            public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
         }
 
         internal class LightAnimStruct
@@ -49,6 +52,7 @@ namespace BfresLibrary.TextConvert
             public bool Loop { get; set; }
             public bool Baked { get; set; }
 
+            public bool Enable { get; set; }
             public bool BaseAngleAttn { get; set; }
             public bool BaseColor0 { get; set; }
             public bool BaseColor1 { get; set; }
@@ -59,6 +63,9 @@ namespace BfresLibrary.TextConvert
             public List<CurveAnimHelper> Curves { get; set; }
 
             public LightAnimData BaseData { get; set; }
+
+            [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
+            public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
         }
 
         internal class FogAnimStruct
@@ -75,6 +82,9 @@ namespace BfresLibrary.TextConvert
             public List<CurveAnimHelper> Curves { get; set; }
 
             public FogAnimData BaseData { get; set; }
+
+            [JsonProperty(ItemConverterType = typeof(NoFormattingConverter))]
+            public Dictionary<string, object> UserData { get; set; } = new Dictionary<string, object>();
         }
 
         public static string ToJson(SceneAnim anim)
@@ -105,6 +115,8 @@ namespace BfresLibrary.TextConvert
                     var convCurve = CurveAnimHelper.FromCurve(curve, target, isDegrees);
                     camAnimConv.Curves.Add(convCurve);
                 }
+                foreach (var param in camAnim.UserData.Values)
+                    camAnimConv.UserData.Add($"{param.Type}|{param.Name}", param.GetData());
             }
             foreach (var lightAnim in anim.LightAnims.Values) {
                 LightAnimStruct lightAnimConv = new LightAnimStruct();
@@ -113,14 +125,15 @@ namespace BfresLibrary.TextConvert
                 lightAnimConv.FrameCount = lightAnim.FrameCount;
                 lightAnimConv.Loop = lightAnim.Flags.HasFlag(LightAnimFlags.Looping);
                 lightAnimConv.Baked = lightAnim.Flags.HasFlag(LightAnimFlags.BakedCurve);
-                lightAnimConv.BaseAngleAttn = lightAnim.Flags.HasFlag(LightAnimFlags.BaseAngleAttn);
-                lightAnimConv.BaseColor0 = lightAnim.Flags.HasFlag(LightAnimFlags.BaseColor0);
-                lightAnimConv.BaseColor1 = lightAnim.Flags.HasFlag(LightAnimFlags.BaseColor1);
-                lightAnimConv.BaseDir = lightAnim.Flags.HasFlag(LightAnimFlags.BaseDir);
-                lightAnimConv.BaseDistAttn = lightAnim.Flags.HasFlag(LightAnimFlags.BaseDistAttn);
-                lightAnimConv.BasePos = lightAnim.Flags.HasFlag(LightAnimFlags.BasePos);
-                if (lightAnim.Flags.HasFlag(LightAnimFlags.BaseEnable))
-                    lightAnimConv.BaseData = lightAnim.BaseData;
+                lightAnimConv.Enable = lightAnim.AnimatedFields.HasFlag(LightAnimField.Enable);
+                lightAnimConv.BaseAngleAttn = lightAnim.AnimatedFields.HasFlag(LightAnimField.AngleAttn);
+                lightAnimConv.BaseColor0 = lightAnim.AnimatedFields.HasFlag(LightAnimField.Color0);
+                lightAnimConv.BaseColor1 = lightAnim.AnimatedFields.HasFlag(LightAnimField.Color1);
+                lightAnimConv.BaseDir = lightAnim.AnimatedFields.HasFlag(LightAnimField.Rotation);
+                lightAnimConv.BaseDistAttn = lightAnim.AnimatedFields.HasFlag(LightAnimField.DistanceAttn);
+                lightAnimConv.BasePos = lightAnim.AnimatedFields.HasFlag(LightAnimField.Position);
+                lightAnimConv.BaseData = lightAnim.BaseData;
+
 
                 animConv.LightAnims.Add(lightAnimConv);
                 foreach (var curve in lightAnim.Curves)
@@ -129,6 +142,9 @@ namespace BfresLibrary.TextConvert
                     var convCurve = CurveAnimHelper.FromCurve(curve, target, false);
                     lightAnimConv.Curves.Add(convCurve);
                 }
+
+                foreach (var param in lightAnim.UserData.Values)
+                    lightAnimConv.UserData.Add($"{param.Type}|{param.Name}", param.GetData());
             }
             foreach (var fogAnim in anim.FogAnims.Values) {
                 FogAnimStruct fogAnimConv = new FogAnimStruct();
@@ -148,6 +164,8 @@ namespace BfresLibrary.TextConvert
                     var convCurve = CurveAnimHelper.FromCurve(curve, target, false);
                     fogAnimConv.Curves.Add(convCurve);
                 }
+                foreach (var param in fogAnim.UserData.Values)
+                    fogAnimConv.UserData.Add($"{param.Type}|{param.Name}", param.GetData());
             }
 
             foreach (var param in anim.UserData.Values)
@@ -206,6 +224,7 @@ namespace BfresLibrary.TextConvert
                     var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     camAnim.Curves.Add(curve);
                 }
+                camAnim.UserData = UserDataConvert.Convert(camAnimJson.UserData);
             }
             foreach (var lightAnimJson in animJson.LightAnims) {
                 LightAnim lightAnim = new LightAnim();
@@ -215,12 +234,14 @@ namespace BfresLibrary.TextConvert
 
                 if (lightAnimJson.Loop) lightAnim.Flags |= LightAnimFlags.Looping;
                 if (lightAnimJson.Baked) lightAnim.Flags |= LightAnimFlags.BakedCurve;
-                if (lightAnimJson.BaseAngleAttn) lightAnim.Flags |= LightAnimFlags.BaseAngleAttn;
-                if (lightAnimJson.BaseColor0) lightAnim.Flags |= LightAnimFlags.BaseColor0;
-                if (lightAnimJson.BaseColor1) lightAnim.Flags |= LightAnimFlags.BaseColor1;
-                if (lightAnimJson.BaseDir) lightAnim.Flags |= LightAnimFlags.BaseDir;
-                if (lightAnimJson.BaseDistAttn) lightAnim.Flags |= LightAnimFlags.BaseDistAttn;
-                if (lightAnimJson.BasePos) lightAnim.Flags |= LightAnimFlags.BasePos;
+
+                if (lightAnimJson.Enable) lightAnim.AnimatedFields |= LightAnimField.Enable;
+                if (lightAnimJson.BaseAngleAttn) lightAnim.AnimatedFields |= LightAnimField.AngleAttn;
+                if (lightAnimJson.BaseColor0) lightAnim.AnimatedFields |= LightAnimField.Color0;
+                if (lightAnimJson.BaseColor1) lightAnim.AnimatedFields |= LightAnimField.Color1;
+                if (lightAnimJson.BaseDir) lightAnim.AnimatedFields |= LightAnimField.Rotation;
+                if (lightAnimJson.BaseDistAttn) lightAnim.AnimatedFields |= LightAnimField.DistanceAttn;
+                if (lightAnimJson.BasePos) lightAnim.AnimatedFields |= LightAnimField.Position;
 
                 lightAnim.Name = lightAnimJson.Name;
                 lightAnim.FrameCount = lightAnimJson.FrameCount;
@@ -236,6 +257,7 @@ namespace BfresLibrary.TextConvert
                     var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     lightAnim.Curves.Add(curve);
                 }
+                lightAnim.UserData = UserDataConvert.Convert(lightAnimJson.UserData);
             }
             foreach (var fogAnimJson in animJson.FogAnims) {
                 FogAnim fogAnim = new FogAnim();
@@ -259,6 +281,7 @@ namespace BfresLibrary.TextConvert
                     var curve = CurveAnimHelper.GenerateCurve(curveJson, (uint)target, false);
                     fogAnim.Curves.Add(curve);
                 }
+                fogAnim.UserData = UserDataConvert.Convert(fogAnimJson.UserData);
             }
         }
     }

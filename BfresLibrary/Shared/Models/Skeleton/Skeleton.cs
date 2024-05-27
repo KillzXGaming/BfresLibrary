@@ -104,6 +104,8 @@ namespace BfresLibrary
         public ushort NumSmoothMatrices { get; private set; }
         public ushort NumRigidMatrices { get; private set; }
 
+        public ushort[] userIndices;
+
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         void IResData.Load(ResFileLoader loader)
@@ -135,6 +137,9 @@ namespace BfresLibrary
                 NumSmoothMatrices = loader.ReadUInt16();
                 NumRigidMatrices = loader.ReadUInt16();
                 loader.Seek(6);
+
+                //MPS
+                userIndices = loader.LoadCustom(() => loader.ReadUInt16s(numBone), (uint)userPointer);
 
                 MatrixToBoneList = loader.LoadCustom(() => loader.ReadUInt16s((NumSmoothMatrices + NumRigidMatrices)), MatrixToBoneListOffset);
                 InverseModelMatrices = loader.LoadCustom(() => loader.ReadMatrix3x4s(NumSmoothMatrices), InverseModelMatricesOffset)?.ToList();
@@ -181,7 +186,7 @@ namespace BfresLibrary
                     saver.Seek(8);
 
                 ((Switch.Core.ResFileSwitchSaver)saver).SaveRelocateEntryToSection(saver.Position, 1, 1, 0, Switch.Core.ResFileSwitchSaver.Section1, "FSKL UserPointer");
-                saver.Write(0L); // UserPointer
+                PosUserPointer = saver.SaveOffset();// UserPointer
 
                 if (saver.ResFile.VersionMajor2 < 9)
                     saver.Write(_flags);
@@ -234,6 +239,7 @@ namespace BfresLibrary
         internal long PosBoneArrayOffset;
         internal long PosMatrixToBoneListOffset;
         internal long PosInverseModelMatricesOffset;
+        internal long PosUserPointer;
     }
 
     public enum SkeletonFlagsScaling : uint

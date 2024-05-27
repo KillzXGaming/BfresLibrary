@@ -116,11 +116,12 @@ namespace BfresLibrary
         
         void IResData.Save(ResFileSaver saver)
         {
+            saver.WriteSignature(_signature);
+
             if (saver.IsSwitch)
                 Switch.FogAnimParser.Write((Switch.Core.ResFileSwitchSaver)saver, this);
             else
             {
-                saver.WriteSignature(_signature);
                 saver.Write(Flags, true);
                 saver.Write(FrameCount);
                 saver.Write((byte)Curves.Count);
