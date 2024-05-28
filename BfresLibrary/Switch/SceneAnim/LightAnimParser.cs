@@ -38,7 +38,7 @@ namespace BfresLibrary.Switch
                 lightAnim.LightTypeIndex = loader.ReadSByte();
                 lightAnim.DistanceAttnFuncIndex = loader.ReadSByte();
                 lightAnim.AngleAttnFuncIndex = loader.ReadSByte();
-                loader.Seek(2);
+                loader.ReadUInt16();
             }
             else
             {
@@ -51,7 +51,7 @@ namespace BfresLibrary.Switch
                 lightAnim.AngleAttnFuncIndex = loader.ReadSByte();
                 lightAnim.BakedSize = loader.ReadUInt32();
             }
-            lightAnim.Curves = loader.LoadList<AnimCurve>(numCurve);
+            lightAnim.Curves = loader.LoadList<AnimCurve>(numCurve, (uint)CurveArrayOffset);
         }
 
         public static void Write(ResFileSwitchSaver saver, LightAnim lightAnim)

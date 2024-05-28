@@ -8,6 +8,17 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
+            var lights = new ResFile("aaa_00.light.bfres");
+            lights.SceneAnims[0].Export("lights.json", lights);
+            lights.SceneAnims[0].Import("lights.json", lights);
+
+            lights.Save("new.bfres");
+
+            lights = new ResFile("new.bfres");
+            lights.SceneAnims[0].Export("newRB.json", lights);
+
+            return;
+
             var resFile = new ResFile("PlayerMarioSuper.bfres");
             LoadMeshData(resFile);
             LoadTextureData(resFile);

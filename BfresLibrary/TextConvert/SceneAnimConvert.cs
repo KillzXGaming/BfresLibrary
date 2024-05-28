@@ -134,7 +134,6 @@ namespace BfresLibrary.TextConvert
                 lightAnimConv.BasePos = lightAnim.AnimatedFields.HasFlag(LightAnimField.Position);
                 lightAnimConv.BaseData = lightAnim.BaseData;
 
-
                 animConv.LightAnims.Add(lightAnimConv);
                 foreach (var curve in lightAnim.Curves)
                 {
