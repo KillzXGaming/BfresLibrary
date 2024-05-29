@@ -88,6 +88,7 @@ namespace BfresLibrary.TextConvert
             var animJson = JsonConvert.DeserializeObject<BoneVisibilityAnimStruct>(json);
 
             anim.Name = animJson.Name;
+            anim.Path = animJson.Path;
             anim.Baked = animJson.Baked;
             anim.Loop = animJson.Loop;
             anim.FrameCount = animJson.FrameCount;

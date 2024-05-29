@@ -184,8 +184,8 @@ namespace BfresLibrary.Switch
             saver.SaveRelocationTablePointerPointer();
             saver.SaveFieldFileSize();
 
-            if (saver.ResFile.VersionMajor2 == 9)
-                saver.SaveRelocateEntryToSection(saver.Position, 15, 1, 0, ResFileSwitchSaver.Section1, "ResFile");
+            if (saver.ResFile.VersionMajor2 >- 9)
+                saver.SaveRelocateEntryToSection(saver.Position, 17, 1, 0, ResFileSwitchSaver.Section1, "ResFile");
             else
                 saver.SaveRelocateEntryToSection(saver.Position, 13, 1, 0, ResFileSwitchSaver.Section1, "ResFile");
 
@@ -247,7 +247,10 @@ namespace BfresLibrary.Switch
             if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write((byte)0); //external flags (set to 0)
-                saver.Write((byte)1); //saved flags
+                if (saver.ResFile.VersionMajor2 >= 10)
+                    saver.Write((byte)1); //saved flags
+                else
+                    saver.Write((byte)0);
             }
             else
                 saver.Seek(6); // padding

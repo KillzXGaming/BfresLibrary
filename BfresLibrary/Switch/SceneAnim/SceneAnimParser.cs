@@ -36,6 +36,8 @@ namespace BfresLibrary.Switch
             else
                 saver.SaveHeaderBlock();
 
+            saver.SaveRelocateEntryToSection(saver.Position, 10, 1, 0, ResFileSwitchSaver.Section1, "Scene Animation");
+
             saver.SaveString(sceneAnim.Name);
             saver.SaveString(sceneAnim.Path);
             sceneAnim.PosCameraAnimArrayOffset = saver.SaveOffset();

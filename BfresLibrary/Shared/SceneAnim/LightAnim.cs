@@ -72,17 +72,17 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets the index of the light type.
         /// </summary>
-        public sbyte LightTypeIndex { get; set; }
+        public sbyte LightTypeIndex { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the index of the distance attenuation function to use.
         /// </summary>
-        public sbyte DistanceAttnFuncIndex { get; set; }
+        public sbyte DistanceAttnFuncIndex { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the index of the angle attenuation function to use.
         /// </summary>
-        public sbyte AngleAttnFuncIndex { get; set; }
+        public sbyte AngleAttnFuncIndex { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the number of bytes required to bake all <see cref="Curves"/>.
@@ -123,7 +123,7 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
-        public ResDict<UserData> UserData { get; set; }
+        public ResDict<UserData> UserData { get; set; } = new ResDict<UserData>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
 

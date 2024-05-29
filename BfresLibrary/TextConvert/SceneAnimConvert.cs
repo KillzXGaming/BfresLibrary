@@ -52,6 +52,11 @@ namespace BfresLibrary.TextConvert
             public bool Loop { get; set; }
             public bool Baked { get; set; }
 
+            public string LightTypeName { get; set; }
+            public sbyte LightTypeIndex { get; set; } = -1;
+            public sbyte DistanceAttnFuncIndex { get; set; } = -1;
+            public sbyte AngleAttnFuncIndex { get; set; } = -1;
+
             public bool Enable { get; set; }
             public bool BaseAngleAttn { get; set; }
             public bool BaseColor0 { get; set; }
@@ -133,6 +138,10 @@ namespace BfresLibrary.TextConvert
                 lightAnimConv.BaseDistAttn = lightAnim.AnimatedFields.HasFlag(LightAnimField.DistanceAttn);
                 lightAnimConv.BasePos = lightAnim.AnimatedFields.HasFlag(LightAnimField.Position);
                 lightAnimConv.BaseData = lightAnim.BaseData;
+                lightAnimConv.LightTypeIndex = lightAnim.LightTypeIndex;
+                lightAnimConv.LightTypeName = lightAnim.LightTypeName;
+                lightAnimConv.AngleAttnFuncIndex = lightAnim.AngleAttnFuncIndex;
+                lightAnimConv.DistanceAttnFuncIndex = lightAnim.DistanceAttnFuncIndex;
 
                 animConv.LightAnims.Add(lightAnimConv);
                 foreach (var curve in lightAnim.Curves)
@@ -197,6 +206,7 @@ namespace BfresLibrary.TextConvert
             var animJson = JsonConvert.DeserializeObject<SceneAnimStuct>(json);
 
             anim.Name = animJson.Name;
+            anim.Path = animJson.Path;
             anim.CameraAnims = new ResDict<CameraAnim>();
             anim.LightAnims = new ResDict<LightAnim>();
             anim.FogAnims = new ResDict<FogAnim>();
@@ -245,6 +255,10 @@ namespace BfresLibrary.TextConvert
                 lightAnim.Name = lightAnimJson.Name;
                 lightAnim.FrameCount = lightAnimJson.FrameCount;
                 lightAnim.BaseData = lightAnimJson.BaseData;
+                lightAnim.LightTypeIndex = lightAnimJson.LightTypeIndex;
+                lightAnim.LightTypeName = lightAnimJson.LightTypeName;
+                lightAnim.AngleAttnFuncIndex = lightAnimJson.AngleAttnFuncIndex;
+                lightAnim.DistanceAttnFuncIndex = lightAnimJson.DistanceAttnFuncIndex;
 
                 if (lightAnim.BaseData.Enable == 1)
                     lightAnim.Flags |= LightAnimFlags.BaseEnable;

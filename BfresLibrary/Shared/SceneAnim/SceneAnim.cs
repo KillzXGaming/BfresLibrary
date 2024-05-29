@@ -61,7 +61,7 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
-        public ResDict<UserData> UserData { get; set; }
+        public ResDict<UserData> UserData { get; set; } = new ResDict<UserData>();
 
         internal uint Flags { get; set; }
 

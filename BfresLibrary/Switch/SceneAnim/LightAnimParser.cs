@@ -73,7 +73,7 @@ namespace BfresLibrary.Switch
             saver.SaveString(lightAnim.LightTypeName);
             saver.SaveString(lightAnim.DistanceAttnFuncName);
             saver.SaveString(lightAnim.AngleAttnFuncName);
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(lightAnim.FrameCount);
                 saver.Write(lightAnim.BakedSize);
