@@ -1310,6 +1310,7 @@ namespace BfresLibrary.Switch.Core
             {
                 WriteOffset(lightanim.PosBaseDataOffset);
                 lightanim.BaseData.Save(this, lightanim.AnimatedFields);
+                Align(8);
 
                 if (lightanim.Curves.Count > 0)
                 {
