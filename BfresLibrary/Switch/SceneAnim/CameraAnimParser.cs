@@ -31,8 +31,7 @@ namespace BfresLibrary.Switch
                 cameraAnim.BakedSize = loader.ReadUInt32();
                 ushort numUserData = loader.ReadUInt16();
                 numCurve = loader.ReadByte();
-                loader.Seek(1);
-                loader.Seek(4);
+                loader.Seek(5);
             }
             else
             {
@@ -70,8 +69,7 @@ namespace BfresLibrary.Switch
                 saver.Write(cameraAnim.BakedSize);
                 saver.Write((ushort)cameraAnim.UserData.Count);
                 saver.Write((byte)cameraAnim.Curves.Count);
-                saver.Seek(1);
-                saver.Seek(4);
+                saver.Seek(5);
             }
             else
             {

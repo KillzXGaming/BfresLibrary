@@ -30,10 +30,10 @@ namespace BfresLibrary.Switch
             if (loader.ResFile.VersionMajor2 >= 9)
             {
                 fogAnim.FrameCount = loader.ReadInt32();
+                fogAnim.BakedSize = loader.ReadUInt32();
+                numUserData = loader.ReadUInt16();
                 numCurve = loader.ReadByte();
                 fogAnim.DistanceAttnFuncIndex = loader.ReadSByte();
-                numUserData = loader.ReadUInt16();
-                fogAnim.BakedSize = loader.ReadUInt32();
                 loader.Seek(4);
             }
             else
@@ -71,10 +71,10 @@ namespace BfresLibrary.Switch
             if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(fogAnim.FrameCount);
+                saver.Write(fogAnim.BakedSize);
+                saver.Write((ushort)fogAnim.UserData.Count);
                 saver.Write((byte)fogAnim.Curves.Count);
                 saver.Write(fogAnim.DistanceAttnFuncIndex);
-                saver.Write((ushort)fogAnim.UserData.Count);
-                saver.Write(fogAnim.BakedSize);
                 saver.Seek(4);
             }
             else
