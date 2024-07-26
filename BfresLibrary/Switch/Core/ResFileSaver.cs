@@ -1344,6 +1344,7 @@ namespace BfresLibrary.Switch.Core
             {
                 WriteOffset(foganim.PosBaseDataOffset);
                 foganim.BaseData.Save(this);
+                Align(8);
 
                 if (foganim.Curves.Count > 0)
                 {
