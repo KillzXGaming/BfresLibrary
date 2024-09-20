@@ -155,20 +155,23 @@ namespace BfresLibrary.Switch
             mat.TextureSlotArray = loader.LoadCustom(() => loader.ReadInt64s(numTextureRef), (uint)SamplerSlotArrayOffset);
             mat.SamplerSlotArray = loader.LoadCustom(() => loader.ReadInt64s(numSampler), (uint)TexSlotArrayOffset);
 
-            mat.ShaderAssign = new ShaderAssign()
+            if (info != null && info.ShaderAssign != null)
             {
-                ShaderArchiveName = info.ShaderAssign.ShaderArchiveName,
-                ShadingModelName = info.ShaderAssign.ShadingModelName,
-            };
-            mat.ShaderParamData = loader.LoadCustom(() => loader.ReadBytes(info.ShaderAssign.ShaderParamSize), (uint)SourceParamOffset);
-            mat.ParamIndices = loader.LoadCustom(() => loader.ReadInt32s(info.ShaderAssign.ShaderParameters.Count), (uint)SourceParamIndices);
+                mat.ShaderAssign = new ShaderAssign()
+                {
+                    ShaderArchiveName = info.ShaderAssign.ShaderArchiveName,
+                    ShadingModelName = info.ShaderAssign.ShadingModelName,
+                };
+                mat.ShaderParamData = loader.LoadCustom(() => loader.ReadBytes(info.ShaderAssign.ShaderParamSize), (uint)SourceParamOffset);
+                mat.ParamIndices = loader.LoadCustom(() => loader.ReadInt32s(info.ShaderAssign.ShaderParameters.Count), (uint)SourceParamIndices);
 
-            ReadRenderInfo(loader, info, mat, renderInfoCounterTable, renderInfoDataOffsets, renderInfoDataTable);
-            ReadShaderParams(loader, info, mat);
+                ReadRenderInfo(loader, info, mat, renderInfoCounterTable, renderInfoDataOffsets, renderInfoDataTable);
+                ReadShaderParams(loader, info, mat);
 
-            LoadAttributeAssign(info, mat);
-            LoadSamplerAssign(info, mat);
-            LoadShaderOptions(info, mat);
+                LoadAttributeAssign(info, mat);
+                LoadSamplerAssign(info, mat);
+                LoadShaderOptions(info, mat);
+            }
 
             loader.Seek(pos, SeekOrigin.Begin);
         }
@@ -421,14 +424,17 @@ namespace BfresLibrary.Switch
                 SamplerAssigns = loader.LoadCustom(() => loader.LoadStrings(numSamplerAssign), (uint)samplerAssignOffset);
                 _optionBitFlags = loader.LoadCustom(() => loader.ReadInt64s(numBitflags), (uint)optionChoiceToggleOffset);
 
-                OptionIndices = ReadShortIndices(loader, optionChoiceIndicesOffset, shaderOptionChoiceCount, ShaderAssign.Options.Count);
-                AttributeAssignIndices = ReadByteIndices(loader, attribAssignIndicesOffset, numAttributeAssign, ShaderAssign.AttributeAssign.Count);
-                SamplerAssignIndices = ReadByteIndices(loader, samplerAssignIndicesOffset, numSamplerAssign, ShaderAssign.SamplerAssign.Count);
+                if (ShaderAssign  != null)
+                {
+                    OptionIndices = ReadShortIndices(loader, optionChoiceIndicesOffset, shaderOptionChoiceCount, ShaderAssign.Options.Count);
+                    AttributeAssignIndices = ReadByteIndices(loader, attribAssignIndicesOffset, numAttributeAssign, ShaderAssign.AttributeAssign.Count);
+                    SamplerAssignIndices = ReadByteIndices(loader, samplerAssignIndicesOffset, numSamplerAssign, ShaderAssign.SamplerAssign.Count);
 
-                var numChoiceValues = shaderOptionChoiceCount - shaderOptionBooleanCount;
-                OptionValues = loader.LoadCustom(() => loader.LoadStrings((int)numChoiceValues), (uint)optionChoiceStringsOffset);
+                    var numChoiceValues = shaderOptionChoiceCount - shaderOptionBooleanCount;
+                    OptionValues = loader.LoadCustom(() => loader.LoadStrings((int)numChoiceValues), (uint)optionChoiceStringsOffset);
 
-                SetupOptionBooleans(shaderOptionBooleanCount);
+                    SetupOptionBooleans(shaderOptionBooleanCount);
+                }
             }
 
             void IResData.Save(ResFileSaver saver)

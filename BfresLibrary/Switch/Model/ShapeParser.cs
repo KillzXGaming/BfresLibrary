@@ -109,24 +109,12 @@ namespace BfresLibrary.Switch
 
             int boundingboxCount = shape.Meshes.Sum(x => x.SubMeshes.Count+1);
             List<Bounding> boundings = new List<Bounding>();
-            if (shape.SubMeshBoundingNodes.Count > 0)
+            for (int i = 0; i < boundingboxCount; i++)
             {
-                for (int i = 0; i < shape.SubMeshBoundingNodes.Count; i++) {
-                    if (shape.SubMeshBoundingNodes[i].SubMeshCount == 1) {
-                        boundings.Add(shape.SubMeshBoundings[i]);
-                    }
-                }
-                boundings.Add(shape.SubMeshBoundings[0]);
-            }
-            else
-            {
-                for (int i = 0; i < boundingboxCount; i++)
-                {
-                    if (shape.SubMeshBoundings.Count <= i)
-                        boundings.Add(shape.SubMeshBoundings.LastOrDefault());
-                    else
-                        boundings.Add(shape.SubMeshBoundings[i]);
-                }
+                if (shape.SubMeshBoundings.Count <= i)
+                    boundings.Add(shape.SubMeshBoundings.LastOrDefault());
+                else
+                    boundings.Add(shape.SubMeshBoundings[i]);
             }
 
             float[] boundingRadius = new float[shape.Meshes.Count];

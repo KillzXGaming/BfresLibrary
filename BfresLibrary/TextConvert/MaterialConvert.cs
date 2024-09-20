@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using BfresLibrary.GX2;
+using Syroot.Maths;
+using static BfresLibrary.Switch.ResDictUpdate;
+using System.Globalization;
 
 namespace BfresLibrary.TextConvert
 {
@@ -172,6 +175,7 @@ namespace BfresLibrary.TextConvert
             JsonConvert.DefaultSettings = () =>
             {
                 var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new TexSrtConverter());
                 return settings;
             };
 
@@ -349,36 +353,38 @@ namespace BfresLibrary.TextConvert
 
             public override TexSrt ReadJson(JsonReader reader, Type objectType, TexSrt existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                TexSrtMode mode = TexSrtMode.ModeMaya;
-                float[] scaling = new float[2] { 1, 1 };
-                float[] translate = new float[2] { 0, 0 };
-                float rotate = 0;
+                var jObject = JObject.Load(reader);
 
-                while (reader.Read())
+                Vector2F ParseTuple(string input)
                 {
-                    if (reader.TokenType != JsonToken.PropertyName)
-                        break;
+                    var parts = input.Split(';');
+                    if (parts.Length != 2) return Vector2F.One;
 
-                    var propertyName = (string)reader.Value;
-                    if (!reader.Read())
-                        continue;
-
-                    if (propertyName == "Mode")
-                        mode = serializer.Deserialize<TexSrtMode>(reader);
-                    if (propertyName == "Scaling")
-                        scaling = serializer.Deserialize<float[]>(reader);
-                    if (propertyName == "Translation")
-                        translate = serializer.Deserialize<float[]>(reader);
-                    if (propertyName == "Rotation")
-                        rotate = serializer.Deserialize<float>(reader);
+                    return new Vector2F(
+                        float.Parse(parts[0], new CultureInfo("en-US")),
+                        float.Parse(parts[1], new CultureInfo("en-US")));
                 }
+
+                int mode = 0;
+                float rotation = 0;
+                Vector2F scaling = Vector2F.One;
+                Vector2F translation = Vector2F.Zero;
+
+                if (jObject.ContainsKey("Mode   "))
+                    mode = jObject["Mode"].Value<int>();
+                if (jObject.ContainsKey("Scaling"))
+                    scaling = ParseTuple(jObject["Scaling"].Value<string>());
+                if (jObject.ContainsKey("Rotation"))
+                    rotation = jObject["Rotation"].Value<float>();
+                if (jObject.ContainsKey("Translation"))
+                    translation = ParseTuple(jObject["Translation"].Value<string>());
 
                 return new TexSrt()
                 {
-                    Mode = mode,
-                    Rotation = rotate,
-                    Scaling = new Syroot.Maths.Vector2F(scaling[0], scaling[1]),
-                    Translation = new Syroot.Maths.Vector2F(translate[0], translate[1]),
+                    Mode = (TexSrtMode)mode,
+                    Rotation = rotation,
+                    Scaling = scaling,
+                    Translation = translation,
                 };
             }
         }

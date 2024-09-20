@@ -92,7 +92,7 @@ namespace BfresLibrary.Switch
             else
                 saver.SaveHeaderBlock();
 
-            if (saver.ResFile.VersionMajor2 >= 10)
+            if (saver.ResFile.VersionMajor2 >= 9)
                 saver.SaveRelocateEntryToSection(saver.Position, 11, 1, 0, ResFileSwitchSaver.Section1, "Model");
             else
                 saver.SaveRelocateEntryToSection(saver.Position, 10, 1, 0, ResFileSwitchSaver.Section1, "Model");
