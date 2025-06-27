@@ -10,7 +10,7 @@ namespace BfresLibrary
     /// Represents an FCAM section in a <see cref="SceneAnim"/> subfile, storing animations controlling camera settings.
     /// </summary>
     [DebuggerDisplay(nameof(CameraAnim) + " {" + nameof(Name) + "}")]
-    public class CameraAnim : IResData, IBinarySection
+    public class CameraAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraAnim"/> class.

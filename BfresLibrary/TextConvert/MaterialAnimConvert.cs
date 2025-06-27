@@ -38,8 +38,14 @@ namespace BfresLibrary.TextConvert
             public List<PatternAnimInfo> PatternAnimInfos { get; set; }
             public List<ParamAnimInfo> ParameterInfos { get; set; }
 
-            public List<AnimConstant> Constants { get; set; }
+            public List<ParamConstant> Constants { get; set; }
             public List<CurveAnimHelper> Curves { get; set; }
+        }
+
+        internal class ParamConstant
+        {
+            public uint AnimTarget ;
+            public float Value;
         }
 
         public static string ToJson(MaterialAnim anim)
@@ -63,7 +69,11 @@ namespace BfresLibrary.TextConvert
                 matAnimConv.Curves = new List<CurveAnimHelper>();
                 matAnimConv.Name = matAnim.Name;
                 if (matAnim.Constants != null)
-                    matAnimConv.Constants = matAnim.Constants.ToList();
+                    matAnimConv.Constants = matAnim.Constants.Select(x => new ParamConstant()
+                    {
+                        Value = x.Value.Single,
+                        AnimTarget = x.AnimDataOffset,
+                    }).ToList();
                 if (matAnim.BaseDataList != null)
                     matAnimConv.BaseDataList = matAnim.BaseDataList.ToList();
                 if (matAnim.ParamAnimInfos != null)
@@ -117,6 +127,7 @@ namespace BfresLibrary.TextConvert
             if (animJson.Baked)
                 anim.Flags |= MaterialAnim.MaterialAnimFlags.BakedCurve;
 
+            anim.TextureNames.Clear();
             foreach (var tex in animJson.Textures)
                 anim.TextureNames.Add(tex, new TextureRef()
                 {
@@ -130,7 +141,12 @@ namespace BfresLibrary.TextConvert
                 matAnim.Name = matAnimJson.Name;
                 matAnim.PatternAnimInfos = matAnimJson.PatternAnimInfos;
                 matAnim.ParamAnimInfos = matAnimJson.ParameterInfos;
-                matAnim.Constants = matAnimJson.Constants;
+                if (matAnimJson.Constants != null)
+                    matAnim.Constants = matAnimJson.Constants.Select(x => new AnimConstant()
+                    {
+                        Value = x.Value,
+                        AnimDataOffset = x.AnimTarget,
+                    }).ToList();
                 matAnim.BaseDataList = matAnimJson.BaseDataList.ToArray();
 
                 foreach (var curveJson in matAnimJson.Curves)

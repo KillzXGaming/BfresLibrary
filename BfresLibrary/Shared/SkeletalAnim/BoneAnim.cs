@@ -11,7 +11,7 @@ namespace BfresLibrary
     /// Represents the animation of a single <see cref="Bone"/> in a <see cref="SkeletalAnim"/> subfile.
     /// </summary>
     [DebuggerDisplay(nameof(BoneAnim) + " {" + nameof(Name) + "}")]
-    public class BoneAnim : IResData
+    public class BoneAnim : IResData, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BoneAnim"/> class.

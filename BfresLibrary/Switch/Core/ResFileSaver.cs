@@ -8,6 +8,7 @@ using System.Text;
 using Syroot.BinaryData;
 using Syroot.Maths;
 using BfresLibrary.Core;
+using System.Security.Cryptography;
 
 namespace BfresLibrary.Switch.Core
 {
@@ -137,7 +138,7 @@ namespace BfresLibrary.Switch.Core
                 ExportModel();
                 return;
             }
-            if (ExportableData is Model)
+            if (ExportableData is Shape)
             {
                 ExportShape();
                 return;
@@ -900,6 +901,10 @@ namespace BfresLibrary.Switch.Core
                 WriteOffset(shp.PosKeyShapesOffset);
                 foreach (KeyShape key in shp.KeyShapes.Values)
                     ((IResData)key).Save(this);
+
+                WriteOffset(shp.PosKeyShapeDictOffset);
+                ((IResData)shp.KeyShapes).Save(this);
+
             }
             if (shp.RadiusArray.Count > 0)
             {

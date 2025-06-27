@@ -10,7 +10,7 @@ namespace BfresLibrary
     /// Represents an FCAM section in a <see cref="SceneAnim"/> subfile, storing animations controlling fog settings.
     /// </summary>
     [DebuggerDisplay(nameof(FogAnim) + " {" + nameof(Name) + "}")]
-    public class FogAnim : IResData, IBinarySection
+    public class FogAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FogAnim"/> class.

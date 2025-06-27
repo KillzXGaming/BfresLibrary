@@ -485,6 +485,9 @@ namespace BfresLibrary
             //Custom external file loading
             foreach (var file in ExternalFiles)
             {
+                // Set name for easier access
+                file.Value.Name = file.Key;
+
                 if (file.Key.EndsWith(".brtcamera"))
                     file.Value.LoadedFileData = new Brtcamera(new MemoryStream(file.Value.Data), !IsPlatformSwitch);
             }
@@ -681,8 +684,8 @@ namespace BfresLibrary
                 {
                     if (calculateBakeSizes)
                     {
-                        foreach (var curve in camAnim.Curves)
-                            camAnim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
+                      //  foreach (var curve in camAnim.Curves)
+                        //    camAnim.BakedSize += curve.CalculateBakeSize(IsPlatformSwitch);
                     }
                 }
             }

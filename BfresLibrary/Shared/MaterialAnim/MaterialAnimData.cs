@@ -7,7 +7,7 @@ namespace BfresLibrary
     /// <summary>
     /// Represents a material animation in a <see cref="MaterialAnim"/> subfile, storing material animation data.
     /// </summary>
-    public class MaterialAnimData 
+    public class MaterialAnimData : INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterialAnimData"/> class.

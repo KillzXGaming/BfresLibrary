@@ -9,7 +9,7 @@ namespace BfresLibrary
     /// Represents an FMDL subfile in a <see cref="ResFile"/>, storing multi-dimensional texture data.
     /// </summary>
     [DebuggerDisplay(nameof(TextureShared) + " {" + nameof(Name) + "}")]
-    public class TextureShared : IResData, IBinarySection
+    public class TextureShared : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture"/> class.

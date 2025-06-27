@@ -8,7 +8,7 @@ namespace BfresLibrary
     /// Represents a vertex shape animation in a <see cref="ShapeAnim"/> subfile.
     /// </summary>
     [DebuggerDisplay(nameof(VertexShapeAnim) + " {" + nameof(Name) + "}")]
-    public class VertexShapeAnim : IResData
+    public class VertexShapeAnim : IResData, INamed
     {
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
         

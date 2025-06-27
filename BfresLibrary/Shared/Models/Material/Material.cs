@@ -15,7 +15,7 @@ namespace BfresLibrary
     /// how technically a surface is drawn.
     /// </summary>
     [DebuggerDisplay(nameof(Material) + " {" + nameof(Name) + "}")]
-    public class Material : IResData, IBinarySection
+    public class Material : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Material"/> class.

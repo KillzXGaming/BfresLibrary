@@ -14,7 +14,7 @@ namespace BfresLibrary
     /// Represents an FMAA section in a <see cref="ResFile"/> subfile, storing material animation data.
     /// </summary>
     [DebuggerDisplay(nameof(MaterialAnim) + " {" + nameof(Name) + "}")]
-    public class MaterialAnim : IResData, IBinarySection
+    public class MaterialAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterialAnim"/> class.

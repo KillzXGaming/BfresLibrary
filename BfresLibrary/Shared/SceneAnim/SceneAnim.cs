@@ -10,7 +10,7 @@ namespace BfresLibrary
     /// fog settings.
     /// </summary>
     [DebuggerDisplay(nameof(SceneAnim) + " {" + nameof(Name) + "}")]
-    public class SceneAnim : IResData, IBinarySection
+    public class SceneAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneAnim"/> class.

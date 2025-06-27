@@ -6,7 +6,7 @@ namespace BfresLibrary
     /// <summary>
     /// Represents a file attachment to a <see cref="ResFile"/> which can be of arbitrary data.
     /// </summary>
-    public class ExternalFile : IResData
+    public class ExternalFile : IResData, INamed
     {
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
@@ -14,6 +14,7 @@ namespace BfresLibrary
         /// Gets or sets the raw data stored by the external file.
         /// </summary>
         public byte[] Data { get; set; }
+        public string Name { get; set; }
 
         public object LoadedFileData { get; set; }
 

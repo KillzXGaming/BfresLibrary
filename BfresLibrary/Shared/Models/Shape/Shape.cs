@@ -174,6 +174,7 @@ namespace BfresLibrary
         [DisplayName("Target Attribiute Count")]
         public byte TargetAttribCount { get; set; }
 
+
         /// <summary>
         /// Gets or sets the list of <see cref="Meshes"/> which are used to represent different level of details of the
         /// shape.

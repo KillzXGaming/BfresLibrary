@@ -10,7 +10,7 @@ namespace BfresLibrary
     /// Represents an FLIT section in a <see cref="SceneAnim"/> subfile, storing animations controlling light settings.
     /// </summary>
     [DebuggerDisplay(nameof(LightAnim) + " {" + nameof(Name) + "}")]
-    public class LightAnim : IResData, IBinarySection
+    public class LightAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LightAnim"/> class.

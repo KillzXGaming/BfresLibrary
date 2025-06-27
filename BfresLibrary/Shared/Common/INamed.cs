@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BfresLibrary
 {
-    public interface IBinarySection
+    public interface INamed
     {
-        void Import(string filePath, ResFile resFile);
-        void Export(string filePath, ResFile resFile);
+        public string Name { get; set; }
     }
 }

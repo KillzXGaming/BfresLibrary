@@ -123,6 +123,9 @@ namespace BfresLibrary.Switch
                     ext.Value.LoadedFileData = bntx;
                     foreach (var tex in bntx.Textures)
                         resFile.Textures.Add(tex.Name, new SwitchTexture(bntx, tex));
+
+                    // Empty the data to save memory space. Bntx is resaved directly
+                    ext.Value.Data = new byte[0];
                 }
             }
 

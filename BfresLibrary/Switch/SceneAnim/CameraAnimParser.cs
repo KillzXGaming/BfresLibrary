@@ -49,7 +49,7 @@ namespace BfresLibrary.Switch
 
         public static void Write(ResFileSwitchSaver saver, CameraAnim cameraAnim)
         {
-            if (saver.ResFile.VersionMajor2 == 9)
+            if (saver.ResFile.VersionMajor2 >= 9)
             {
                 saver.Write(cameraAnim.Flags, true);
                 saver.Seek(2);

@@ -47,7 +47,7 @@ namespace BfresLibrary.Switch
             shape.VertexSkinCount = loader.ReadByte();
             byte numMesh = loader.ReadByte();
             byte numKeys = loader.ReadByte();
-            byte numTargetAttr = loader.ReadByte();
+            shape.TargetAttribCount = loader.ReadByte();
             if (loader.ResFile.VersionMajor2 <= 2 && loader.ResFile.VersionMajor == 0)
                 loader.Seek(2); //padding
             else if (loader.ResFile.VersionMajor2 >= 9)

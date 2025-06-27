@@ -14,7 +14,7 @@ namespace BfresLibrary
     /// <see cref="Material"/> instances.
     /// </summary>
     [DebuggerDisplay(nameof(VisibilityAnim) + " {" + nameof(Name) + "}")]
-    public class VisibilityAnim : IResData, IBinarySection
+    public class VisibilityAnim : IResData, IBinarySection, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VisibilityAnim"/> class.

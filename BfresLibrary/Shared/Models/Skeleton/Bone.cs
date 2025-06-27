@@ -8,6 +8,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace BfresLibrary
 {
@@ -16,7 +17,7 @@ namespace BfresLibrary
     /// effects.
     /// </summary>
     [DebuggerDisplay(nameof(Bone) + " {" + nameof(Name) + "}")]
-    public class Bone : IResData
+    public class Bone : IResData, INamed, INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Bone"/> class.
@@ -206,6 +207,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.Identity;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.Identity;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -220,6 +222,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.RotateTranslateZero;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.RotateTranslateZero;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -234,6 +237,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.RotateZero;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.RotateZero;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -248,6 +252,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.ScaleOne;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.ScaleOne;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -262,6 +267,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.ScaleUniform;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.ScaleUniform;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -276,6 +282,7 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.ScaleVolumeOne;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.ScaleVolumeOne;
+                UpdateTransformFlagProperties();
             }
         }
 
@@ -290,7 +297,19 @@ namespace BfresLibrary
                     FlagsTransform |= BoneFlagsTransform.TranslateZero;
                 else
                     FlagsTransform &= ~BoneFlagsTransform.TranslateZero;
+                UpdateTransformFlagProperties();
             }
+        }
+
+        private void UpdateTransformFlagProperties()
+        {
+            NotifyPropertyChanged(nameof(TransformScaleOne));
+            NotifyPropertyChanged(nameof(TransformScaleUniform));
+            NotifyPropertyChanged(nameof(TransformScaleVolumeOne));
+            NotifyPropertyChanged(nameof(TransformRotateZero));
+            NotifyPropertyChanged(nameof(TransformRotateTranslateZero));
+            NotifyPropertyChanged(nameof(TransformTranslateZero));
+            NotifyPropertyChanged(nameof(TransformIdentity));
         }
 
         [Category("Transform Mode Cumulative")]
@@ -304,6 +323,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.Identity;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.Identity;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -318,6 +338,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.RotateTranslateZero;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.RotateTranslateZero;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -332,6 +353,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.RotateZero;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.RotateZero;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -346,6 +368,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.ScaleOne;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.ScaleOne;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -360,6 +383,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.ScaleUniform;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.ScaleUniform;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -374,6 +398,7 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.ScaleVolumeOne;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.ScaleVolumeOne;
+                UpdateCumulativeTransformFlagProperties();
             }
         }
 
@@ -388,7 +413,19 @@ namespace BfresLibrary
                     FlagsTransformCumulative |= BoneFlagsTransformCumulative.TranslateZero;
                 else
                     FlagsTransformCumulative &= ~BoneFlagsTransformCumulative.TranslateZero;
+                UpdateCumulativeTransformFlagProperties();
             }
+        }
+
+        private void UpdateCumulativeTransformFlagProperties()
+        {
+            NotifyPropertyChanged(nameof(TransformCumulativeScaleOne));
+            NotifyPropertyChanged(nameof(TransformCumulativeScaleUniform));
+            NotifyPropertyChanged(nameof(TransformCumulativeScaleVolumeOne));
+            NotifyPropertyChanged(nameof(TransformCumulativeRotateZero));
+            NotifyPropertyChanged(nameof(TransformCumulativeRotateTranslateZero));
+            NotifyPropertyChanged(nameof(TransformCumulativeTranslateZero));
+            NotifyPropertyChanged(nameof(TransformCumulativeIdentity));
         }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------
@@ -486,6 +523,16 @@ namespace BfresLibrary
 
         internal long PosUserDataOffset;
         internal long PosUserDataDictOffset;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 
     /// <summary>

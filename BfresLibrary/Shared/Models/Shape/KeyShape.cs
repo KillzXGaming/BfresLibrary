@@ -20,8 +20,8 @@ namespace BfresLibrary
         
         void IResData.Save(ResFileSaver saver)
         {
-            saver.SaveCustom(TargetAttribIndices, () => saver.Write(TargetAttribIndices));
-            saver.SaveCustom(TargetAttribIndexOffsets, () => saver.Write(TargetAttribIndexOffsets));
+            saver.Write(TargetAttribIndices);
+            saver.Write(TargetAttribIndexOffsets);
         }
     }
 }

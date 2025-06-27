@@ -9,7 +9,7 @@ namespace BfresLibrary
     /// draw and interpolate textures.
     /// </summary>
     [DebuggerDisplay(nameof(Sampler) + " {" + nameof(Name) + "}")]
-    public class Sampler : IResData
+    public class Sampler : IResData, INamed
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Sampler"/> class.

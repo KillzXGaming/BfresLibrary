@@ -5,6 +5,8 @@ using Syroot.BinaryData;
 using Syroot.Maths;
 using BfresLibrary.Core;
 using System.Linq;
+using System.Xml.Linq;
+using System.Reflection;
 
 namespace BfresLibrary.Helpers
 {
@@ -151,6 +153,12 @@ namespace BfresLibrary.Helpers
             vertexBuffer.Buffers = new List<Buffer>(numBuffers);
             vertexBuffer.VertexCount = (uint)lastElementCount;
 
+            Buffer[] buffers = new Buffer[numBuffers];
+            for (int i = 0; i < numBuffers; i++)
+                buffers[i] = new Buffer();
+
+            uint[] buffer_pos = new uint[numBuffers];
+
             foreach (VertexBufferHelperAttrib helperAttrib in Attributes)
             {
                 // Check if the length of data does not match another attribute's data length.
@@ -158,8 +166,40 @@ namespace BfresLibrary.Helpers
                 {
                     throw new InvalidDataException("Attribute data arrays have different sizes.");
                 }
+
+                buffers[helperAttrib.BufferIndex].Stride += (ushort)helperAttrib.Stride;
+
+                // Add a VertexAttrib instance from the helper attribute.   
+                vertexBuffer.Attributes.Add(helperAttrib.Name, new VertexAttrib()
+                {
+                    Name = helperAttrib.Name,
+                    Format = helperAttrib.Format,
+                    BufferIndex = helperAttrib.BufferIndex,
+                    Offset = (ushort)buffer_pos[helperAttrib.BufferIndex],
+                }); 
+                buffer_pos[helperAttrib.BufferIndex] += helperAttrib.Stride;
             }
 
+            // Set buffer data
+            for (byte index = 0; index < numBuffers; index++)
+            {
+                List<VertexBufferHelperAttrib> attributes = Attributes.Where(x => x.BufferIndex == index).ToList();
+                if (attributes.Count == 0)
+                    continue;
+
+                if (attributes.Count == 1)
+                {
+                    buffers[index].Data = new byte[1][] { ToRawData(attributes[0]) };
+                }
+                else
+                {
+                    // Create the buffer containing all attribute data.
+                    buffers[index].Data = new byte[1][] { ToRawData(attributes) };
+                }
+            }
+            vertexBuffer.Buffers = buffers.ToList();
+
+/*
             for (byte index = 0; index < numBuffers; index++)
             {
                 List<VertexBufferHelperAttrib> attributes = Attributes.Where(x => x.BufferIndex == index).ToList();
@@ -178,7 +218,7 @@ namespace BfresLibrary.Helpers
                     //Typically used for the position
                   /*  foreach (var att in attributes)
                         if (att.Stride == 12)
-                            att.Stride = 16;*/
+                            att.Stride = 16;
                 }
 
                 ushort stride = (ushort)attributes.Sum(x => x.Stride);
@@ -213,7 +253,7 @@ namespace BfresLibrary.Helpers
                     });
                     offset += helperAttrib.Stride;
                 }
-            }
+            }*/
 
             return vertexBuffer;
         }
