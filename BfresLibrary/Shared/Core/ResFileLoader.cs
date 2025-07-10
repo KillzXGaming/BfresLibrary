@@ -117,7 +117,7 @@ namespace BfresLibrary.Core
                 ((IResData)buffer).Load(this);
                 ((Shape)ImportableFile).VertexBuffer = buffer;
             }
-            else
+            else if (ImportableFile is Model)
             {
                 long test = BufferInfo.BufferOffset;
 
@@ -129,6 +129,10 @@ namespace BfresLibrary.Core
                 }
                 ((IResData)ImportableFile).Load(this);
                 BufferInfo.BufferOffset = test;
+            }
+            else
+            {
+                ((IResData)ImportableFile).Load(this);
             }
         }
 
