@@ -117,7 +117,7 @@ namespace BfresLibrary.Switch
             
             resFile.Textures = new ResDict<TextureShared>();
 
-            /*
+            
             foreach (var ext in resFile.ExternalFiles) {
                 if (ext.Key.Contains(".bntx")) 
                 {
@@ -129,7 +129,7 @@ namespace BfresLibrary.Switch
                     // Empty the data to save memory space. Bntx is resaved directly
                     ext.Value.Data = new byte[0];
                 }
-            }*/
+            }
 
             resFile.TexPatternAnims = new ResDict<MaterialAnim>();
             resFile.MatVisibilityAnims = new ResDict<MaterialAnim>();
