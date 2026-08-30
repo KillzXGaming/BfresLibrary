@@ -149,7 +149,7 @@ namespace BfresLibrary
                 uint ofsBoneList = loader.ReadOffset(); // Only load dict.
                 MatrixToBoneList = loader.LoadCustom(() => loader.ReadUInt16s((NumSmoothMatrices + NumRigidMatrices)));
                 if (loader.ResFile.Version >= 0x03040000)
-                    InverseModelMatrices = loader.LoadCustom(() => loader.ReadMatrix3x4s(NumRigidMatrices))?.ToList();
+                    InverseModelMatrices = loader.LoadCustom(() => loader.ReadMatrix3x4s(NumSmoothMatrices))?.ToList();
                 uint userPointer = loader.ReadUInt32();
             }
         }
