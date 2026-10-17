@@ -16,7 +16,7 @@ namespace BfresLibrary
     /// instances in a <see cref="Skeleton"/>.
     /// </summary>
     [DebuggerDisplay(nameof(SkeletalAnim) + " {" + nameof(Name) + "}")]
-    public class SkeletalAnim : IResData, IBinarySection, INamed
+    public class SkeletalAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalAnim"/> class.

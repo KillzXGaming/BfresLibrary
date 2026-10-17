@@ -294,7 +294,10 @@ namespace BfresLibrary
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
         public void CalculateTransformFlags()
-        {
+        {                  
+            // Keep segment scale settings from transform flags
+            var segmentScale = this.ApplySegmentScaleCompensate;
+
             FlagsTransform = BoneAnimFlagsTransform.Identity;
             foreach (var curve in Curves) {
                 switch (curve.AnimDataOffset)
@@ -329,6 +332,8 @@ namespace BfresLibrary
                 FlagsTransform &= ~BoneAnimFlagsTransform.ScaleUniform;
             if (BaseData.Translate != Syroot.Maths.Vector3F.One)
                 FlagsTransform &= ~BoneAnimFlagsTransform.TranslateZero;
+
+            ApplySegmentScaleCompensate = segmentScale;
         }
 
         void IResData.Load(ResFileLoader loader)

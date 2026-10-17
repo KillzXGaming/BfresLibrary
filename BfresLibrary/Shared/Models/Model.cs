@@ -11,7 +11,7 @@ namespace BfresLibrary
     /// Represents an FMDL subfile in a <see cref="ResFile"/>, storing model vertex data, skeletons and used materials.
     /// </summary>
     [DebuggerDisplay(nameof(Model) + " {" + nameof(Name) + "}")]
-    public class Model : IResData, IBinarySection, INamed
+    public class Model : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Model"/> class.

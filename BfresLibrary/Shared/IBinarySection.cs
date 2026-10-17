@@ -11,4 +11,9 @@ namespace BfresLibrary
         void Import(string filePath, ResFile resFile);
         void Export(string filePath, ResFile resFile);
     }
+
+    public interface IUserDataSection
+    {
+        ResDict<UserData> UserData { get; set; }
+    }
 }

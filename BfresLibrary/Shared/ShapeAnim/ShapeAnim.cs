@@ -11,7 +11,7 @@ namespace BfresLibrary
     /// instance.
     /// </summary>
     [DebuggerDisplay(nameof(ShapeAnim) + " {" + nameof(Name) + "}")]
-    public class ShapeAnim : IResData, IBinarySection, INamed
+    public class ShapeAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShapeAnim"/> class.

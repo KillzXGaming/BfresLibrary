@@ -1,7 +1,8 @@
-﻿using System;
+﻿using BfresLibrary.Core;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using BfresLibrary.Core;
 using System.IO;
 
 namespace BfresLibrary
@@ -10,7 +11,7 @@ namespace BfresLibrary
     /// Represents an FLIT section in a <see cref="SceneAnim"/> subfile, storing animations controlling light settings.
     /// </summary>
     [DebuggerDisplay(nameof(LightAnim) + " {" + nameof(Name) + "}")]
-    public class LightAnim : IResData, IBinarySection, INamed
+    public class LightAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LightAnim"/> class.
@@ -49,6 +50,7 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets flags controlling how the animation should be played.
         /// </summary>
+        [Browsable(false)]
         public LightAnimFlags Flags
         {
             get { return (LightAnimFlags)(_flags & _flagsMask); }
@@ -58,6 +60,7 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets flags controlling how animation data is stored or how the animation should be played.
         /// </summary>
+        [Browsable(false)]
         public LightAnimField AnimatedFields
         {
             get { return (LightAnimField)(_flags & _flagsMaskFields); }
@@ -113,16 +116,19 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets <see cref="AnimCurve"/> instances animating properties of objects stored in this section.
         /// </summary>
+        [Browsable(false)]
         public IList<AnimCurve> Curves { get; set; }
-        
+
         /// <summary>
         /// Gets the <see cref="LightAnimData"/> instance storing initial light parameters.
         /// </summary>
+        [Browsable(false)]
         public LightAnimData BaseData { get; set; }
 
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
+        [Browsable(false)]
         public ResDict<UserData> UserData { get; set; } = new ResDict<UserData>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------

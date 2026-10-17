@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using BfresLibrary.Core;
 using System.IO;
+using System.ComponentModel;
 
 namespace BfresLibrary
 {
@@ -10,7 +11,7 @@ namespace BfresLibrary
     /// Represents an FCAM section in a <see cref="SceneAnim"/> subfile, storing animations controlling camera settings.
     /// </summary>
     [DebuggerDisplay(nameof(CameraAnim) + " {" + nameof(Name) + "}")]
-    public class CameraAnim : IResData, IBinarySection, INamed
+    public class CameraAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraAnim"/> class.
@@ -30,13 +31,20 @@ namespace BfresLibrary
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
         private const string _signature = "FCAM";
-        
+
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
         /// <summary>
         /// Gets or sets flags controlling how animation data is stored or how the animation should be played.
         /// </summary>
+        [Browsable(false)]
         public CameraAnimFlags Flags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name with which the instance can be referenced uniquely in
+        /// <see cref="ResDict{CameraAnim}"/> instances.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the total number of frames this animation plays.
@@ -49,24 +57,21 @@ namespace BfresLibrary
         public uint BakedSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the name with which the instance can be referenced uniquely in
-        /// <see cref="ResDict{CameraAnim}"/> instances.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// Gets or sets <see cref="AnimCurve"/> instances animating properties of objects stored in this section.
         /// </summary>
+        [Browsable(false)]
         public IList<AnimCurve> Curves { get; set; }
 
         /// <summary>
         /// Gets the <see cref="CameraAnimData"/> instance storing initial camera parameters.
         /// </summary>
+        [Browsable(false)]
         public CameraAnimData BaseData { get; set; }
 
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
+        [Browsable(false)]
         public ResDict<UserData> UserData { get; set; } = new ResDict<UserData>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------

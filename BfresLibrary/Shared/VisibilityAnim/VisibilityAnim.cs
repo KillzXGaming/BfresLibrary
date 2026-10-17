@@ -14,7 +14,7 @@ namespace BfresLibrary
     /// <see cref="Material"/> instances.
     /// </summary>
     [DebuggerDisplay(nameof(VisibilityAnim) + " {" + nameof(Name) + "}")]
-    public class VisibilityAnim : IResData, IBinarySection, INamed
+    public class VisibilityAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VisibilityAnim"/> class.
@@ -27,6 +27,7 @@ namespace BfresLibrary
             FrameCount = 1;
             BakedSize = 0;
             Curves = new List<AnimCurve>();
+            BaseDataList = new bool[0];
             BindIndices = new ushort[0];
             Names = new List<string>();
             UserData = new ResDict<UserData>();

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using BfresLibrary.Core;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using BfresLibrary.Core;
 using System.IO;
 
 namespace BfresLibrary
@@ -10,7 +11,7 @@ namespace BfresLibrary
     /// Represents an FCAM section in a <see cref="SceneAnim"/> subfile, storing animations controlling fog settings.
     /// </summary>
     [DebuggerDisplay(nameof(FogAnim) + " {" + nameof(Name) + "}")]
-    public class FogAnim : IResData, IBinarySection, INamed
+    public class FogAnim : IResData, IBinarySection, INamed, IUserDataSection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FogAnim"/> class.
@@ -32,13 +33,20 @@ namespace BfresLibrary
         // ---- CONSTANTS ----------------------------------------------------------------------------------------------
 
         private const string _signature = "FFOG";
-        
+
         // ---- PROPERTIES ---------------------------------------------------------------------------------------------
 
         /// <summary>
         /// Gets or sets flags controlling how animation data is stored or how the animation should be played.
         /// </summary>
+        [Browsable(false)]
         public FogAnimFlags Flags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name with which the instance can be referenced uniquely in <see cref="ResDict{FogAnim}"/>
+        /// instances.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the total number of frames this animation plays.
@@ -55,11 +63,6 @@ namespace BfresLibrary
         /// </summary>
         public uint BakedSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name with which the instance can be referenced uniquely in <see cref="ResDict{FogAnim}"/>
-        /// instances.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the distance attenuation function to use.
@@ -69,16 +72,19 @@ namespace BfresLibrary
         /// <summary>
         /// Gets or sets <see cref="AnimCurve"/> instances animating properties of objects stored in this section.
         /// </summary>
+        [Browsable(false)]
         public IList<AnimCurve> Curves { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="FogAnimData"/> instance storing initial fog parameters.
         /// </summary>
+        [Browsable(false)]
         public FogAnimData BaseData { get; set; }
 
         /// <summary>
         /// Gets or sets customly attached <see cref="UserData"/> instances.
         /// </summary>
+        [Browsable(false)]
         public ResDict<UserData> UserData { get; set; } = new ResDict<UserData>();
 
         // ---- METHODS (PUBLIC) ---------------------------------------------------------------------------------------
