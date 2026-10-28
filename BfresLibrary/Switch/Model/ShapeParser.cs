@@ -27,7 +27,7 @@ namespace BfresLibrary.Switch
             shape.KeyShapes = loader.LoadDictValues<KeyShape>();
             long BoundingBoxArrayOffset = loader.ReadOffset();
             long RadiusOffset = 0;
-            if (loader.ResFile.VersionMajor > 2)
+            if (loader.ResFile.VersionMajor > 3)
             {
                 RadiusOffset = loader.ReadOffset();
                 long UserPointer = loader.ReadInt64();
@@ -48,7 +48,7 @@ namespace BfresLibrary.Switch
             byte numMesh = loader.ReadByte();
             byte numKeys = loader.ReadByte();
             shape.TargetAttribCount = loader.ReadByte();
-            if (loader.ResFile.VersionMajor <= 2)
+            if (loader.ResFile.VersionMajor <= 3)
                 loader.Seek(2); //padding
             else if (loader.ResFile.VersionMajor >= 9)
                 loader.Seek(2); //padding
