@@ -9,7 +9,10 @@ namespace BfresLibrary
 
         public byte[] TargetAttribIndices { get; set; }
 
-        public byte[] TargetAttribIndexOffsets { get; set; }
+        public KeyShape()
+        {
+            TargetAttribIndices = new byte[18];
+        }
 
         // ---- METHODS ------------------------------------------------------------------------------------------------
 
