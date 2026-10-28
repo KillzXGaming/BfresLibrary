@@ -1,4 +1,5 @@
 ﻿using BfresLibrary.Core;
+using System.Diagnostics;
 
 namespace BfresLibrary
 {
@@ -14,14 +15,14 @@ namespace BfresLibrary
 
         void IResData.Load(ResFileLoader loader)
         {
-            TargetAttribIndices = loader.ReadBytes(20);
-            TargetAttribIndexOffsets = loader.ReadBytes(4);
+            TargetAttribIndices = loader.ReadBytes(18);
+            loader.ReadUInt16(); // padding
         }
         
         void IResData.Save(ResFileSaver saver)
         {
             saver.Write(TargetAttribIndices);
-            saver.Write(TargetAttribIndexOffsets);
+            saver.Write((ushort)0);
         }
     }
 }
